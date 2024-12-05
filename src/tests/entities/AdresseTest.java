@@ -24,14 +24,15 @@ class AdresseTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"145", "67b"})
+    @ValueSource(strings = {"145", "67b", "2bis", "3"})
     void setNumeroRueValid(String numeroRue) {
         assertDoesNotThrow(() -> adresse.setNumeroRue(numeroRue));
+        assertEquals(numeroRue, adresse.getNumeroRue());
     }
 
     @ParameterizedTest
     @NullAndEmptySource
-    @ValueSource(strings = {"230", "_-", "2 rue de la Boustifaille"})
+    @ValueSource(strings = {"_-", "2 rue de la Boustifaille"})
     void setNomRueInvalid(String nomRue) {
         assertThrows(SocieteEntityException.class, () -> adresse.setNomRue(nomRue));
     }
@@ -41,6 +42,7 @@ class AdresseTest {
             "Rue Litaldus", "Rue Serpenoise"})
     void setNomRueValid(String nomRue) {
         assertDoesNotThrow(() -> adresse.setNomRue(nomRue));
+        assertEquals(nomRue, adresse.getNomRue());
     }
 
     @ParameterizedTest
@@ -51,9 +53,10 @@ class AdresseTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"75001", "57070", "57130"})
+    @ValueSource(strings = {"75001", "57070", "57130", "57004"})
     void setCodePostalValid(String codePostal) {
         assertDoesNotThrow(() -> adresse.setCodePostal(codePostal));
+        assertEquals(codePostal, adresse.getCodePostal());
     }
 
     @ParameterizedTest
@@ -67,5 +70,6 @@ class AdresseTest {
     @ValueSource(strings = {"Metz", "Nancy", "Paris", "Toulouse", "Châlons-en-Champagne"})
     void setVilleValid(String ville) {
         assertDoesNotThrow(() -> adresse.setVille(ville));
+        assertEquals(ville, adresse.getVille());
     }
 }

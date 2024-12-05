@@ -148,7 +148,8 @@ public class Adresse {
 
         // Cas regex non matché
         if(!Patterns.PATTERN_VILLE.matcher(ville).matches()){
-            throw new SocieteEntityException("La ville est obligatoirement !");
+            throw new SocieteEntityException("La ville est composée de " +
+                    "lettres uniquement !");
         }
 
         this.ville = ville;
@@ -160,7 +161,7 @@ public class Adresse {
      */
     @Override
     public String toString() {
-        return getNumeroRue() + " " + getNomRue() + ", " + getCodePostal() +
-                " " + getVille();
+        return "{" +getNumeroRue() + " " + getNomRue() + ", " + getCodePostal() +
+                " " + getVille() + "}";
     }
 }

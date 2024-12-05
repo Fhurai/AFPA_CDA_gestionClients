@@ -1,5 +1,7 @@
 package entities;
 
+import utilities.Patterns;
+
 /**
  * Classe Société
  */
@@ -21,8 +23,7 @@ public class Societe {
      * @param mail L'adresse mail
      * @param commentaires Les commentaires
      */
-    public Societe(String raisonSociale, Adresse adresse, String telephone, String mail, String commentaires) {
-        setIdentifiant(0);
+    public Societe(String raisonSociale, Adresse adresse, String telephone, String mail, String commentaires) throws SocieteEntityException {
         setRaisonSociale(raisonSociale);
         setAdresse(adresse);
         setTelephone(telephone);
@@ -48,7 +49,11 @@ public class Societe {
      * Setter commentaires
      * @param commentaires Commentaires, possiblement null
      */
-    public void setCommentaires(String commentaires) {
+    public void setCommentaires(String commentaires) throws SocieteEntityException {
+        if(commentaires == null){
+            throw new SocieteEntityException("Les commentaires ne peuvent pas" +
+                    " être null !");
+        }
         this.commentaires = commentaires;
     }
 
@@ -60,7 +65,22 @@ public class Societe {
         return mail;
     }
 
-    public void setMail(String mail) {
+    /**
+     * Setter adresse mail
+     * @param mail L'adresse mail
+     */
+    public void setMail(String mail) throws SocieteEntityException {
+        // Cas chaîne vide ou null
+        if(mail == null || mail.isEmpty()){
+            throw new SocieteEntityException("L'adresse mail ne peut être " +
+                    "vide !");
+        }
+
+        // Cas regex non matché
+        if(!Patterns.PATTERN_MAIL.matcher(mail).matches()){
+            throw new SocieteEntityException("L'adresse mail doit être de " +
+                    "format destinataire@fournisseur.extension");
+        }
         this.mail = mail;
     }
 
@@ -72,7 +92,23 @@ public class Societe {
         return telephone;
     }
 
-    public void setTelephone(String telephone) {
+    /**
+     * Setter téléphone
+     * @param telephone Le numéro de téléphone
+     */
+    public void setTelephone(String telephone) throws SocieteEntityException {
+        // Cas chaîne vide ou null
+        if(telephone == null || telephone.isEmpty()){
+            throw new SocieteEntityException("Le numéro de téléphone ne peut " +
+                    "être vide !");
+        }
+
+        // Cas regex non matché
+        if(!Patterns.PATTERN_TELEPHONE.matcher(telephone).matches()){
+            throw new SocieteEntityException("Le numéro de téléphone doit " +
+                    "comporter uniquement dix chiffres !");
+        }
+
         this.telephone = telephone;
     }
 
@@ -84,7 +120,16 @@ public class Societe {
         return adresse;
     }
 
-    public void setAdresse(Adresse adresse) {
+    /**
+     * Setter adresse
+     * @param adresse L'adresse
+     */
+    public void setAdresse(Adresse adresse) throws SocieteEntityException {
+        // Cas chaîne vide
+        if(adresse == null){
+            throw new SocieteEntityException("L'adresse ne peut être vide !");
+        }
+
         this.adresse = adresse;
     }
 
@@ -96,7 +141,17 @@ public class Societe {
         return raisonSociale;
     }
 
-    public void setRaisonSociale(String raisonSociale) {
+    /**
+     * Setter raison sociale
+     * @param raisonSociale La raison social, ou nom
+     */
+    public void setRaisonSociale(String raisonSociale) throws SocieteEntityException {
+        // Cas chaîne vide ou null
+        if(raisonSociale == null || raisonSociale.isEmpty()){
+            throw new SocieteEntityException("La raison sociale ne peut etre" +
+                    " vide !");
+        }
+
         this.raisonSociale = raisonSociale;
     }
 
@@ -108,7 +163,23 @@ public class Societe {
         return identifiant;
     }
 
-    public void setIdentifiant(int identifiant) {
+    /**
+     * Setter identifiant
+     * @param identifiant L'identifiant
+     */
+    public void setIdentifiant(int identifiant) throws SocieteEntityException {
+        // Cas nombre négatif
+        if(identifiant <= 0){
+            throw new SocieteEntityException("L'identifiant ne peut être " +
+                    "inférieur ou égal à 0 !");
+        }
+
+        // Cas Raison sociale déjà existante
+        if(!isRaisonSocialUnique()){
+            throw new SocieteEntityException("La raison sociale est déjà " +
+                    "utilisée !");
+        }
+
         this.identifiant = identifiant;
     }
 
@@ -118,14 +189,12 @@ public class Societe {
      */
     @Override
     public String toString() {
-        return "Societe{" +
-                "identifiant=" + identifiant +
-                ", raisonSociale='" + raisonSociale + '\'' +
-                ", adresse=" + adresse +
-                ", telephone='" + telephone + '\'' +
-                ", mail='" + mail + '\'' +
-                ", commentaires='" + commentaires + '\'' +
-                '}';
+        return "identifiant=" + getIdentifiant() +
+                ", raisonSociale='" + getRaisonSociale() + '\'' +
+                ", adresse=" + getAdresse() +
+                ", telephone='" + getTelephone() + '\'' +
+                ", mail='" + getMail() + '\'' +
+                ", commentaires='" + getCommentaires() + '\'';
     }
 
     /**
@@ -133,6 +202,6 @@ public class Societe {
      * @return Indication si la raison sociale est unique.
      */
     private boolean isRaisonSocialUnique(){
-        return false;
+        return true;
     }
 }
