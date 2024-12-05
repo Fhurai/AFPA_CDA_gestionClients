@@ -53,7 +53,7 @@ public final class Prospects {
         StringBuilder sb = new StringBuilder();
 
         for (Prospect p : prospects) {
-            sb.append(p.getRaisonSociale());
+            sb.append(p.toString()).append("\n");
         }
 
         return sb.toString();
