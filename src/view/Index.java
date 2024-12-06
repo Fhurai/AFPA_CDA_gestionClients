@@ -41,7 +41,7 @@ public class Index extends JFrame {
 
     private TypeSociete typeChoice;
     private TypeAction actionChoice;
-    private Societe editChoice;
+    private Societe editChoice = null;
 
     /**
      * Constructeur
@@ -132,7 +132,7 @@ public class Index extends JFrame {
         ActionPanel.setVisible(true);
 
         // Valorisation de la valeur globale du choix de type de société.
-        typeChoice = type;
+        this.typeChoice = type;
     }
 
     /**
@@ -142,11 +142,16 @@ public class Index extends JFrame {
      */
     private void choiceAction(@NotNull TypeAction type) {
 
+        // Valorisation de la valeur globale du choix de type d'action.
+        actionChoice = type;
+
         switch (type) {
             case TypeAction.CREATION:
                 // Création choisie
                 EditPanel.setVisible(false);
                 choiceEditLabel.setText("");
+                new Form(this.typeChoice, this.actionChoice).setVisible(true);
+                this.dispose();
                 break;
             case TypeAction.LISTE:
                 // Liste choisie
@@ -166,9 +171,6 @@ public class Index extends JFrame {
                 choiceEditLabel.setText("Quelle société supprimer ?");
                 break;
         }
-
-        // Valorisation de la valeur globale du choix de type d'action.
-        actionChoice = type;
     }
 
     /**
@@ -192,6 +194,7 @@ public class Index extends JFrame {
             });
         }
 
-        System.out.println(this.actionChoice.getName() + " " + this.typeChoice.getName() + " " + this.editChoice.getRaisonSociale());
+        new Form(this.typeChoice, this.actionChoice, this.editChoice).setVisible(true);
+        dispose();
     }
 }
