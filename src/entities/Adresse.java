@@ -161,7 +161,7 @@ public class Adresse {
      */
     @Override
     public String toString() {
-        return "{" +getNumeroRue() + " " + getNomRue() + ", " + getCodePostal() +
-                " " + getVille() + "}";
+        return getNumeroRue() + " " + getNomRue() + ", " + getCodePostal() +
+                " " + getVille();
     }
 }

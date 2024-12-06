@@ -1,7 +1,6 @@
 package view;
 
 import entities.*;
-import logs.LogManager;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -10,6 +9,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Objects;
+
+import static utilities.ViewsUtilities.quitApplication;
 
 /**
  * Fenêtre d'accueil sur l'application.
@@ -82,14 +83,14 @@ public class Index extends JFrame {
 
         // Gestion de l'évènement de fermeture de la fenêtre.
         WindowAdapter windowAdapter = new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
-                quitApplication();
+            public void windowClosing(@NotNull WindowEvent e) {
+                quitApplication((JFrame) e.getComponent());
             }
         };
 
         // Boutons et touche clavier pour fermer l'application.
-        quitButton.addActionListener(e -> quitApplication());
-        contentPane.registerKeyboardAction(e -> quitApplication(),
+        quitButton.addActionListener(e -> quitApplication(this));
+        contentPane.registerKeyboardAction(e -> quitApplication(this),
                 KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
         this.addWindowListener(windowAdapter);
 
@@ -105,15 +106,6 @@ public class Index extends JFrame {
 
         // Boutons sélection
         selectionnerButton.addActionListener(e -> choiceEdit());
-    }
-
-
-    /**
-     * Méthode pour quitter l'application
-     */
-    private void quitApplication() {
-        LogManager.stop();
-        dispose();
     }
 
     /**
@@ -160,6 +152,8 @@ public class Index extends JFrame {
                 // Liste choisie
                 EditPanel.setVisible(false);
                 choiceEditLabel.setText("");
+                new List(this.typeChoice).setVisible(true);
+                this.dispose();
                 break;
             case TypeAction.MODIFICATION:
                 // Modification choisie
