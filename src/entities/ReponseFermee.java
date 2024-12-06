@@ -13,7 +13,7 @@ public enum ReponseFermee {
     private final String value;
 
     /**
-     * Constructeur avec toutes les variables
+     * Constructeur réponse fermée
      * @param number Valeur numérique
      * @param value Valeur chaîne de caractères
      */

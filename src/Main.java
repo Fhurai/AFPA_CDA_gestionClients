@@ -1,5 +1,8 @@
-import entities.*;
+import entities.Clients;
+import entities.Prospects;
+import entities.SocieteEntityException;
 import logs.LogManager;
+import view.Index;
 
 import java.io.IOException;
 import java.util.logging.Level;
@@ -22,11 +25,10 @@ public class Main {
         } catch (SocieteEntityException e) {
             System.out.println(e.getMessage());
         } catch (Exception e) {
-            LogManager.logs.log(Level.INFO, e.getMessage());
+            LogManager.logs.log(Level.SEVERE, e.getMessage());
             System.exit(1);
         }
 
-        System.out.println(Clients.toClientsString());
-        System.out.println(Prospects.toProspectsString());
+        new Index().setVisible(true);
     }
 }
