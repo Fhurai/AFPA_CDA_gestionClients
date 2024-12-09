@@ -27,8 +27,8 @@ class ClientsTest {
         Client cac = null;
         try {
             Clients.populateClients();
-            cac = new Client("Centrale des " +
-                    "Artisans Coiffeurs", new Adresse("4", "rue du gravier", "57160", "Scy-chazelles"), "0387600600", "contact@cac.fr", "", 1448418, 100);
+            cac = new Client("Centrale des Artisans Coiffeurs", new Adresse(
+                    "4", "Rue du gravier", "57160", "Scy-chazelles"), "0387600600", "contact@cac.fr", "", 1448418, 100);
             assertTrue(Clients.toClientsAdd(cac));
         } catch (SocieteEntityException e) {
             fail(e.getMessage());

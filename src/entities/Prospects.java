@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 import static utilities.Formatters.FORMAT_DDMMYYYY;
 
@@ -26,6 +27,34 @@ public final class Prospects {
     }
 
     /**
+     * Méthode qui retourne le prospect lié à l'identifiant donné
+     * @param id Identifiant du prospect recherché
+     * @return Optional du prospect recherché
+     */
+    public static Optional<Prospect> get(int id) {
+        for (Prospect p : prospects) {
+            if(p.getIdentifiant() == id) {
+                return Optional.of(p);
+            }
+        }
+        return Optional.empty();
+    }
+
+    /**
+     * Méthode qui retourne le prospect lié à la raison sociale donnée.
+     * @param raisonSociale Raison sociale du prospect recherché
+     * @return Optional du prospect recherché
+     */
+    public static Optional<Prospect> getFromRaisonSociale(String raisonSociale) {
+        for (Prospect p : prospects) {
+            if(p.getRaisonSociale().equalsIgnoreCase(raisonSociale)) {
+                return Optional.of(p);
+            }
+        }
+        return Optional.empty();
+    }
+
+    /**
      * Méthode statique d'ajout d'un prospects à la liste des prospects
      *
      * @param prospect Prospect à ajouter à la liste
@@ -40,6 +69,8 @@ public final class Prospects {
         }
 
         sortProspects();
+
+        Prospects.compteurIdProspects++;
 
         return prospects.add(prospect);
     }

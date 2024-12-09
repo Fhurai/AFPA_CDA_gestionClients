@@ -1,6 +1,6 @@
 package view;
 
-import entities.TypeSociete;
+import entities.*;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -9,6 +9,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Optional;
 
 import static utilities.ViewsUtilities.*;
 
@@ -77,6 +78,9 @@ public class List extends JFrame {
         contentPane.registerKeyboardAction(e -> returnIndex(this),
                 KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
         this.addWindowListener(windowAdapter);
+
+        modificationButton.addActionListener(e -> selectEdit(TypeAction.MODIFICATION));
+        suppressionButton.addActionListener(e -> selectEdit(TypeAction.SUPPRESSION));
     }
 
     /**
@@ -102,5 +106,26 @@ public class List extends JFrame {
         };
 
         table1.setModel(modelTable);
+    }
+
+    private void selectEdit(TypeAction action){
+        int x = table1.getSelectedRow();
+
+        if(this.typeSociete == TypeSociete.CLIENT){
+            Optional<Client> c =
+                    Clients.get(Integer.parseInt(this.table1.getValueAt(x,0).toString()));
+
+            if(c.isPresent()){
+                new Form(this.typeSociete, action, c.get()).setVisible(true);
+                dispose();
+            }
+        }else if(this.typeSociete == TypeSociete.PROSPECT){
+            Optional<Prospect> p = Prospects.get(Integer.parseInt(this.table1.getValueAt(x,1).toString()));
+
+            if(p.isPresent()){
+                new Form(this.typeSociete, action, p.get()).setVisible(true);
+                dispose();
+            }
+        }
     }
 }

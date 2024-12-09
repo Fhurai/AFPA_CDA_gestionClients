@@ -9,6 +9,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Objects;
+import java.util.Optional;
 
 import static utilities.ViewsUtilities.quitApplication;
 
@@ -180,18 +181,12 @@ public class Index extends JFrame {
 
         if (typeChoice == TypeSociete.CLIENT) {
             // Le choix est un client
-            Clients.clients.forEach(client -> {
-                if (client.getRaisonSociale().equalsIgnoreCase(Objects.requireNonNull(selectionComboBox.getSelectedItem()).toString())) {
-                    editChoice = client;
-                }
-            });
+            Optional<Client> c = Clients.getFromRaisonSociale(Objects.requireNonNull(selectionComboBox.getSelectedItem()).toString());
+            c.ifPresent(client -> editChoice = client);
         } else if (typeChoice == TypeSociete.PROSPECT) {
             // Le choix est un prospect
-            Prospects.prospects.forEach(prospect -> {
-                if (prospect.getRaisonSociale().equalsIgnoreCase(Objects.requireNonNull(selectionComboBox.getSelectedItem()).toString())) {
-                    editChoice = prospect;
-                }
-            });
+            Optional<Prospect> p = Prospects.getFromRaisonSociale(Objects.requireNonNull(selectionComboBox.getSelectedItem()).toString());
+            p.ifPresent(prospect -> editChoice = prospect);
         }
 
         new Form(this.typeChoice, this.actionChoice, this.editChoice).setVisible(true);

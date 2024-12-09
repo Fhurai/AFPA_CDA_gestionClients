@@ -2,18 +2,23 @@ package view;
 
 import entities.*;
 import org.jetbrains.annotations.NotNull;
+import utilities.Formatters;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.time.LocalDate;
+import java.util.Objects;
 
 import static utilities.ViewsUtilities.quitApplication;
 import static utilities.ViewsUtilities.returnIndex;
 
 public class Form extends JFrame {
     private final Dimension windowSize = new Dimension(350, 800);
+    private final TypeSociete typeSociete;
+    private final TypeAction typeAction;
     private JPanel contentPane;
     private JPanel AppliNamePanel;
     private JLabel AppliNameLabel;
@@ -60,14 +65,11 @@ public class Form extends JFrame {
     private JPanel prospectInteressePanel;
     private JLabel prospectInteresseLabel;
     private JComboBox prospectInteresseComboBox;
-    private JPanel commentiresPanel;
+    private JPanel commentairesPanel;
     private JLabel commentairesLabel;
     private JTextArea commentairesTextArea;
     private JPanel boutonPanel;
     private JButton btnButton;
-
-    private TypeSociete typeSociete;
-    private TypeAction typeAction;
     private Client client = null;
     private Prospect prospect = null;
 
@@ -117,6 +119,9 @@ public class Form extends JFrame {
         } else if (typeSociete == TypeSociete.PROSPECT) {
             clientPanel.setVisible(false);
             prospectPanel.setVisible(true);
+            for (ReponseFermee rf : ReponseFermee.values()) {
+                this.prospectInteresseComboBox.addItem(rf.getValue());
+            }
         }
 
         if (this.typeAction == TypeAction.CREATION || this.typeAction == TypeAction.MODIFICATION) {
@@ -138,10 +143,33 @@ public class Form extends JFrame {
         }
 
         if (this.typeAction == TypeAction.MODIFICATION || this.typeAction == TypeAction.SUPPRESSION) {
-            this.identifiantTextfield.setText(String.valueOf(typeSociete == TypeSociete.CLIENT ? this.client.getIdentifiant() : this.prospect.getIdentifiant()));
+            this.identifiantTextfield.setText(String.valueOf(typeSociete == TypeSociete.CLIENT ?
+                    this.client.getIdentifiant() : this.prospect.getIdentifiant()));
             this.raisonTextfield.setText(typeSociete == TypeSociete.CLIENT ?
                     this.client.getRaisonSociale() : this.prospect.getRaisonSociale());
-            
+            this.numRueTextfield.setText(typeSociete == TypeSociete.CLIENT ?
+                    this.client.getAdresse().getNumeroRue() : this.prospect.getAdresse().getNumeroRue());
+            this.nomRueTextfield.setText(typeSociete == TypeSociete.CLIENT ?
+                    this.client.getAdresse().getNomRue() : this.prospect.getAdresse().getNomRue());
+            this.codePostalTextfield.setText(typeSociete == TypeSociete.CLIENT ?
+                    this.client.getAdresse().getCodePostal() : this.prospect.getAdresse().getCodePostal());
+            this.villeTextfield.setText(typeSociete == TypeSociete.CLIENT ?
+                    this.client.getAdresse().getVille() : this.prospect.getAdresse().getVille());
+            this.telephoneTextfield.setText(typeSociete == TypeSociete.CLIENT ?
+                    this.client.getTelephone() : this.prospect.getTelephone());
+            this.mailTextfield.setText(typeSociete == TypeSociete.CLIENT ?
+                    this.client.getMail() : this.prospect.getMail());
+            this.commentairesTextArea.setText(typeSociete == TypeSociete.CLIENT ?
+                    this.client.getCommentaires() : this.prospect.getCommentaires());
+
+            if (typeSociete == TypeSociete.CLIENT) {
+                this.chiffreAffaireTextfield.setText(String.valueOf(this.client.getChiffreAffaires()));
+                this.nbEmployesTextfield.setText(String.valueOf(this.client.getNbEmployes()));
+            } else {
+                this.dateProspectionTextfield.setText(this.prospect.getDateProspection().format(Formatters.FORMAT_DDMMYYYY));
+                this.prospectInteresseComboBox.setSelectedItem(this.prospect.getProspectInteresse());
+            }
+
         } else {
             this.identifiantTextfield.setText(String.valueOf(typeSociete == TypeSociete.CLIENT ? Clients.compteurIdClients : Prospects.compteurIdProspects));
         }
@@ -169,5 +197,112 @@ public class Form extends JFrame {
         contentPane.registerKeyboardAction(e -> returnIndex(this),
                 KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
         this.addWindowListener(windowAdapter);
+
+        btnButton.addActionListener(e -> {
+            try {
+                actionPerformed();
+            } catch (SocieteEntityException see) {
+                System.out.println(see.getMessage());
+            }
+        });
+    }
+
+
+    private void actionPerformed() throws SocieteEntityException {
+        switch (this.typeAction) {
+            case CREATION:
+                if (this.typeSociete == TypeSociete.CLIENT) {
+                    client = new Client(this.raisonTextfield.getText(),
+                            new Adresse(
+                                    this.numRueTextfield.getText(),
+                                    this.nomRueTextfield.getText(),
+                                    this.codePostalTextfield.getText(),
+                                    this.villeTextfield.getText()
+                            ),
+                            this.telephoneTextfield.getText(),
+                            this.mailTextfield.getText(),
+                            this.commentairesTextArea.getText(),
+                            Long.parseLong(this.chiffreAffaireTextfield.getText()),
+                            Integer.parseInt(this.nbEmployesTextfield.getText()));
+                    Clients.toClientsAdd(client);
+                    JOptionPane.showMessageDialog(this, "Client ajouté avec succès !");
+                } else if (this.typeSociete == TypeSociete.PROSPECT) {
+                    prospect = new Prospect(
+                            this.raisonTextfield.getText(),
+                            new Adresse(
+                                    this.numRueTextfield.getText(),
+                                    this.nomRueTextfield.getText(),
+                                    this.codePostalTextfield.getText(),
+                                    this.villeTextfield.getText()
+                            ),
+                            this.telephoneTextfield.getText(),
+                            this.mailTextfield.getText(),
+                            this.commentairesTextArea.getText(),
+                            LocalDate.parse(this.dateProspectionTextfield.getText(), Formatters.FORMAT_DDMMYYYY),
+                            (String) this.prospectInteresseComboBox.getSelectedItem());
+                    Prospects.toProspectsAdd(prospect);
+                    JOptionPane.showMessageDialog(this, "Prospect ajouté avec succès !");
+                }
+                break;
+            case MODIFICATION:
+                // Modification de tous les champs
+                // Save()
+                if (this.typeSociete == TypeSociete.CLIENT) {
+                    client.setRaisonSociale(this.raisonTextfield.getText());
+                    client.getAdresse().setNumeroRue(this.numRueTextfield.getText());
+                    client.getAdresse().setNomRue(this.nomRueTextfield.getText());
+                    client.getAdresse().setCodePostal(this.codePostalTextfield.getText());
+                    client.getAdresse().setVille(this.villeTextfield.getText());
+                    client.setTelephone(this.telephoneTextfield.getText());
+                    client.setMail(this.mailTextfield.getText());
+                    client.setCommentaires(this.commentairesTextArea.getText());
+                    client.setChiffreAffaires(Long.parseLong(this.chiffreAffaireTextfield.getText()));
+                    client.setNbEmployes(Integer.parseInt(this.nbEmployesTextfield.getText()));
+
+                    int index = Clients.clients.indexOf(client);
+                    Clients.clients.set(index, client);
+                    JOptionPane.showMessageDialog(this, "Client modifié " +
+                            "avec succès !");
+                } else if (this.typeSociete == TypeSociete.PROSPECT) {
+                    prospect.setRaisonSociale(this.raisonTextfield.getText());
+                    prospect.getAdresse().setNumeroRue(this.numRueTextfield.getText());
+                    prospect.getAdresse().setNomRue(this.nomRueTextfield.getText());
+                    prospect.getAdresse().setCodePostal(this.codePostalTextfield.getText());
+                    prospect.getAdresse().setVille(this.villeTextfield.getText());
+                    prospect.setTelephone(this.telephoneTextfield.getText());
+                    prospect.setMail(this.mailTextfield.getText());
+                    prospect.setCommentaires(this.commentairesTextArea.getText());
+                    prospect.setDateProspection(LocalDate.parse(this.dateProspectionTextfield.getText(), Formatters.FORMAT_DDMMYYYY));
+                    prospect.setProspectInteresse(Objects.requireNonNull(this.prospectInteresseComboBox.getSelectedItem()).toString());
+
+                    int index = Prospects.prospects.indexOf(prospect);
+                    Prospects.prospects.set(index, prospect);
+                    JOptionPane.showMessageDialog(this, "Prospect modifié " +
+                            "avec succès !");
+                }
+                break;
+            case SUPPRESSION:
+                int reponse = -1;
+                if (this.typeSociete == TypeSociete.CLIENT) {
+                    reponse = JOptionPane.showConfirmDialog(this, "Souhaitez" +
+                            " vous supprimer " + client.getRaisonSociale() + " ?");
+                    if (reponse == JOptionPane.OK_OPTION){
+                        Clients.clients.remove(client);
+                        JOptionPane.showMessageDialog(this, "Client supprimé " +
+                                "avec succès !");
+                    }
+                } else if (this.typeSociete == TypeSociete.PROSPECT) {
+                    reponse = JOptionPane.showConfirmDialog(this, "Souhaitez " +
+                            "vous supprimer " + prospect.getRaisonSociale() + " ?");
+                    if (reponse == JOptionPane.OK_OPTION){
+                        Prospects.prospects.remove(prospect);
+                        JOptionPane.showMessageDialog(this, "Prospect " +
+                                "supprimé avec succès !");
+                    }
+                }
+                    break;
+        }
+
+        returnIndex(this);
     }
 }

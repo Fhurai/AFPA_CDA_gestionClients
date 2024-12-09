@@ -30,7 +30,6 @@ public final class Prospect extends Societe {
         setProspectInteresse(prospectInteresse);
 
         setIdentifiant(Prospects.compteurIdProspects);
-        Prospects.compteurIdProspects++;
     }
 
     /**

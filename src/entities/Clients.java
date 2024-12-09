@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Classe de liste des clients
@@ -40,6 +41,34 @@ public final class Clients {
     }
 
     /**
+     * Méthode qui retourne le client lié à l'identifiant donné
+     * @param identifiant L'identifiant du client recherché
+     * @return Optional du client recherché
+     */
+    public static Optional<Client> get(int identifiant){
+        for(Client c : clients){
+            if(c.getIdentifiant() == identifiant){
+                return Optional.of(c);
+            }
+        }
+        return Optional.empty();
+    }
+
+    /**
+     * Méthode qui retourne le client lié à la raison sociale donnée.
+     * @param raisonSociale Raison sociale du client recherché
+     * @return Optional du client recherché
+     */
+    public static Optional<Client> getFromRaisonSociale(String raisonSociale){
+        for(Client c : clients){
+            if(c.getRaisonSociale().equalsIgnoreCase(raisonSociale)){
+                return Optional.of(c);
+            }
+        }
+        return Optional.empty();
+    }
+
+    /**
      * Méthode statique d'ajout d'un client à la liste des clients
      * @param client Client à ajouter à la liste
      * @return Indication si le client a bien été ajouté.
@@ -53,6 +82,8 @@ public final class Clients {
         }
 
         sortClients();
+
+        Clients.compteurIdClients++;
 
         return clients.add(client);
     }
@@ -81,8 +112,7 @@ public final class Clients {
             toClientsAdd(new Client("Happiso", new Adresse("25", "rue de la Taye", "57130", "Jussy"), "0387758575", "contact@happiso.fr", "", 4813, 6));
             toClientsAdd(new Client("OGMI", new Adresse("3", "rue des Michottes", "54000", "Nancy"), "0383375640", "ogmi@ogmi.fr", "", 50000, 1));
         } catch (SocieteEntityException e) {
-            throw new SocieteEntityException("La liste des clients n'a pas pu" +
-                    " être remplie !");
+            throw new SocieteEntityException("La liste des clients n'a pas pu être remplie !");
         }
 
     }
