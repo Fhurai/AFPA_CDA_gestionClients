@@ -9,6 +9,7 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Scanner;
 import java.util.logging.Level;
 
@@ -45,6 +46,7 @@ public class Files {
 
     /**
      * Méthode de chargement des données de la BDD.
+     *
      * @throws SocieteUtilitiesException Exception sur les utilitaires.
      */
     public static void dbLoad() throws SocieteUtilitiesException {
@@ -72,14 +74,32 @@ public class Files {
                                 // Création du client depuis les données de
                                 // la bdd et ajout à la liste.
                                 Client c =
-                                        new Client(Integer.parseInt(line.split(";")[0]), line.split(";")[1], new Adresse(line.split(";")[2], line.split(";")[3], line.split(";")[4], line.split(";")[5]), line.split(";")[6], line.split(";")[7], line.split(";")[8], Long.parseLong(line.split(";")[9]), Integer.parseInt(line.split(";")[10]));
+                                        new Client(Integer.parseInt(line.split(";")[0]),
+                                                line.split(";")[1],
+                                                new Adresse(line.split(";")[2],
+                                                        line.split(";")[3],
+                                                        line.split(";")[4],
+                                                        line.split(";")[5]),
+                                                line.split(";")[6],
+                                                line.split(";")[7],
+                                                line.split(";")[8],
+                                                Long.parseLong(line.split(";")[9]),
+                                                Integer.parseInt(line.split(";")[10]));
                                 Clients.clients.add(c);
 
                             } catch (SocieteEntityException e) {
                                 LogManager.logs.log(Level.SEVERE, e.getMessage());
 
                                 throw new SocieteUtilitiesException("Erreur " +
-                                        "lors de la charge des données");
+                                        "lors de la charge des données des " +
+                                        "clients");
+                            }catch(Exception e){
+                                LogManager.logs.log(Level.SEVERE, e.getMessage());
+                                LogManager.logs.log(Level.WARNING, Arrays.toString(line.split(";")));
+                                System.out.println("Erreur " +
+                                        "lors de la charge des données des " +
+                                        "clients");
+                                System.exit(1);
                             }
                         }
                     } else {
@@ -92,12 +112,30 @@ public class Files {
                             try {
                                 // Création du prospect depuis les données de
                                 // la bdd et ajout à la liste.
-                                Prospects.prospects.add(new Prospect(Integer.parseInt(line.split(";")[0]), line.split(";")[1], new Adresse(line.split(";")[2], line.split(";")[3], line.split(";")[4], line.split(";")[5]), line.split(";")[6], line.split(";")[7], line.split(";")[8], LocalDate.parse(line.split(";")[9], Formatters.FORMAT_DDMMYYYY), line.split(";")[10]));
-                            } catch (SocieteEntityException e) {
+                                Prospects.prospects.add(new Prospect(Integer.parseInt(line.split(";")[0]),
+                                        line.split(";")[1],
+                                        new Adresse(line.split(";")[2],
+                                                line.split(";")[3],
+                                                line.split(";")[4],
+                                                line.split(";")[5]),
+                                        line.split(";")[6],
+                                        line.split(";")[7],
+                                        line.split(";")[8],
+                                        LocalDate.parse(line.split(";")[9],
+                                                Formatters.FORMAT_DDMMYYYY), line.split(";")[10]));
+                            } catch (SocieteEntityException | NumberFormatException e) {
                                 LogManager.logs.log(Level.SEVERE, e.getMessage());
 
                                 throw new SocieteUtilitiesException("Erreur " +
-                                        "lors de la charge des données");
+                                        "lors de la charge des données des " +
+                                        "prospects");
+                            }catch(Exception e){
+                                LogManager.logs.log(Level.SEVERE, e.getMessage());
+                                LogManager.logs.log(Level.WARNING, Arrays.toString(line.split(";")));
+                                System.out.println("Erreur " +
+                                        "lors de la charge des données des " +
+                                        "prospects");
+                                System.exit(1);
                             }
                         }
                     }
@@ -113,6 +151,7 @@ public class Files {
 
     /**
      * Méthode de sauvegarde d'un type de société.
+     *
      * @param typeSociete Le type de société à sauvegarder.
      * @throws SocieteUtilitiesException L'exception sur les utilitaires.
      */
@@ -194,8 +233,9 @@ public class Files {
 
     /**
      * Méthode d'écriture d'une ligne d'enregistrement dans les fichiers bdd
+     *
      * @param societe La société à écrire
-     * @param fw L'écrivain du fichier
+     * @param fw      L'écrivain du fichier
      * @throws SocieteUtilitiesException L'exception sur les utilitaires.
      */
     private static void dbWriteLine(Societe societe, FileWriter fw) throws SocieteUtilitiesException {
