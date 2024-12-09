@@ -22,7 +22,8 @@ public class Adresse {
      * @throws SocieteEntityException Lance une exception si une des variables
      * présente un problème
      */
-    public Adresse(String numeroRue, String nomRue, String codePostal, String ville) throws SocieteEntityException {
+    public Adresse(String numeroRue, String nomRue, String codePostal, String ville)
+            throws SocieteEntityException {
         setNumeroRue(numeroRue);
         setNomRue(nomRue);
         setCodePostal(codePostal);

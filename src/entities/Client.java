@@ -1,5 +1,7 @@
 package entities;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Classe Client
  */
@@ -8,6 +10,23 @@ public final class Client extends Societe {
     // Variables d'instance
     private long chiffreAffaires;
     private int nbEmployes;
+
+    /**
+     * Constructeur avec toutes les variables
+     * @param identifiant Identifiant
+     * @param raisonSociale La raison sociale, ou nom
+     * @param adresse Adresse
+     * @param telephone Le numéro de téléphone
+     * @param mail L'adresse mail
+     * @param commentaires Les commentaires
+     * @param chiffreAffaires Le chifffre d'affaire
+     * @param nbEmployes Le nombre d'employés
+     */
+    public Client(int identifiant, String raisonSociale, Adresse adresse, String telephone, String mail, String commentaires, long chiffreAffaires, int nbEmployes) throws SocieteEntityException {
+        super(identifiant, raisonSociale, adresse, telephone, mail, commentaires);
+        setChiffreAffaires(chiffreAffaires);
+        setNbEmployes(nbEmployes);
+    }
 
     /**
      * Constructeur avec toutes les variables
@@ -83,7 +102,7 @@ public final class Client extends Societe {
      * @return le client en chaîne de caractères.
      */
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         return super.toString() +
                 " chiffreAffaires=" + getChiffreAffaires() +
                 ", nbEmployes=" + getNbEmployes();

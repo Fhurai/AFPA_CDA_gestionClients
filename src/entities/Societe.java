@@ -17,6 +17,24 @@ public class Societe {
 
     /**
      * Constructeur avec toutes les variables
+     * @param identifiant Identifiant
+     * @param raisonSociale La raison sociale, ou nom
+     * @param adresse Adresse
+     * @param telephone Le numéro de téléphone
+     * @param mail L'adresse mail
+     * @param commentaires Les commentaires
+     */
+    public Societe(int identifiant, String raisonSociale, Adresse adresse, String telephone, String mail, String commentaires) throws SocieteEntityException {
+        this.identifiant = identifiant;
+        setRaisonSociale(raisonSociale);
+        setAdresse(adresse);
+        setTelephone(telephone);
+        setMail(mail);
+        setCommentaires(commentaires);
+    }
+
+    /**
+     * Constructeur avec toutes les variables sauf l'identifiant
      * @param raisonSociale La raison sociale, ou nom
      * @param adresse Adresse
      * @param telephone Le numéro de téléphone
@@ -143,7 +161,7 @@ public class Societe {
 
     /**
      * Setter raison sociale
-     * @param raisonSociale La raison social, ou nom
+     * @param raisonSociale La raison sociale, ou nom
      */
     public void setRaisonSociale(String raisonSociale) throws SocieteEntityException {
         // Cas chaîne vide ou null
@@ -152,6 +170,19 @@ public class Societe {
                     " vide !");
         }
 
+        for(Client c : Clients.clients){
+            if(raisonSociale.equals(c.getRaisonSociale()) && this.identifiant != c.getIdentifiant()){
+                throw new SocieteEntityException("La raison sociale donnée " +
+                        "existe déjà en base de données.");
+            }
+        }
+
+        for(Prospect p : Prospects.prospects){
+            if(raisonSociale.equals(p.getRaisonSociale()) && this.identifiant != p.getIdentifiant()){
+                throw new SocieteEntityException("La raison sociale donnée " +
+                        "existe déjà en base de données.");
+            }
+        }
         this.raisonSociale = raisonSociale;
     }
 
@@ -174,12 +205,6 @@ public class Societe {
                     "inférieur ou égal à 0 !");
         }
 
-        // Cas Raison sociale déjà existante
-        if(!isRaisonSocialUnique()){
-            throw new SocieteEntityException("La raison sociale est déjà " +
-                    "utilisée !");
-        }
-
         this.identifiant = identifiant;
     }
 
@@ -195,13 +220,5 @@ public class Societe {
                 ", telephone='" + getTelephone() + '\'' +
                 ", mail='" + getMail() + '\'' +
                 ", commentaires='" + getCommentaires() + '\'';
-    }
-
-    /**
-     * Indique si la raison sociale est unique ou non
-     * @return Indication si la raison sociale est unique.
-     */
-    private boolean isRaisonSocialUnique(){
-        return true;
     }
 }

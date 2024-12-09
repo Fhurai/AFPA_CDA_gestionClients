@@ -1,5 +1,6 @@
 package entities;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EmptySource;
@@ -9,24 +10,31 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Classe de test sur les instances de société.
+ */
 class SocieteTest {
 
     static Societe societe;
 
+    @BeforeAll
+    static void setUpBeforeClass() {
+        try {
+            Clients.populateClients();
+        } catch (SocieteEntityException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
     @BeforeEach
     void setUp() {
         societe = new Societe();
-        // TODO : Remplir la liste des clients et des prospects avec des
-        //  sociétés.
     }
 
     @ParameterizedTest
     @NullSource
     void setCommentairesInvalid(String commentaire) {
-        assertThrows(SocieteEntityException.class,
-                () -> {
-                    societe.setCommentaires(commentaire);
-                });
+        assertThrows(SocieteEntityException.class,() -> {societe.setCommentaires(commentaire);});
     }
 
     @ParameterizedTest
@@ -70,9 +78,9 @@ class SocieteTest {
 
     @ParameterizedTest
     @NullAndEmptySource
+    @ValueSource(strings = {"Efluid SAS"})
     void setRaisonSocialeInvalid(String raisonSociale) {
         assertThrows(SocieteEntityException.class, () -> societe.setRaisonSociale(raisonSociale));
-        // TODO : Vérifier raison sociale déjà existante
     }
 
     @ParameterizedTest

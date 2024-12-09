@@ -31,7 +31,7 @@ public class Index extends JFrame {
     private JButton listeButton;
     private JButton creationButton;
     private JButton selectionnerButton;
-    private JComboBox selectionComboBox;
+    private JComboBox<String> selectionComboBox;
     private JPanel TypePanel;
     private JPanel ActionPanel;
     private JPanel EditPanel;
@@ -48,6 +48,7 @@ public class Index extends JFrame {
      * Constructeur
      */
     public Index() {
+        // Initialisation de la vue et de ses écouteurs d'évènements.
         init();
         setListeners();
     }
@@ -147,25 +148,31 @@ public class Index extends JFrame {
         actionChoice = type;
 
         switch (type) {
+
             case TypeAction.CREATION:
                 // Création choisie
                 EditPanel.setVisible(false);
                 choiceEditLabel.setText("");
+
                 new Form(this.typeChoice, this.actionChoice).setVisible(true);
                 this.dispose();
                 break;
+
             case TypeAction.LISTE:
                 // Liste choisie
                 EditPanel.setVisible(false);
                 choiceEditLabel.setText("");
+
                 new List(this.typeChoice).setVisible(true);
                 this.dispose();
                 break;
+
             case TypeAction.MODIFICATION:
                 // Modification choisie
                 EditPanel.setVisible(true);
                 choiceEditLabel.setText("Quelle société modifier ?");
                 break;
+
             case TypeAction.SUPPRESSION:
                 // Suppression choisie
                 EditPanel.setVisible(true);

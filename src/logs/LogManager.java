@@ -6,8 +6,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.nio.file.Paths;
-import java.nio.file.Files;
 
 /**
  * Classe du gestionnaire de logs.

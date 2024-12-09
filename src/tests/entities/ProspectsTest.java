@@ -8,6 +8,9 @@ import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.*;
 import static utilities.Formatters.FORMAT_DDMMYYYY;
 
+/**
+ * Classe de test sur la liste des prospects.
+ */
 class ProspectsTest {
 
     @BeforeEach

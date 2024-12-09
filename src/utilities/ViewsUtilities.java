@@ -9,6 +9,9 @@ import view.Index;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
+/**
+ * Classe des utilitaires sur les vues.
+ */
 public class ViewsUtilities {
 
     /**
@@ -31,7 +34,7 @@ public class ViewsUtilities {
     /**
      * Méthode qui prépare le modèle de table en fonction de l'entête de
      * table fournie.
-     * @param entete L'entête fournie.
+     * @param entete L'entête fourni.
      * @return Le modèle de table préparé.
      */
     public static @NotNull DefaultTableModel getModelTable(String[] entete){

@@ -1,12 +1,13 @@
 package entities;
 
+import logs.LogManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
 
 import static utilities.Formatters.FORMAT_DDMMYYYY;
 
@@ -32,11 +33,15 @@ public final class Prospects {
      * @return Optional du prospect recherché
      */
     public static Optional<Prospect> get(int id) {
+        // Parcours des clients existant et retourne le prospect qui a
+        // l'identifiant donné
         for (Prospect p : prospects) {
             if(p.getIdentifiant() == id) {
                 return Optional.of(p);
             }
         }
+
+        // Aucun prospect existant trouvé, retourne un optional vide.
         return Optional.empty();
     }
 
@@ -46,48 +51,39 @@ public final class Prospects {
      * @return Optional du prospect recherché
      */
     public static Optional<Prospect> getFromRaisonSociale(String raisonSociale) {
+        // Parcours des clients existant et retourne le prospect qui a
+        // la raison sociale donnée.
         for (Prospect p : prospects) {
             if(p.getRaisonSociale().equalsIgnoreCase(raisonSociale)) {
                 return Optional.of(p);
             }
         }
+
+        // Aucun prospect existant trouvé, retourne un optional vide.
         return Optional.empty();
     }
 
     /**
-     * Méthode statique d'ajout d'un prospects à la liste des prospects
+     * Méthode statique d'ajout d'un prospect à la liste des prospects
      *
      * @param prospect Prospect à ajouter à la liste
      * @return Indication si le prospect a bien été ajouté.
      */
     public static boolean toProspectsAdd(Prospect prospect) {
-        List<String> raisonsSociales =
-                prospects.stream().map(Societe::getRaisonSociale).toList();
-
-        if (prospects.contains(prospect) || prospect == null || raisonsSociales.contains(prospect.getRaisonSociale())) {
+        // Si prospect existe déjà en base ou il est nul
+        if (prospects.contains(prospect) || prospect == null) {
             return false;
         }
 
+        // Tri des prospect
         sortProspects();
 
+        // Incrémentation du compteur ID apres l'insertion dans la liste qui
+        // sert de bdd.
         Prospects.compteurIdProspects++;
 
+        // Retourne si la liste a bien ajouté le prospect.
         return prospects.add(prospect);
-    }
-
-    /**
-     * Méthode pour convertir la liste des prospects en chaîne de caractères.
-     *
-     * @return La liste des prospects en chaîne de caractères.
-     */
-    public static @NotNull String toProspectsString() {
-        StringBuilder sb = new StringBuilder();
-
-        for (Prospect p : prospects) {
-            sb.append(p.toString()).append("\n");
-        }
-
-        return sb.toString();
     }
 
     /**
@@ -96,19 +92,24 @@ public final class Prospects {
      */
     public static void populateProspects() throws SocieteEntityException {
         try {
+            // Ajout CGI
             toProspectsAdd(new Prospect("CGI", new Adresse("28", "Boulevard " +
                     "Albert 1er", "54000", "NANCY"), "0388553370", "contact" +
                     "@cgi.com", "", LocalDate.parse("15/11/2024", FORMAT_DDMMYYYY),
                     ReponseFermee.NON.getValue()));
 
+            // Ajout ATOS
             toProspectsAdd(new Prospect("ATOS", new Adresse("80", "QUAI " +
                     "VOLTAIRE", "95870", "BEZONS"), "0173260000", "contact" +
                     "@atos.fr", "", LocalDate.parse("28/05/2024", FORMAT_DDMMYYYY), ReponseFermee.NON.getValue()));
 
+            // Ajout OGMI
             toProspectsAdd(new Prospect("Expectra", new Adresse("276",
                     "AVENUE DU PRESIDENT WILSON", "93210", "SAINT-DENIS"),
                     "0387172390", "contact@expectra.fr", "", LocalDate.parse("10/10/2024", FORMAT_DDMMYYYY), ReponseFermee.OUI.getValue()));
         } catch (SocieteEntityException e) {
+            LogManager.logs.log(Level.SEVERE, e.getMessage());
+
             throw new SocieteEntityException("La liste des prospects n'a pas " +
                     "pu être remplie !");
         }

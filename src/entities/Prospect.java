@@ -16,6 +16,7 @@ public final class Prospect extends Societe {
 
     /**
      * Constructeur avec toutes les variables
+     * @param identifiant Identifiant
      * @param raisonSociale La raison sociale, ou nom
      * @param adresse Adresse
      * @param telephone Le numéro de téléphone
@@ -24,7 +25,27 @@ public final class Prospect extends Societe {
      * @param dateProspection La date de prospection
      * @param prospectInteresse Indication si le prospect est intéressé ou non
      */
-    public Prospect(String raisonSociale, Adresse adresse, String telephone, String mail, String commentaires, LocalDate dateProspection, String prospectInteresse) throws SocieteEntityException {
+    public Prospect(int identifiant, String raisonSociale, Adresse adresse,
+                    String telephone, String mail, String commentaires, LocalDate dateProspection,
+                    String prospectInteresse) throws SocieteEntityException {
+        super(identifiant, raisonSociale, adresse, telephone, mail, commentaires);
+        this.dateProspection = dateProspection;
+        this.prospectInteresse = prospectInteresse;
+    }
+
+    /**
+     * Constructeur avec toutes les variables
+     * @param raisonSociale La raison sociale, ou nom
+     * @param adresse Adresse
+     * @param telephone Le numéro de téléphone
+     * @param mail L'adresse mail
+     * @param commentaires Les commentaires
+     * @param dateProspection La date de prospection
+     * @param prospectInteresse Indication si le prospect est intéressé ou non
+     */
+    public Prospect(String raisonSociale, Adresse adresse, String telephone,
+                    String mail, String commentaires, LocalDate dateProspection,
+                    String prospectInteresse) throws SocieteEntityException {
         super(raisonSociale, adresse, telephone, mail, commentaires);
         setDateProspection(dateProspection);
         setProspectInteresse(prospectInteresse);

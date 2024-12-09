@@ -6,6 +6,9 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Classe de test sur la liste des clients.
+ */
 class ClientsTest {
 
     @Test

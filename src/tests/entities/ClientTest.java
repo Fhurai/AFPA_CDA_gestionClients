@@ -6,6 +6,9 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Classe de test sur les instances de client.
+ */
 class ClientTest {
 
     static Client client;

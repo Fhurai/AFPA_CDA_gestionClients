@@ -5,6 +5,7 @@ out/
 javadoc/
 !**/logs/
 .idea/
+!**/save
 
 ### Eclipse ###
 .apt_generated
