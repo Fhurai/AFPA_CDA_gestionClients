@@ -3,9 +3,7 @@ out/
 !**/src/main/**/out/
 !**/src/test/**/out/
 javadoc/
-!**/logs/
 .idea/
-!**/save
 
 ### Eclipse ###
 .apt_generated
