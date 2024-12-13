@@ -276,18 +276,23 @@ public class Form extends JFrame {
 
                     // Création du client et ajout de celui-ci à la liste des
                     // clients en mémoire.
-                    client = new Client(this.raisonTextfield.getText(),
-                            new Adresse(
-                                    this.numRueTextfield.getText(),
-                                    this.nomRueTextfield.getText(),
-                                    this.codePostalTextfield.getText(),
-                                    this.villeTextfield.getText()
-                            ),
-                            this.telephoneTextfield.getText(),
-                            this.mailTextfield.getText(),
-                            this.commentairesTextArea.getText(),
-                            Long.parseLong(this.chiffreAffaireTextfield.getText()),
-                            Integer.parseInt(this.nbEmployesTextfield.getText()));
+                    try{
+                        client = new Client(this.raisonTextfield.getText(),
+                                new Adresse(
+                                        this.numRueTextfield.getText(),
+                                        this.nomRueTextfield.getText(),
+                                        this.codePostalTextfield.getText(),
+                                        this.villeTextfield.getText()
+                                ),
+                                this.telephoneTextfield.getText(),
+                                this.mailTextfield.getText(),
+                                this.commentairesTextArea.getText(),
+                                Long.parseLong(this.chiffreAffaireTextfield.getText()),
+                                Integer.parseInt(this.nbEmployesTextfield.getText()));
+                    }catch(NumberFormatException nfe){
+                        throw new SocieteEntityException("Ciffre d'affaires " +
+                                "et nombre d'employés ne peuvent être nuls !");
+                    }
                     Clients.toClientsAdd(client);
 
                     JOptionPane.showMessageDialog(this, "Client ajouté avec succès !");
