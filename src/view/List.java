@@ -137,30 +137,32 @@ public class List extends JFrame {
         // Récupération de l'index de la ligne sélectionnée.
         int x = table1.getSelectedRow();
 
-        if(this.typeSociete == TypeSociete.CLIENT){
-            // Si la liste est pour des clients
+        if(x != -1){
+            if(this.typeSociete == TypeSociete.CLIENT){
+                // Si la liste est pour des clients
 
-            // Récupération du client
-            Optional<Client> c =
-                    Clients.get(Integer.parseInt(this.table1.getValueAt(x,0).toString()));
+                // Récupération du client
+                Optional<Client> c =
+                        Clients.get(Integer.parseInt(this.table1.getValueAt(x,0).toString()));
 
-            if(c.isPresent()){
-                // Le client existe, le formulaire est à ouvrir avec l'action
-                // voulue
-                new Form(this.typeSociete, action, c.get()).setVisible(true);
-                dispose();
-            }
-        }else if(this.typeSociete == TypeSociete.PROSPECT){
-            // Si la liste est pour des prospects
+                if(c.isPresent()){
+                    // Le client existe, le formulaire est à ouvrir avec l'action
+                    // voulue
+                    new Form(this.typeSociete, action, c.get()).setVisible(true);
+                    dispose();
+                }
+            }else if(this.typeSociete == TypeSociete.PROSPECT){
+                // Si la liste est pour des prospects
 
-            // Récupération du prospect
-            Optional<Prospect> p = Prospects.get(Integer.parseInt(this.table1.getValueAt(x,1).toString()));
+                // Récupération du prospect
+                Optional<Prospect> p = Prospects.get(Integer.parseInt(this.table1.getValueAt(x,1).toString()));
 
-            if(p.isPresent()){
-                // Le prospect existe, le formulaire est à ouvrir avec l'action
-                // voulue
-                new Form(this.typeSociete, action, p.get()).setVisible(true);
-                dispose();
+                if(p.isPresent()){
+                    // Le prospect existe, le formulaire est à ouvrir avec l'action
+                    // voulue
+                    new Form(this.typeSociete, action, p.get()).setVisible(true);
+                    dispose();
+                }
             }
         }
     }
