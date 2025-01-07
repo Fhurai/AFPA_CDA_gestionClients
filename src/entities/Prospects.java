@@ -17,8 +17,8 @@ import static utilities.Formatters.FORMAT_DDMMYYYY;
 public final class Prospects {
 
     // Variables de classe
-    public static ArrayList<Prospect> prospects = new ArrayList<>();
-    public static int compteurIdProspects = 1;
+    private static ArrayList<Prospect> prospects = new ArrayList<>();
+    private static int compteurIdProspects = 1;
 
     /**
      * Méthode statique de tri des prospects
@@ -43,6 +43,30 @@ public final class Prospects {
 
         // Aucun prospect existant trouvé, retourne un optional vide.
         return Optional.empty();
+    }
+
+    /**
+     * Méthode qui retourne la liste des prospects.
+     * @return Liste des prospects.
+     */
+    public static ArrayList<Prospect> getProspects() {
+        return prospects;
+    }
+
+    /**
+     * Méthode qui retourne le compteur de prospects.
+     * @return Le compteur de prospects.
+     */
+    public static int getCompteurIdProspects() {
+        return compteurIdProspects;
+    }
+
+    /**
+     * Setter Compteur prospects
+     * @param compteur Nouveau compte
+     */
+    public static void setCompteurIdProspects(int compteur) {
+        compteurIdProspects = compteur;
     }
 
     /**

@@ -1,6 +1,7 @@
 package view;
 
 import entities.*;
+import logs.LogManager;
 import org.jetbrains.annotations.NotNull;
 import utilities.Files;
 import utilities.Formatters;
@@ -11,8 +12,10 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.Objects;
+import java.util.logging.Level;
 
 import static utilities.ViewsUtilities.quitApplication;
 import static utilities.ViewsUtilities.returnIndex;
@@ -110,14 +113,12 @@ public class Form extends JFrame {
     /**
      * Constructeur avec toutes les variables nécessaires à la création
      * @param typeSociete Le type de société (CLIENT ou PROSPECT)
-     * @param typeAction Le type d'action (CREATION, LISTE, MODIFICATION ou
-     *                   SUPPRESSION).
      */
-    public Form(TypeSociete typeSociete, TypeAction typeAction) {
+    public Form(TypeSociete typeSociete) {
         // Valorisation des variables de la vue pour le type de société et
         // d'action.
         this.typeSociete = typeSociete;
-        this.typeAction = typeAction;
+        this.typeAction = TypeAction.CREATION;
 
         // Initialisation de la vue et de ses écouteurs d'évènements.
         init();
@@ -222,7 +223,7 @@ public class Form extends JFrame {
             // Si le formulaire est pour de la création, valorisation
             // uniquement pour le champ identifiant.
 
-            this.identifiantTextfield.setText(String.valueOf(typeSociete == TypeSociete.CLIENT ? Clients.compteurIdClients : Prospects.compteurIdProspects));
+            this.identifiantTextfield.setText(String.valueOf(typeSociete == TypeSociete.CLIENT ? Clients.getCompteurIdClient() : Prospects.getCompteurIdProspects()));
         }
     }
 
@@ -250,33 +251,26 @@ public class Form extends JFrame {
         this.addWindowListener(windowAdapter);
 
         // Bouton pour les actions suite au formulaire.
-        btnButton.addActionListener(e -> {
-            try {
-                actionPerformed();
-            } catch (SocieteEntityException see) {
-                JOptionPane.showMessageDialog(null, see.getMessage());
-            }
-        });
+        btnButton.addActionListener(e -> actionPerformed());
     }
 
     /**
      * Méthode d'action suite au formulaire.
-     * @throws SocieteEntityException Exception des entités.
      */
-    private void actionPerformed() throws SocieteEntityException {
+    private void actionPerformed() {
 
-        switch (this.typeAction) {
-            // Cas d'utilisation du formulaire.
+        try{
+            switch (this.typeAction) {
+                // Cas d'utilisation du formulaire.
 
-            case CREATION:
-                // Cas de la création.
+                case CREATION:
+                    // Cas de la création.
 
-                if (this.typeSociete == TypeSociete.CLIENT) {
-                    // Si le formulaire est pour un client.
+                    if (this.typeSociete == TypeSociete.CLIENT) {
+                        // Si le formulaire est pour un client.
 
-                    // Création du client et ajout de celui-ci à la liste des
-                    // clients en mémoire.
-                    try{
+                        // Création du client et ajout de celui-ci à la liste des
+                        // clients en mémoire.
                         client = new Client(this.raisonTextfield.getText(),
                                 new Adresse(
                                         this.numRueTextfield.getText(),
@@ -289,122 +283,127 @@ public class Form extends JFrame {
                                 this.commentairesTextArea.getText(),
                                 Long.parseLong(this.chiffreAffaireTextfield.getText()),
                                 Integer.parseInt(this.nbEmployesTextfield.getText()));
-                    }catch(NumberFormatException nfe){
-                        throw new SocieteEntityException("Ciffre d'affaires " +
-                                "et nombre d'employés ne peuvent être nuls !");
+                        Clients.toClientsAdd(client);
+
+                        JOptionPane.showMessageDialog(this, "Client ajouté avec succès !");
+                    } else if (this.typeSociete == TypeSociete.PROSPECT) {
+                        // Si le formulaire est pour un client.
+
+                        // Création du prospect et ajout de celui-ci à la liste des
+                        // prospects en mémoire.
+                        prospect = new Prospect(
+                                this.raisonTextfield.getText(),
+                                new Adresse(
+                                        this.numRueTextfield.getText(),
+                                        this.nomRueTextfield.getText(),
+                                        this.codePostalTextfield.getText(),
+                                        this.villeTextfield.getText()
+                                ),
+                                this.telephoneTextfield.getText(),
+                                this.mailTextfield.getText(),
+                                this.commentairesTextArea.getText(),
+                                LocalDate.parse(this.dateProspectionTextfield.getText(), Formatters.FORMAT_DDMMYYYY),
+                                (String) this.prospectInteresseComboBox.getSelectedItem());
+                        Prospects.toProspectsAdd(prospect);
+
+                        JOptionPane.showMessageDialog(this, "Prospect ajouté avec succès !");
                     }
-                    Clients.toClientsAdd(client);
+                    break;
+                case MODIFICATION:
+                    // Cas de la modification.
 
-                    JOptionPane.showMessageDialog(this, "Client ajouté avec succès !");
-                } else if (this.typeSociete == TypeSociete.PROSPECT) {
-                    // Si le formulaire est pour un client.
+                    if (this.typeSociete == TypeSociete.CLIENT) {
+                        // Remplissage du client avec les données du formulaire
+                        client.setRaisonSociale(this.raisonTextfield.getText());
+                        client.getAdresse().setNumeroRue(this.numRueTextfield.getText());
+                        client.getAdresse().setNomRue(this.nomRueTextfield.getText());
+                        client.getAdresse().setCodePostal(this.codePostalTextfield.getText());
+                        client.getAdresse().setVille(this.villeTextfield.getText());
+                        client.setTelephone(this.telephoneTextfield.getText());
+                        client.setMail(this.mailTextfield.getText());
+                        client.setCommentaires(this.commentairesTextArea.getText());
+                        client.setChiffreAffaires(Long.parseLong(this.chiffreAffaireTextfield.getText()));
+                        client.setNbEmployes(Integer.parseInt(this.nbEmployesTextfield.getText()));
 
-                    // Création du prospect et ajout de celui-ci à la liste des
-                    // prospects en mémoire.
-                    prospect = new Prospect(
-                            this.raisonTextfield.getText(),
-                            new Adresse(
-                                    this.numRueTextfield.getText(),
-                                    this.nomRueTextfield.getText(),
-                                    this.codePostalTextfield.getText(),
-                                    this.villeTextfield.getText()
-                            ),
-                            this.telephoneTextfield.getText(),
-                            this.mailTextfield.getText(),
-                            this.commentairesTextArea.getText(),
-                            LocalDate.parse(this.dateProspectionTextfield.getText(), Formatters.FORMAT_DDMMYYYY),
-                            (String) this.prospectInteresseComboBox.getSelectedItem());
-                    Prospects.toProspectsAdd(prospect);
+                        // Recherche du client modifié parmi la liste des clients
+                        // et modification de celui-c.
+                        int index = Clients.getClients().indexOf(client);
+                        Clients.getClients().set(index, client);
+                        JOptionPane.showMessageDialog(this, "Client modifié " +
+                                "avec succès !");
+                    } else if (this.typeSociete == TypeSociete.PROSPECT) {
+                        // Remplissage du prospect avec les données du formulaire
+                        prospect.setRaisonSociale(this.raisonTextfield.getText());
+                        prospect.getAdresse().setNumeroRue(this.numRueTextfield.getText());
+                        prospect.getAdresse().setNomRue(this.nomRueTextfield.getText());
+                        prospect.getAdresse().setCodePostal(this.codePostalTextfield.getText());
+                        prospect.getAdresse().setVille(this.villeTextfield.getText());
+                        prospect.setTelephone(this.telephoneTextfield.getText());
+                        prospect.setMail(this.mailTextfield.getText());
+                        prospect.setCommentaires(this.commentairesTextArea.getText());
+                        prospect.setDateProspection(LocalDate.parse(this.dateProspectionTextfield.getText(), Formatters.FORMAT_DDMMYYYY));
+                        prospect.setProspectInteresse(Objects.requireNonNull(this.prospectInteresseComboBox.getSelectedItem()).toString());
 
-                    JOptionPane.showMessageDialog(this, "Prospect ajouté avec succès !");
-                }
-                break;
-            case MODIFICATION:
-                // Cas de la modification.
-
-                if (this.typeSociete == TypeSociete.CLIENT) {
-                    // Remplissage du client avec les données du formulaire
-                    client.setRaisonSociale(this.raisonTextfield.getText());
-                    client.getAdresse().setNumeroRue(this.numRueTextfield.getText());
-                    client.getAdresse().setNomRue(this.nomRueTextfield.getText());
-                    client.getAdresse().setCodePostal(this.codePostalTextfield.getText());
-                    client.getAdresse().setVille(this.villeTextfield.getText());
-                    client.setTelephone(this.telephoneTextfield.getText());
-                    client.setMail(this.mailTextfield.getText());
-                    client.setCommentaires(this.commentairesTextArea.getText());
-                    client.setChiffreAffaires(Long.parseLong(this.chiffreAffaireTextfield.getText()));
-                    client.setNbEmployes(Integer.parseInt(this.nbEmployesTextfield.getText()));
-
-                    // Recherche du client modifié parmi la liste des clients
-                    // et modification de celui-c.
-                    int index = Clients.clients.indexOf(client);
-                    Clients.clients.set(index, client);
-                    JOptionPane.showMessageDialog(this, "Client modifié " +
-                            "avec succès !");
-                } else if (this.typeSociete == TypeSociete.PROSPECT) {
-                    // Remplissage du prospect avec les données du formulaire
-                    prospect.setRaisonSociale(this.raisonTextfield.getText());
-                    prospect.getAdresse().setNumeroRue(this.numRueTextfield.getText());
-                    prospect.getAdresse().setNomRue(this.nomRueTextfield.getText());
-                    prospect.getAdresse().setCodePostal(this.codePostalTextfield.getText());
-                    prospect.getAdresse().setVille(this.villeTextfield.getText());
-                    prospect.setTelephone(this.telephoneTextfield.getText());
-                    prospect.setMail(this.mailTextfield.getText());
-                    prospect.setCommentaires(this.commentairesTextArea.getText());
-                    prospect.setDateProspection(LocalDate.parse(this.dateProspectionTextfield.getText(), Formatters.FORMAT_DDMMYYYY));
-                    prospect.setProspectInteresse(Objects.requireNonNull(this.prospectInteresseComboBox.getSelectedItem()).toString());
-
-                    // Recherche du prospect modifié parmi la liste des
-                    // prospects et modification de celui-c.
-                    int index = Prospects.prospects.indexOf(prospect);
-                    Prospects.prospects.set(index, prospect);
-                    JOptionPane.showMessageDialog(this, "Prospect modifié " +
-                            "avec succès !");
-                }
-                break;
-            case SUPPRESSION:
-                // Cas de la suppression.
-
-                // Initialisation de la réponse.
-                int reponse;
-
-                if (this.typeSociete == TypeSociete.CLIENT) {
-                    // Si le formulaire est pour un client.
-
-                    // Demande de confirmation de suppression et suppression
-                    // si la demande est confirmée.
-                    reponse = JOptionPane.showConfirmDialog(this, "Souhaitez" +
-                            " vous supprimer " + client.getRaisonSociale() + " ?");
-
-                    if (reponse == JOptionPane.OK_OPTION) {
-                        Clients.clients.remove(client);
-                        JOptionPane.showMessageDialog(this, "Client supprimé " +
+                        // Recherche du prospect modifié parmi la liste des
+                        // prospects et modification de celui-c.
+                        int index = Prospects.getProspects().indexOf(prospect);
+                        Prospects.getProspects().set(index, prospect);
+                        JOptionPane.showMessageDialog(this, "Prospect modifié " +
                                 "avec succès !");
                     }
-                } else if (this.typeSociete == TypeSociete.PROSPECT) {
-                    // Si le formulaire est pour un prospect
+                    break;
+                case SUPPRESSION:
+                    // Cas de la suppression.
 
-                    // Demande de confirmation de suppression et suppression
-                    // si la demande est confirmée.
-                    reponse = JOptionPane.showConfirmDialog(this, "Souhaitez " +
-                            "vous supprimer " + prospect.getRaisonSociale() + " ?");
+                    // Initialisation de la réponse.
+                    int reponse;
 
-                    if (reponse == JOptionPane.OK_OPTION) {
-                        Prospects.prospects.remove(prospect);
-                        JOptionPane.showMessageDialog(this, "Prospect " +
-                                "supprimé avec succès !");
+                    if (this.typeSociete == TypeSociete.CLIENT) {
+                        // Si le formulaire est pour un client.
+
+                        // Demande de confirmation de suppression et suppression
+                        // si la demande est confirmée.
+                        reponse = JOptionPane.showConfirmDialog(this, "Souhaitez" +
+                                " vous supprimer " + client.getRaisonSociale() + " ?");
+
+                        if (reponse == JOptionPane.OK_OPTION) {
+                            Clients.getClients().remove(client);
+                            JOptionPane.showMessageDialog(this, "Client supprimé " +
+                                    "avec succès !");
+                        }
+                    } else if (this.typeSociete == TypeSociete.PROSPECT) {
+                        // Si le formulaire est pour un prospect
+
+                        // Demande de confirmation de suppression et suppression
+                        // si la demande est confirmée.
+                        reponse = JOptionPane.showConfirmDialog(this, "Souhaitez " +
+                                "vous supprimer " + prospect.getRaisonSociale() + " ?");
+
+                        if (reponse == JOptionPane.OK_OPTION) {
+                            Prospects.getProspects().remove(prospect);
+                            JOptionPane.showMessageDialog(this, "Prospect " +
+                                    "supprimé avec succès !");
+                        }
                     }
-                }
-                break;
-        }
+                    break;
+            }
 
-        try {
-            // Tentative de sauvegarde de l'action en base de données avec un
-            // retour sur la vue d'accueil.
             Files.dbSave(this.typeSociete);
             returnIndex(this);
-        } catch (SocieteUtilitiesException sue) {
-            JOptionPane.showMessageDialog(null, sue.getMessage());
+        } catch (NumberFormatException nfe) {
+            LogManager.logs.log(Level.SEVERE, nfe.getMessage(), nfe);
+            JOptionPane.showMessageDialog(null, "Erreur dans le format du " +
+                    "nombre.");
+        }catch (DateTimeException dte) {
+            LogManager.logs.log(Level.SEVERE, dte.getMessage(), dte);
+            JOptionPane.showMessageDialog(null, "Erreur dans la date.");
+        }catch (SocieteEntityException see) {
+            LogManager.logs.log(Level.SEVERE, see.getMessage(), see);
+            JOptionPane.showMessageDialog(null, see.getMessage());
+        }catch (Exception e) {
+            LogManager.logs.log(Level.SEVERE, e.getMessage());
+            JOptionPane.showMessageDialog(null, "Erreur inconnue.");
+            System.exit(1);
         }
     }
 }

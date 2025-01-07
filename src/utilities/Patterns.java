@@ -19,6 +19,7 @@ public class Patterns {
 
     // Partie société
 
-    public static final Pattern PATTERN_TELEPHONE = Pattern.compile("(0[0-9]{9})");
+    public static final Pattern PATTERN_TELEPHONE = Pattern.compile("\\+?[0-9" +
+            "][0-9]{7,14}");
     public static final Pattern PATTERN_MAIL = Pattern.compile("^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$");
 }

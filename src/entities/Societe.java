@@ -5,7 +5,7 @@ import utilities.Patterns;
 /**
  * Classe Société
  */
-public class Societe {
+abstract public class Societe {
 
     // Variables d'instance
     private int identifiant;
@@ -124,7 +124,7 @@ public class Societe {
         // Cas regex non matché
         if(!Patterns.PATTERN_TELEPHONE.matcher(telephone).matches()){
             throw new SocieteEntityException("Le numéro de téléphone doit " +
-                    "comporter uniquement dix chiffres !");
+                    "comporter maximum quinze chiffres !");
         }
 
         this.telephone = telephone;
@@ -170,14 +170,14 @@ public class Societe {
                     " vide !");
         }
 
-        for(Client c : Clients.clients){
+        for(Client c : Clients.getClients()){
             if(raisonSociale.equals(c.getRaisonSociale()) && this.identifiant != c.getIdentifiant()){
                 throw new SocieteEntityException("La raison sociale donnée " +
                         "existe déjà en base de données.");
             }
         }
 
-        for(Prospect p : Prospects.prospects){
+        for(Prospect p : Prospects.getProspects()){
             if(raisonSociale.equals(p.getRaisonSociale()) && this.identifiant != p.getIdentifiant()){
                 throw new SocieteEntityException("La raison sociale donnée " +
                         "existe déjà en base de données.");

@@ -3,7 +3,9 @@ import utilities.Files;
 import utilities.SocieteUtilitiesException;
 import view.Index;
 
+import javax.swing.*;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.logging.Level;
 
 /**
@@ -23,34 +25,31 @@ public class Main {
             LogManager.init();
             LogManager.run();
         } catch (IOException e) {
-            System.out.println("Erreur lors de l'initialisation des logs");
-
+            String message = "Erreur lors de l'initialisation des logs";
+            System.out.println(message);
+            System.out.println(Arrays.toString(e.getStackTrace()));
+            JOptionPane.showMessageDialog(null, message);
+            System.exit(1);
+        } catch (Exception e) {
+            LogManager.logs.log(Level.SEVERE, e.getMessage());
+            JOptionPane.showMessageDialog(null, "Erreur inconnue.");
             System.exit(1);
         }
 
         try {
             // Création des fichiers de base de données si non existants.
             Files.dbCreate();
-        } catch (SocieteUtilitiesException sue) {
-            LogManager.logs.log(Level.SEVERE, sue.getMessage());
 
-            System.out.println(sue.getMessage());
-        } catch (Exception e) {
-            LogManager.logs.log(Level.SEVERE, e.getMessage());
-
-            System.exit(1);
-        }
-
-        try {
             // Chargement des fichiers de base de données.
             Files.dbLoad();
         } catch (SocieteUtilitiesException sue) {
             LogManager.logs.log(Level.SEVERE, sue.getMessage());
-
+            JOptionPane.showMessageDialog(null, sue.getMessage());
             System.out.println(sue.getMessage());
         } catch (Exception e) {
             LogManager.logs.log(Level.SEVERE, e.getMessage());
-
+            JOptionPane.showMessageDialog(null, "Erreur lors de la création " +
+                    "ou du chargement de la base de données.");
             System.exit(1);
         }
 

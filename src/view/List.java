@@ -155,7 +155,8 @@ public class List extends JFrame {
                 // Si la liste est pour des prospects
 
                 // Récupération du prospect
-                Optional<Prospect> p = Prospects.get(Integer.parseInt(this.table1.getValueAt(x,1).toString()));
+                Optional<Prospect> p =
+                        Prospects.get(Integer.parseInt(this.table1.getValueAt(x,0).toString()));
 
                 if(p.isPresent()){
                     // Le prospect existe, le formulaire est à ouvrir avec l'action
@@ -164,6 +165,9 @@ public class List extends JFrame {
                     dispose();
                 }
             }
+        }else{
+            JOptionPane.showMessageDialog(this,
+                    "Pas de "+this.typeSociete.getName()+ " sélectionné.");
         }
     }
 }

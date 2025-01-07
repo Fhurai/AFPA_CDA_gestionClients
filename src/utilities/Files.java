@@ -1,6 +1,7 @@
 package utilities;
 
 import entities.*;
+import entities.Clients;
 import logs.LogManager;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,7 +22,7 @@ public class Files {
     /**
      * Méthode de création des fichiers de BDD.
      */
-    public static void dbCreate() {
+    public static void dbCreate() throws SocieteUtilitiesException {
 
         // POur chaque type de société (client ou prospect)
         for (TypeSociete type : TypeSociete.values()) {
@@ -67,7 +68,7 @@ public class Files {
                         if (!line.contains(";")) {
                             // Première ligne, sans ';', c'est donc le
                             // compteur d'identifiant.
-                            Clients.compteurIdClients = Integer.parseInt(line);
+                            Clients.setCompteurIdClients(Integer.parseInt(line));
                         } else {
                             // Autre ligne, c'est un enregistrement en bdd.
                             try {
@@ -85,7 +86,7 @@ public class Files {
                                                 line.split(";")[8],
                                                 Long.parseLong(line.split(";")[9]),
                                                 Integer.parseInt(line.split(";")[10]));
-                                Clients.clients.add(c);
+                                Clients.getClients().add(c);
 
                             } catch (SocieteEntityException e) {
                                 LogManager.logs.log(Level.SEVERE, e.getMessage());
@@ -106,13 +107,13 @@ public class Files {
                         if (!line.contains(";")) {
                             // Première ligne, sans ';', c'est donc le
                             // compteur d'identifiant.
-                            Prospects.compteurIdProspects = Integer.parseInt(line);
+                            Prospects.setCompteurIdProspects(Integer.parseInt(line));
                         } else {
                             // Autre ligne, c'est un enregistrement en bdd.
                             try {
                                 // Création du prospect depuis les données de
                                 // la bdd et ajout à la liste.
-                                Prospects.prospects.add(new Prospect(Integer.parseInt(line.split(";")[0]),
+                                Prospects.getProspects().add(new Prospect(Integer.parseInt(line.split(";")[0]),
                                         line.split(";")[1],
                                         new Adresse(line.split(";")[2],
                                                 line.split(";")[3],
@@ -179,7 +180,7 @@ public class Files {
                 try {
                     // Tentative d'écriture du compteur d'identifiants dans
                     // le fichier.
-                    fw.write(Clients.compteurIdClients + "\n");
+                    fw.write(Clients.getCompteurIdClient() + "\n");
                 } catch (IOException e) {
                     LogManager.logs.log(Level.SEVERE, e.getMessage());
 
@@ -187,7 +188,7 @@ public class Files {
                             "de l'écriture dans la base de données des clients");
                 }
 
-                for (Client c : Clients.clients) {
+                for (Client c : Clients.getClients()) {
                     // Pour chaque client dans la liste, écriture d'une ligne
                     // d'enregistrement
                     dbWriteLine(c, fw);
@@ -197,7 +198,7 @@ public class Files {
                 try {
                     // Tentative d'écriture du compteur d'identifiants dans
                     // le fichier.
-                    fw.write(Prospects.compteurIdProspects + "\n");
+                    fw.write(Prospects.getCompteurIdProspects() + "\n");
                 } catch (IOException e) {
                     LogManager.logs.log(Level.SEVERE, e.getMessage());
 
@@ -205,7 +206,7 @@ public class Files {
                             "de l'écriture dans la base de données des " +
                             "prospects");
                 }
-                for (Prospect p : Prospects.prospects) {
+                for (Prospect p : Prospects.getProspects()) {
                     // Pour chaque prospect dans la liste, écriture d'une ligne
                     // d'enregistrement
                     dbWriteLine(p, fw);

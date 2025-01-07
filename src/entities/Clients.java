@@ -14,8 +14,8 @@ import java.util.logging.Level;
 public final class Clients {
 
     // Variables de classe
-    public static ArrayList<Client> clients = new ArrayList<>();
-    public static int compteurIdClients = 1;
+    private static ArrayList<Client> clients = new ArrayList<>();
+    private static int compteurIdClients = 1;
 
     /**
      * Comparateur des clients par raison sociale
@@ -58,6 +58,31 @@ public final class Clients {
 
         // Aucun client existant trouvé, retourne un optional vide.
         return Optional.empty();
+    }
+
+    /**
+     * Méthode qui retourne la liste des clients
+     * @return La liste des clients.
+     */
+    public static ArrayList<Client> getClients(){
+        return clients;
+    }
+
+    /**
+     * Méthode qui retourne le compteur de clients.
+     * @return Le compteur de clients.
+     */
+    public static int getCompteurIdClient()
+    {
+        return compteurIdClients;
+    }
+
+    /**
+     * Setter compteur clients.
+     * @param compteur Nouveau compteur client.
+     */
+    public static void setCompteurIdClients(int compteur){
+        compteurIdClients = compteur;
     }
 
     /**

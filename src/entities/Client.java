@@ -43,7 +43,7 @@ public final class Client extends Societe {
         setChiffreAffaires(chiffreAffaires);
         setNbEmployes(nbEmployes);
 
-        setIdentifiant(Clients.compteurIdClients);
+        setIdentifiant(Clients.getCompteurIdClient());
     }
 
     /**

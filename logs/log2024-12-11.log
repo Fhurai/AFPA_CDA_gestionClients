@@ -1,0 +1,17 @@
+[INFO] - 2024-12-11 16:25:17 | Class : logs.LogManager | Method : run() | Message : Software running...
+[SEVERE] - 2024-12-11 16:25:17 | Class : Main | Method : main() | Message : Erreur lors de la creation de la base de données des clients
+[SEVERE] - 2024-12-11 16:25:17 | Class : utilities.Files | Method : dbLoad() | Message : save\clientTable.csv (Le chemin d’accès spécifié est introuvable)
+[SEVERE] - 2024-12-11 16:25:17 | Class : Main | Method : main() | Message : Erreur lors de l'ouverture de la base de données des clients
+[INFO] - 2024-12-11 16:25:28 | Class : logs.LogManager | Method : stop() | Message : Software stopped !
+[INFO] - 2024-12-11 16:33:54 | Class : logs.LogManager | Method : run() | Message : Software running...
+[INFO] - 2024-12-11 16:33:54 | Class : utilities.Files | Method : dbCreate() | Message : DB File created for clients
+[INFO] - 2024-12-11 16:33:54 | Class : utilities.Files | Method : dbCreate() | Message : DB File created for prospects
+[INFO] - 2024-12-11 16:34:10 | Class : logs.LogManager | Method : stop() | Message : Software stopped !
+[INFO] - 2024-12-11 16:34:28 | Class : logs.LogManager | Method : run() | Message : Software running...
+[INFO] - 2024-12-11 16:34:28 | Class : utilities.Files | Method : dbCreate() | Message : DB File already exists for clients
+[INFO] - 2024-12-11 16:34:28 | Class : utilities.Files | Method : dbCreate() | Message : DB File already exists for prospects
+[INFO] - 2024-12-11 16:35:07 | Class : logs.LogManager | Method : stop() | Message : Software stopped !
+[INFO] - 2024-12-11 16:36:39 | Class : logs.LogManager | Method : run() | Message : Software running...
+[INFO] - 2024-12-11 16:36:39 | Class : utilities.Files | Method : dbCreate() | Message : DB File already exists for clients
+[INFO] - 2024-12-11 16:36:39 | Class : utilities.Files | Method : dbCreate() | Message : DB File already exists for prospects
+[INFO] - 2024-12-11 16:36:49 | Class : logs.LogManager | Method : stop() | Message : Software stopped !

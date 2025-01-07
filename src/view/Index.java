@@ -125,9 +125,9 @@ public class Index extends JFrame {
         // sociétés correspondantes au type choisi.
         selectionComboBox.removeAllItems();
         if (type == TypeSociete.CLIENT) {
-            Clients.clients.forEach(client -> selectionComboBox.addItem(client.getRaisonSociale()));
+            Clients.getClients().forEach(client -> selectionComboBox.addItem(client.getRaisonSociale()));
         } else if (type == TypeSociete.PROSPECT) {
-            Prospects.prospects.forEach(prospect -> selectionComboBox.addItem(prospect.getRaisonSociale()));
+            Prospects.getProspects().forEach(prospect -> selectionComboBox.addItem(prospect.getRaisonSociale()));
         }
 
         // Affichage du panneau de choix d'action.
@@ -154,7 +154,7 @@ public class Index extends JFrame {
                 EditPanel.setVisible(false);
                 choiceEditLabel.setText("");
 
-                new Form(this.typeChoice, this.actionChoice).setVisible(true);
+                new Form(this.typeChoice).setVisible(true);
                 this.dispose();
                 break;
 

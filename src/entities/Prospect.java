@@ -50,7 +50,7 @@ public final class Prospect extends Societe {
         setDateProspection(dateProspection);
         setProspectInteresse(prospectInteresse);
 
-        setIdentifiant(Prospects.compteurIdProspects);
+        setIdentifiant(Prospects.getCompteurIdProspects());
     }
 
     /**

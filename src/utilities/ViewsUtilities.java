@@ -53,7 +53,7 @@ public class ViewsUtilities {
         if(entete[5].equals("Chiffre d'affaires")){
             // Si l'entête est pour un client.
 
-            Clients.clients.forEach(c -> modelTable.addRow(new Object[]{
+            Clients.getClients().forEach(c -> modelTable.addRow(new Object[]{
                     c.getIdentifiant(),
                     c.getRaisonSociale(),
                     c.getAdresse(),
@@ -65,7 +65,7 @@ public class ViewsUtilities {
         }else if(entete[5].equals("Date prospection")){
             // Si l'entête est pour un prospect.
 
-            Prospects.prospects.forEach(p -> modelTable.addRow(new Object[]{
+            Prospects.getProspects().forEach(p -> modelTable.addRow(new Object[]{
                     p.getIdentifiant(),
                     p.getRaisonSociale(),
                     p.getAdresse(),

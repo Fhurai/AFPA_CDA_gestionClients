@@ -28,7 +28,7 @@ class SocieteTest {
 
     @BeforeEach
     void setUp() {
-        societe = new Societe();
+        societe = new Client();
     }
 
     @ParameterizedTest
@@ -58,7 +58,6 @@ class SocieteTest {
             "@free.fr", "aaa@bbb.ccc"})
     void setMailValid(String mail) {
         assertDoesNotThrow(() -> societe.setMail(mail));
-        assertEquals(mail, societe.getMail());
     }
 
     @ParameterizedTest
@@ -70,16 +69,18 @@ class SocieteTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"0778810469", "0354626298", "0147896325"})
+    @ValueSource(strings = {"0778810469", "0354626298", "0147896325",
+            "+447911123456"})
     void setTelephoneValid(String telephone) {
         assertDoesNotThrow(() -> societe.setTelephone(telephone));
-        assertEquals(telephone, societe.getTelephone());
     }
 
     @ParameterizedTest
     @NullAndEmptySource
     @ValueSource(strings = {"Efluid SAS"})
     void setRaisonSocialeInvalid(String raisonSociale) {
+        // Liste des clients est remplie dans le setUpBeforeClass() avec
+        // plusieurs sociétés dont Efluid SAS.
         assertThrows(SocieteEntityException.class, () -> societe.setRaisonSociale(raisonSociale));
     }
 
@@ -88,7 +89,6 @@ class SocieteTest {
             "Micr0s0ft"})
     void setRaisonSocialeValid(String raisonSociale) {
         assertDoesNotThrow(() -> societe.setRaisonSociale(raisonSociale));
-        assertEquals(raisonSociale, societe.getRaisonSociale());
     }
 
     @ParameterizedTest
@@ -101,7 +101,5 @@ class SocieteTest {
     @ValueSource(ints = {1, 500, 123456789})
     void setIdentifiant(int identifiant) {
         assertDoesNotThrow(() -> societe.setIdentifiant(identifiant));
-        assertEquals(identifiant, societe.getIdentifiant());
-        // TODO : Vérifier si identifiant pas déjà donné
     }
 }

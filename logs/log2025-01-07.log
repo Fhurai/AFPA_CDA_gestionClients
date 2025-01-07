@@ -1,0 +1,79 @@
+[INFO] - 2025-01-07 16:02:26 | Class : logs.LogManager | Method : run() | Message : Software running...
+[INFO] - 2025-01-07 16:02:26 | Class : utilities.Files | Method : dbCreate() | Message : DB File already exists for clients
+[INFO] - 2025-01-07 16:02:26 | Class : utilities.Files | Method : dbCreate() | Message : DB File already exists for prospects
+[INFO] - 2025-01-07 16:02:42 | Class : logs.LogManager | Method : stop() | Message : Software stopped !
+[INFO] - 2025-01-07 16:05:13 | Class : logs.LogManager | Method : run() | Message : Software running...
+[INFO] - 2025-01-07 16:05:13 | Class : utilities.Files | Method : dbCreate() | Message : DB File already exists for clients
+[INFO] - 2025-01-07 16:05:13 | Class : utilities.Files | Method : dbCreate() | Message : DB File already exists for prospects
+[INFO] - 2025-01-07 16:05:24 | Class : logs.LogManager | Method : stop() | Message : Software stopped !
+[INFO] - 2025-01-07 16:05:29 | Class : logs.LogManager | Method : run() | Message : Software running...
+[INFO] - 2025-01-07 16:05:29 | Class : utilities.Files | Method : dbCreate() | Message : DB File already exists for clients
+[INFO] - 2025-01-07 16:05:29 | Class : utilities.Files | Method : dbCreate() | Message : DB File already exists for prospects
+[INFO] - 2025-01-07 16:05:37 | Class : logs.LogManager | Method : stop() | Message : Software stopped !
+[INFO] - 2025-01-07 16:05:52 | Class : logs.LogManager | Method : run() | Message : Software running...
+[INFO] - 2025-01-07 16:05:52 | Class : utilities.Files | Method : dbCreate() | Message : DB File already exists for clients
+[INFO] - 2025-01-07 16:05:52 | Class : utilities.Files | Method : dbCreate() | Message : DB File already exists for prospects
+[INFO] - 2025-01-07 16:05:59 | Class : logs.LogManager | Method : stop() | Message : Software stopped !
+[INFO] - 2025-01-07 16:06:10 | Class : logs.LogManager | Method : run() | Message : Software running...
+[INFO] - 2025-01-07 16:06:10 | Class : utilities.Files | Method : dbCreate() | Message : DB File already exists for clients
+[INFO] - 2025-01-07 16:06:10 | Class : utilities.Files | Method : dbCreate() | Message : DB File already exists for prospects
+[INFO] - 2025-01-07 16:06:29 | Class : logs.LogManager | Method : stop() | Message : Software stopped !
+[INFO] - 2025-01-07 16:06:55 | Class : logs.LogManager | Method : run() | Message : Software running...
+[INFO] - 2025-01-07 16:06:55 | Class : utilities.Files | Method : dbCreate() | Message : DB File already exists for clients
+[INFO] - 2025-01-07 16:06:55 | Class : utilities.Files | Method : dbCreate() | Message : DB File already exists for prospects
+[INFO] - 2025-01-07 16:07:12 | Class : logs.LogManager | Method : stop() | Message : Software stopped !
+[INFO] - 2025-01-07 16:07:20 | Class : logs.LogManager | Method : run() | Message : Software running...
+[INFO] - 2025-01-07 16:07:20 | Class : utilities.Files | Method : dbCreate() | Message : DB File already exists for clients
+[INFO] - 2025-01-07 16:07:20 | Class : utilities.Files | Method : dbCreate() | Message : DB File already exists for prospects
+[INFO] - 2025-01-07 16:07:37 | Class : logs.LogManager | Method : stop() | Message : Software stopped !
+[INFO] - 2025-01-07 16:20:42 | Class : logs.LogManager | Method : run() | Message : Software running...
+[INFO] - 2025-01-07 16:20:42 | Class : utilities.Files | Method : dbCreate() | Message : DB File already exists for clients
+[INFO] - 2025-01-07 16:20:42 | Class : utilities.Files | Method : dbCreate() | Message : DB File already exists for prospects
+[INFO] - 2025-01-07 16:21:24 | Class : logs.LogManager | Method : stop() | Message : Software stopped !
+[INFO] - 2025-01-07 16:22:46 | Class : logs.LogManager | Method : run() | Message : Software running...
+[INFO] - 2025-01-07 16:22:46 | Class : utilities.Files | Method : dbCreate() | Message : DB File already exists for clients
+[INFO] - 2025-01-07 16:22:46 | Class : utilities.Files | Method : dbCreate() | Message : DB File already exists for prospects
+[SEVERE] - 2025-01-07 16:22:46 | Class : utilities.Files | Method : dbLoad() | Message : Le numéro de téléphone doit comporter maximum quinze chiffres !
+[SEVERE] - 2025-01-07 16:22:46 | Class : Main | Method : main() | Message : Erreur lors de la charge des données des clients
+[INFO] - 2025-01-07 16:23:10 | Class : logs.LogManager | Method : stop() | Message : Software stopped !
+[INFO] - 2025-01-07 16:23:47 | Class : logs.LogManager | Method : run() | Message : Software running...
+[INFO] - 2025-01-07 16:23:47 | Class : utilities.Files | Method : dbCreate() | Message : DB File already exists for clients
+[INFO] - 2025-01-07 16:23:47 | Class : utilities.Files | Method : dbCreate() | Message : DB File already exists for prospects
+[SEVERE] - 2025-01-07 16:23:47 | Class : utilities.Files | Method : dbLoad() | Message : Le numéro de téléphone doit comporter maximum quinze chiffres !
+[SEVERE] - 2025-01-07 16:23:47 | Class : Main | Method : main() | Message : Erreur lors de la charge des données des clients
+[INFO] - 2025-01-07 16:23:51 | Class : logs.LogManager | Method : stop() | Message : Software stopped !
+[INFO] - 2025-01-07 16:24:23 | Class : logs.LogManager | Method : run() | Message : Software running...
+[INFO] - 2025-01-07 16:24:23 | Class : utilities.Files | Method : dbCreate() | Message : DB File already exists for clients
+[INFO] - 2025-01-07 16:24:23 | Class : utilities.Files | Method : dbCreate() | Message : DB File already exists for prospects
+[SEVERE] - 2025-01-07 16:24:42 | Class : utilities.Files | Method : dbLoad() | Message : Le numéro de téléphone doit comporter maximum quinze chiffres !
+[SEVERE] - 2025-01-07 16:24:42 | Class : Main | Method : main() | Message : Erreur lors de la charge des données des clients
+[INFO] - 2025-01-07 16:25:02 | Class : logs.LogManager | Method : run() | Message : Software running...
+[INFO] - 2025-01-07 16:25:03 | Class : utilities.Files | Method : dbCreate() | Message : DB File already exists for clients
+[INFO] - 2025-01-07 16:25:03 | Class : utilities.Files | Method : dbCreate() | Message : DB File already exists for prospects
+[SEVERE] - 2025-01-07 16:27:08 | Class : utilities.Files | Method : dbLoad() | Message : Le numéro de téléphone doit comporter maximum quinze chiffres !
+[SEVERE] - 2025-01-07 16:27:08 | Class : Main | Method : main() | Message : Erreur lors de la charge des données des clients
+[INFO] - 2025-01-07 16:39:01 | Class : logs.LogManager | Method : run() | Message : Software running...
+[INFO] - 2025-01-07 16:39:01 | Class : utilities.Files | Method : dbCreate() | Message : DB File already exists for clients
+[INFO] - 2025-01-07 16:39:01 | Class : utilities.Files | Method : dbCreate() | Message : DB File already exists for prospects
+[SEVERE] - 2025-01-07 16:39:16 | Class : view.Form | Method : actionPerformed() | Message : For input string: "63880000000000000000000000"
+[INFO] - 2025-01-07 16:39:19 | Class : logs.LogManager | Method : stop() | Message : Software stopped !
+[INFO] - 2025-01-07 16:40:38 | Class : logs.LogManager | Method : run() | Message : Software running...
+[INFO] - 2025-01-07 16:40:38 | Class : utilities.Files | Method : dbCreate() | Message : DB File already exists for clients
+[INFO] - 2025-01-07 16:40:38 | Class : utilities.Files | Method : dbCreate() | Message : DB File already exists for prospects
+[SEVERE] - 2025-01-07 16:40:55 | Class : view.Form | Method : actionPerformed() | Message : For input string: "63880000000000000000000000"
+[SEVERE] - 2025-01-07 16:41:00 | Class : view.Form | Method : actionPerformed() | Message : For input string: "6388000000000000000000000"
+[SEVERE] - 2025-01-07 16:41:04 | Class : view.Form | Method : actionPerformed() | Message : For input string: "638800000000000000000000"
+[SEVERE] - 2025-01-07 16:41:07 | Class : view.Form | Method : actionPerformed() | Message : For input string: "63880000000000000000000"
+[SEVERE] - 2025-01-07 16:41:11 | Class : view.Form | Method : actionPerformed() | Message : For input string: "6388000000000000000000"
+[SEVERE] - 2025-01-07 16:41:13 | Class : view.Form | Method : actionPerformed() | Message : For input string: "638800000000000000000"
+[SEVERE] - 2025-01-07 16:41:16 | Class : view.Form | Method : actionPerformed() | Message : For input string: "63880000000000000000"
+[INFO] - 2025-01-07 16:41:26 | Class : logs.LogManager | Method : stop() | Message : Software stopped !
+[INFO] - 2025-01-07 16:41:30 | Class : logs.LogManager | Method : run() | Message : Software running...
+[INFO] - 2025-01-07 16:41:30 | Class : utilities.Files | Method : dbCreate() | Message : DB File already exists for clients
+[INFO] - 2025-01-07 16:41:30 | Class : utilities.Files | Method : dbCreate() | Message : DB File already exists for prospects
+[SEVERE] - 2025-01-07 16:41:47 | Class : view.Form | Method : actionPerformed() | Message : Text '32/10/2025' could not be parsed: Invalid value for DayOfMonth (valid values 1 - 28/31): 32
+[INFO] - 2025-01-07 16:41:57 | Class : logs.LogManager | Method : stop() | Message : Software stopped !
+[INFO] - 2025-01-07 16:58:51 | Class : logs.LogManager | Method : run() | Message : Software running...
+[INFO] - 2025-01-07 16:58:51 | Class : utilities.Files | Method : dbCreate() | Message : DB File already exists for clients
+[INFO] - 2025-01-07 16:58:51 | Class : utilities.Files | Method : dbCreate() | Message : DB File already exists for prospects
+[INFO] - 2025-01-07 16:58:56 | Class : logs.LogManager | Method : stop() | Message : Software stopped !

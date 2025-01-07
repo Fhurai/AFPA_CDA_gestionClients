@@ -1,0 +1,12 @@
+[INFO] - 2024-12-13 11:14:44 | Class : logs.LogManager | Method : run() | Message : Software running...
+[INFO] - 2024-12-13 11:14:44 | Class : utilities.Files | Method : dbCreate() | Message : DB File already exists for clients
+[INFO] - 2024-12-13 11:14:44 | Class : utilities.Files | Method : dbCreate() | Message : DB File already exists for prospects
+[INFO] - 2024-12-13 11:19:09 | Class : logs.LogManager | Method : stop() | Message : Software stopped !
+[INFO] - 2024-12-13 11:20:17 | Class : logs.LogManager | Method : run() | Message : Software running...
+[INFO] - 2024-12-13 11:20:17 | Class : utilities.Files | Method : dbCreate() | Message : DB File already exists for clients
+[INFO] - 2024-12-13 11:20:17 | Class : utilities.Files | Method : dbCreate() | Message : DB File already exists for prospects
+[INFO] - 2024-12-13 11:20:24 | Class : logs.LogManager | Method : stop() | Message : Software stopped !
+[INFO] - 2024-12-13 11:20:45 | Class : logs.LogManager | Method : run() | Message : Software running...
+[INFO] - 2024-12-13 11:20:45 | Class : utilities.Files | Method : dbCreate() | Message : DB File already exists for clients
+[INFO] - 2024-12-13 11:20:45 | Class : utilities.Files | Method : dbCreate() | Message : DB File already exists for prospects
+[INFO] - 2024-12-13 11:21:04 | Class : logs.LogManager | Method : stop() | Message : Software stopped !
