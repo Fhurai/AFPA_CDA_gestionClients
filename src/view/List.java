@@ -1,5 +1,7 @@
 package view;
 
+import DAO.ClientsDAO;
+import DAO.SocieteDatabaseException;
 import entities.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -111,7 +113,12 @@ public class List extends JFrame {
                 entete = new String[]{"ID", "Raison sociale", "Adresse", "N° " +
                         "Téléphone", "Adresse mail", "Chiffre d'affaires",
                         "Nombre employés"};
-                yield getModelTable(entete);
+                try {
+                    yield getModelTable(entete);
+                } catch (SocieteDatabaseException e) {
+                    JOptionPane.showMessageDialog(null, e.getMessage());
+                    yield null;
+                }
             }
             case TypeSociete.PROSPECT -> {
                 // Cas des prospects
@@ -121,7 +128,12 @@ public class List extends JFrame {
                 entete = new String[]{"ID", "Raison sociale", "Adresse", "N° " +
                         "Téléphone", "Adresse mail", "Date prospection",
                         "Prospect intéressé"};
-                yield getModelTable(entete);
+                try {
+                    yield getModelTable(entete);
+                } catch (SocieteDatabaseException e) {
+                    JOptionPane.showMessageDialog(null, e.getMessage());
+                    yield null;
+                }
             }
         };
 
@@ -142,14 +154,23 @@ public class List extends JFrame {
                 // Si la liste est pour des clients
 
                 // Récupération du client
-                Optional<Client> c =
-                        Clients.get(Integer.parseInt(this.table1.getValueAt(x,0).toString()));
+                try {
+                    Client client = ClientsDAO.findByIdentifiant(x);
 
-                if(c.isPresent()){
-                    // Le client existe, le formulaire est à ouvrir avec l'action
-                    // voulue
-                    new Form(this.typeSociete, action, c.get()).setVisible(true);
-                    dispose();
+                    if(client != null){
+                        // Le client existe, le formulaire est à ouvrir avec l'action
+                        // voulue
+                        new Form(this.typeSociete, action, client).setVisible(true);
+                        dispose();
+                    }else{
+
+                        JOptionPane.showMessageDialog(this,"Client introuvable, " +
+                                "rechargement de la liste des clients.");
+                        this.fillTable();
+                    }
+                } catch (SocieteDatabaseException e) {
+                    JOptionPane.showMessageDialog(null, e.getMessage());
+                    System.exit(1);
                 }
             }else if(this.typeSociete == TypeSociete.PROSPECT){
                 // Si la liste est pour des prospects

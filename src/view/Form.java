@@ -1,11 +1,12 @@
 package view;
 
+import DAO.AdresseDAO;
+import DAO.ClientsDAO;
 import entities.*;
 import logs.LogManager;
 import org.jetbrains.annotations.NotNull;
 import utilities.Files;
 import utilities.Formatters;
-import utilities.SocieteUtilitiesException;
 
 import javax.swing.*;
 import java.awt.*;
@@ -223,7 +224,7 @@ public class Form extends JFrame {
             // Si le formulaire est pour de la création, valorisation
             // uniquement pour le champ identifiant.
 
-            this.identifiantTextfield.setText(String.valueOf(typeSociete == TypeSociete.CLIENT ? Clients.getCompteurIdClient() : Prospects.getCompteurIdProspects()));
+            this.identifiantTextfield.setText("0");
         }
     }
 
@@ -272,7 +273,7 @@ public class Form extends JFrame {
                         // Création du client et ajout de celui-ci à la liste des
                         // clients en mémoire.
                         client = new Client(this.raisonTextfield.getText(),
-                                new Adresse(
+                                new Adresse(0,
                                         this.numRueTextfield.getText(),
                                         this.nomRueTextfield.getText(),
                                         this.codePostalTextfield.getText(),
@@ -293,7 +294,7 @@ public class Form extends JFrame {
                         // prospects en mémoire.
                         prospect = new Prospect(
                                 this.raisonTextfield.getText(),
-                                new Adresse(
+                                new Adresse(0,
                                         this.numRueTextfield.getText(),
                                         this.nomRueTextfield.getText(),
                                         this.codePostalTextfield.getText(),
@@ -367,7 +368,7 @@ public class Form extends JFrame {
                                 " vous supprimer " + client.getRaisonSociale() + " ?");
 
                         if (reponse == JOptionPane.OK_OPTION) {
-                            Clients.getClients().remove(client);
+                            ClientsDAO.delete(client);
                             JOptionPane.showMessageDialog(this, "Client supprimé " +
                                     "avec succès !");
                         }
@@ -388,7 +389,6 @@ public class Form extends JFrame {
                     break;
             }
 
-            Files.dbSave(this.typeSociete);
             returnIndex(this);
         } catch (NumberFormatException nfe) {
             LogManager.logs.log(Level.SEVERE, nfe.getMessage(), nfe);

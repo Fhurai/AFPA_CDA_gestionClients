@@ -1,6 +1,9 @@
 package view;
 
+import DAO.ClientsDAO;
+import DAO.SocieteDatabaseException;
 import entities.*;
+import logs.LogManager;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -10,6 +13,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.logging.Level;
 
 import static utilities.ViewsUtilities.quitApplication;
 
@@ -124,17 +128,21 @@ public class Index extends JFrame {
         // Reset de la liste déroulante et remplissage de celle-ci avec les
         // sociétés correspondantes au type choisi.
         selectionComboBox.removeAllItems();
-        if (type == TypeSociete.CLIENT) {
-            Clients.getClients().forEach(client -> selectionComboBox.addItem(client.getRaisonSociale()));
-        } else if (type == TypeSociete.PROSPECT) {
-            Prospects.getProspects().forEach(prospect -> selectionComboBox.addItem(prospect.getRaisonSociale()));
+        try {
+            if (type == TypeSociete.CLIENT) {
+                ClientsDAO.findAll().forEach(client -> selectionComboBox.addItem(client.getRaisonSociale()));
+            } else if (type == TypeSociete.PROSPECT) {
+                Prospects.getProspects().forEach(prospect -> selectionComboBox.addItem(prospect.getRaisonSociale()));
+            }
+
+            // Affichage du panneau de choix d'action.
+            ActionPanel.setVisible(true);
+
+            // Valorisation de la valeur globale du choix de type de société.
+            this.typeChoice = type;
+        } catch (SocieteDatabaseException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
         }
-
-        // Affichage du panneau de choix d'action.
-        ActionPanel.setVisible(true);
-
-        // Valorisation de la valeur globale du choix de type de société.
-        this.typeChoice = type;
     }
 
     /**
@@ -186,17 +194,25 @@ public class Index extends JFrame {
      */
     private void choiceEdit() {
 
-        if (typeChoice == TypeSociete.CLIENT) {
-            // Le choix est un client
-            Optional<Client> c = Clients.getFromRaisonSociale(Objects.requireNonNull(selectionComboBox.getSelectedItem()).toString());
-            c.ifPresent(client -> editChoice = client);
-        } else if (typeChoice == TypeSociete.PROSPECT) {
-            // Le choix est un prospect
-            Optional<Prospect> p = Prospects.getFromRaisonSociale(Objects.requireNonNull(selectionComboBox.getSelectedItem()).toString());
-            p.ifPresent(prospect -> editChoice = prospect);
-        }
+        try {
+            if (typeChoice == TypeSociete.CLIENT) {
+                // Le choix est un client
+                editChoice =
+                        ClientsDAO.findByRaisonSociale(Objects.requireNonNull(selectionComboBox.getSelectedItem()).toString());
+            } else if (typeChoice == TypeSociete.PROSPECT) {
+                // Le choix est un prospect
+                Optional<Prospect> p = Prospects.getFromRaisonSociale(Objects.requireNonNull(selectionComboBox.getSelectedItem()).toString());
+                p.ifPresent(prospect -> editChoice = prospect);
+            }
 
-        new Form(this.typeChoice, this.actionChoice, this.editChoice).setVisible(true);
-        dispose();
+            new Form(this.typeChoice, this.actionChoice, this.editChoice).setVisible(true);
+            dispose();
+        } catch (SocieteDatabaseException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        } catch (Exception e) {
+            LogManager.logs.log(Level.SEVERE, e.getMessage());
+            JOptionPane.showMessageDialog(null, "Erreur lors de l'ouverture " +
+                    "du formulaire.");
+        }
     }
 }
