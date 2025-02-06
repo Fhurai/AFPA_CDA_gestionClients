@@ -133,17 +133,17 @@ public final class Clients {
 
         try {
             // Ajout Efluid
-            toClientsAdd(new Client("Efluid SAS", new Adresse("2bis",
+            toClientsAdd(new Client("Efluid SAS", new Adresse(1, "2bis",
                     "rue Ardant du Picq", "57004", "Metz"), "0387543400",
                     "contact@efluid.fr", "", 6388000, 250));
 
             // Ajout Happiso
-            toClientsAdd(new Client("Happiso", new Adresse("25",
+            toClientsAdd(new Client("Happiso", new Adresse(2, "25",
                     "rue de la Taye", "57130", "Jussy"), "0387758575",
                     "contact@happiso.fr", "", 4813, 6));
 
             // Ajout OGMI
-            toClientsAdd(new Client("OGMI", new Adresse("3",
+            toClientsAdd(new Client("OGMI", new Adresse(3, "3",
                     "rue des Michottes", "54000", "Nancy"), "0383375640",
                     "ogmi@ogmi.fr", "", 50000, 1));
         } catch (SocieteEntityException e) {

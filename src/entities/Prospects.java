@@ -117,18 +117,19 @@ public final class Prospects {
     public static void populateProspects() throws SocieteEntityException {
         try {
             // Ajout CGI
-            toProspectsAdd(new Prospect("CGI", new Adresse("28", "Boulevard " +
+            toProspectsAdd(new Prospect("CGI", new Adresse(4, "28",
+                    "Boulevard " +
                     "Albert 1er", "54000", "NANCY"), "0388553370", "contact" +
                     "@cgi.com", "", LocalDate.parse("15/11/2024", FORMAT_DDMMYYYY),
                     ReponseFermee.NON.getValue()));
 
             // Ajout ATOS
-            toProspectsAdd(new Prospect("ATOS", new Adresse("80", "QUAI " +
+            toProspectsAdd(new Prospect("ATOS", new Adresse(5, "80", "QUAI " +
                     "VOLTAIRE", "95870", "BEZONS"), "0173260000", "contact" +
                     "@atos.fr", "", LocalDate.parse("28/05/2024", FORMAT_DDMMYYYY), ReponseFermee.NON.getValue()));
 
             // Ajout OGMI
-            toProspectsAdd(new Prospect("Expectra", new Adresse("276",
+            toProspectsAdd(new Prospect("Expectra", new Adresse(6, "276",
                     "AVENUE DU PRESIDENT WILSON", "93210", "SAINT-DENIS"),
                     "0387172390", "contact@expectra.fr", "", LocalDate.parse("10/10/2024", FORMAT_DDMMYYYY), ReponseFermee.OUI.getValue()));
         } catch (SocieteEntityException e) {
