@@ -8,6 +8,7 @@ import utilities.Patterns;
 public class Adresse {
 
     // Variables d'instance.
+    private int identifiant;
     private String numeroRue;
     private String nomRue;
     private String codePostal;
@@ -15,6 +16,7 @@ public class Adresse {
 
     /**
      * Constructeur avec toutes les variables
+     * @param identifiant Identifiant de l'adresse
      * @param numeroRue Numéro de la rue
      * @param nomRue Nom de la rue
      * @param codePostal Code postal
@@ -22,7 +24,8 @@ public class Adresse {
      * @throws SocieteEntityException Lance une exception si une des variables
      * présente un problème
      */
-    public Adresse(String numeroRue, String nomRue, String codePostal, String ville)
+    public Adresse(int identifiant, String numeroRue, String nomRue,
+                   String codePostal, String ville)
             throws SocieteEntityException {
         setNumeroRue(numeroRue);
         setNomRue(nomRue);
@@ -34,6 +37,27 @@ public class Adresse {
      * Constructeur implicite
      */
     public Adresse() {
+    }
+
+    /**
+     * Getter identifiant.
+     * @return Identifiant de l'adresse.
+     */
+    public int getIdentifiant() {
+        return identifiant;
+    }
+
+    /**
+     * Setter identifiant.
+     * @param identifiant Le nouvel identifiant.
+     *
+     */
+    public void setIdentifiant(int identifiant) throws SocieteEntityException {
+        if(identifiant < 0){
+            throw new SocieteEntityException("L'identifiant ne peut pas être " +
+                    "inférieur à 0.");
+        }
+        this.identifiant = identifiant;
     }
 
     /**

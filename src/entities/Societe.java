@@ -67,11 +67,7 @@ abstract public class Societe {
      * Setter commentaires
      * @param commentaires Commentaires, possiblement null
      */
-    public void setCommentaires(String commentaires) throws SocieteEntityException {
-        if(commentaires == null){
-            throw new SocieteEntityException("Les commentaires ne peuvent pas" +
-                    " être null !");
-        }
+    public void setCommentaires(String commentaires) {
         this.commentaires = commentaires;
     }
 
