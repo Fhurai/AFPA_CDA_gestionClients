@@ -26,7 +26,7 @@ class ProspectsTest {
     void toProspectsAddExistantProspect() {
         Prospect cgi = null;
         try {
-            cgi = new Prospect("CGI", new Adresse("28", "Boulevard " +
+            cgi = new Prospect(4, "CGI", new Adresse(4, "28", "Boulevard " +
                     "Albert 1er", "54000", "NANCY"), "0388553370", "contact" +
                     "@cgi.com", "", LocalDate.parse("15/11/2024", FORMAT_DDMMYYYY),
                     ReponseFermee.NON.getValue());
@@ -41,7 +41,8 @@ class ProspectsTest {
         Prospect total = null;
         LocalDate dtTotal = LocalDate.parse("27/08/2024", FORMAT_DDMMYYYY);
         try {
-            total = new Prospect("Total Energies", new Adresse("2", "Place " +
+            total = new Prospect("Total Energies", new Adresse(7, "2", "Place" +
+                    " " +
                     "Jean Millier", "92400", "Courbevoie"), "0156784923",
                     "contact@totalenergies.fr", "", dtTotal,
                     ReponseFermee.NON.getValue());
