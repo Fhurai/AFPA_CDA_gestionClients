@@ -1,3 +1,5 @@
+import DAO.Connexion;
+import DAO.SocieteDatabaseException;
 import logs.LogManager;
 import utilities.Files;
 import utilities.SocieteUtilitiesException;
@@ -36,20 +38,11 @@ public class Main {
             System.exit(1);
         }
 
-        try {
-            // Création des fichiers de base de données si non existants.
-            Files.dbCreate();
-
-            // Chargement des fichiers de base de données.
-            Files.dbLoad();
-        } catch (SocieteUtilitiesException sue) {
-            LogManager.logs.log(Level.SEVERE, sue.getMessage());
-            JOptionPane.showMessageDialog(null, sue.getMessage());
-            System.out.println(sue.getMessage());
-        } catch (Exception e) {
-            LogManager.logs.log(Level.SEVERE, e.getMessage());
-            JOptionPane.showMessageDialog(null, "Erreur lors de la création " +
-                    "ou du chargement de la base de données.");
+        try{
+            // Initialisation de l'accès à la base de données.
+            Connexion.getInstance();
+        }catch (SocieteDatabaseException sde){
+            JOptionPane.showMessageDialog(null, sde.getMessage());
             System.exit(1);
         }
 

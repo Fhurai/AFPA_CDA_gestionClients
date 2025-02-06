@@ -1,5 +1,7 @@
 package utilities;
 
+import DAO.ClientsDAO;
+import DAO.SocieteDatabaseException;
 import entities.Clients;
 import entities.Prospects;
 import logs.LogManager;
@@ -37,7 +39,7 @@ public class ViewsUtilities {
      * @param entete L'entête fourni.
      * @return Le modèle de table préparé.
      */
-    public static @NotNull DefaultTableModel getModelTable(String[] entete){
+    public static @NotNull DefaultTableModel getModelTable(String[] entete) throws SocieteDatabaseException {
         // Création du modèle de table avec toutes les lignes non éditables.
         DefaultTableModel modelTable = new DefaultTableModel(new Object[][]{}
                 , entete){
@@ -53,7 +55,7 @@ public class ViewsUtilities {
         if(entete[5].equals("Chiffre d'affaires")){
             // Si l'entête est pour un client.
 
-            Clients.getClients().forEach(c -> modelTable.addRow(new Object[]{
+            ClientsDAO.findAll().forEach(c -> modelTable.addRow(new Object[]{
                     c.getIdentifiant(),
                     c.getRaisonSociale(),
                     c.getAdresse(),

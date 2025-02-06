@@ -1,7 +1,6 @@
 package utilities;
 
 import entities.*;
-import entities.Clients;
 import logs.LogManager;
 import org.jetbrains.annotations.NotNull;
 
@@ -77,7 +76,8 @@ public class Files {
                                 Client c =
                                         new Client(Integer.parseInt(line.split(";")[0]),
                                                 line.split(";")[1],
-                                                new Adresse(line.split(";")[2],
+                                                new Adresse(0,
+                                                        line.split(";")[2],
                                                         line.split(";")[3],
                                                         line.split(";")[4],
                                                         line.split(";")[5]),
@@ -115,7 +115,7 @@ public class Files {
                                 // la bdd et ajout à la liste.
                                 Prospects.getProspects().add(new Prospect(Integer.parseInt(line.split(";")[0]),
                                         line.split(";")[1],
-                                        new Adresse(line.split(";")[2],
+                                        new Adresse(0, line.split(";")[2],
                                                 line.split(";")[3],
                                                 line.split(";")[4],
                                                 line.split(";")[5]),
