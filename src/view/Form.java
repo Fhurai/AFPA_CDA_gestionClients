@@ -284,7 +284,6 @@ public class Form extends JFrame {
                                 Long.parseLong(this.chiffreAffaireTextfield.getText()),
                                 Integer.parseInt(this.nbEmployesTextfield.getText()));
                         MySqlFactory.getClientsDAO().create(client);
-//                        Clients.toClientsAdd(client);
 
                         JOptionPane.showMessageDialog(this, "Client ajouté avec succès !");
                     } else if (this.typeSociete == TypeSociete.PROSPECT) {
@@ -305,7 +304,7 @@ public class Form extends JFrame {
                                 this.commentairesTextArea.getText(),
                                 LocalDate.parse(this.dateProspectionTextfield.getText(), Formatters.FORMAT_DDMMYYYY),
                                 (String) this.prospectInteresseComboBox.getSelectedItem());
-                        Prospects.toProspectsAdd(prospect);
+                        MySqlFactory.getProspectsDAO().create(prospect);
 
                         JOptionPane.showMessageDialog(this, "Prospect ajouté avec succès !");
                     }
@@ -381,7 +380,7 @@ public class Form extends JFrame {
                                 "vous supprimer " + prospect.getRaisonSociale() + " ?");
 
                         if (reponse == JOptionPane.OK_OPTION) {
-                            Prospects.getProspects().remove(prospect);
+                            MySqlFactory.getProspectsDAO().delete(prospect);
                             JOptionPane.showMessageDialog(this, "Prospect " +
                                     "supprimé avec succès !");
                         }

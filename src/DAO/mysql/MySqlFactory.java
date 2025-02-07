@@ -20,4 +20,8 @@ public class MySqlFactory {
     public static ClientsMySqlDAO getClientsDAO() {
         return new ClientsMySqlDAO();
     }
+
+    public static ProspectsMySqlDAO getProspectsDAO() {
+        return new ProspectsMySqlDAO();
+    }
 }
