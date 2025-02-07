@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS `clients` (
 INSERT INTO `clients` (`identifiant`, `raisonSociale`, `telephone`, `mail`, `commentaires`, `chiffreAffaires`, `nbEmployes`, `idAdresse`) VALUES
 (1, 'Efluid SAS', '0387543400', 'contact@efluid.fr', NULL, 999999999999999.9999, 250, 1),
 (2, 'OGMI', '0383375640', 'ogmi@ogmi.fr', NULL, 50000.0000, 1, 3),
-(3, 'Happiso', '0387758575', 'contact@happiso.fr', NULL, 4813.0000, 6, 3);
+(3, 'Happiso', '0387758575', 'contact@happiso.fr', NULL, 4813.0000, 6, 2);
 
 -- --------------------------------------------------------
 

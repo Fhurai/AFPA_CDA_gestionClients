@@ -3,11 +3,11 @@ package DAO.mysql;
 import DAO.SocieteDatabaseException;
 import entities.Adresse;
 import entities.Client;
-import entities.Societe;
 import entities.SocieteEntityException;
 import logs.LogManager;
 import org.jetbrains.annotations.NotNull;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -17,20 +17,25 @@ import java.util.logging.Level;
  */
 public class ClientsMySqlDAO extends SocieteMySqlDAO<Client> {
 
-    /**
-     * Constructeur.
-     */
     public ClientsMySqlDAO() {
-        this.defineLikeParameters(new String[]{"raisonSociale", "commentaires"});
+        super(new String[] {"raisonSociale", "commentaires"});
     }
 
     /**
-     * Méthode pour récupérer un client de la data donnée en argument.
-     * @param rs La ligne d'enregistrement.
-     * @return L'objet Client tiré des données.
+     * @return
      */
     @Override
-    protected Client parse(ResultSet rs) throws SocieteDatabaseException {
+    protected String getTable() {
+        return "clients";
+    }
+
+    /**
+     * @param rs
+     * @return
+     * @throws SocieteDatabaseException
+     */
+    @Override
+    protected Client parse(@NotNull ResultSet rs) throws SocieteDatabaseException {
         Client client = new Client();
 
         try {
@@ -42,9 +47,7 @@ public class ClientsMySqlDAO extends SocieteMySqlDAO<Client> {
             client.setChiffreAffaires(rs.getLong("chiffreAffaires"));
             client.setNbEmployes(rs.getInt("nbEmployes"));
 
-            Adresse adresse =
-                    MySqlFactory.getAdresseDAO().findById(rs.getInt(
-                            "idAdresse"));
+            Adresse adresse = MySqlFactory.getAdresseDAO().findById(rs.getInt("idAdresse"));
             client.setAdresse(adresse);
         } catch (SocieteEntityException | SQLException e) {
             LogManager.logs.log(Level.SEVERE, e.getMessage());
@@ -56,39 +59,48 @@ public class ClientsMySqlDAO extends SocieteMySqlDAO<Client> {
     }
 
     /**
-     * Méthode qui retourne le nom de la table de la classe DAO.
-     * @return Nom de la table.
-     */
-    @Override
-    protected String getTable() {
-        return "clients";
-    }
-
-    public Client findByRaisonSociale(String raisonSociale) throws SocieteDatabaseException {
-        // Initialisation de la condition de recherche.
-        String[][] selection = {{"raisonSociale", raisonSociale}};
-
-        // Retourne le client trouvé avec la condition de recherche.
-        return this.find(selection);
-    }
-
-    /**
-     * @param o L'objet à sauvegarder.
      * @return
      */
     @Override
-    public boolean save(Object o) {
-        return false;
+    protected String[] getTablePropertiesLabels() {
+        return new String[]{"raisonSociale", "telephone", "mail", "commentaires", "chiffreAffaires", "nbEmployes","idAdresse"};
     }
 
     /**
-     * @param client Le client à supprimer.
-     * @return Indication si le client a été supprimé.
-     * @throws SocieteDatabaseException L'exception de lecture de la base de
-     * données.
+     * @param obj
+     * @param stmt
+     * @throws SocieteDatabaseException
      */
     @Override
-    public boolean delete(@NotNull Client client) throws SocieteDatabaseException {
-        return super.delete(client);
+    protected void bindTableProperties(Client obj, PreparedStatement stmt) throws SocieteDatabaseException {
+        try {
+            stmt.setString(1, obj.getRaisonSociale());
+            stmt.setString(2, obj.getTelephone());
+            stmt.setString(3, obj.getMail());
+            stmt.setString(4, obj.getCommentaires());
+            stmt.setLong(5, obj.getChiffreAffaires());
+            stmt.setInt(6, obj.getNbEmployes());
+            stmt.setInt(7, obj.getAdresse().getIdentifiant());
+        } catch (SQLException e) {
+            LogManager.logs.log(Level.SEVERE, e.getMessage());
+            throw new SocieteDatabaseException("Client n'arrive pas à être " +
+                    "créé.");
+        }
+    }
+
+    /**
+     * @param obj
+     * @param rs
+     * @throws SocieteDatabaseException
+     */
+    @Override
+    protected void setPrimaryKey(@NotNull Client obj, @NotNull ResultSet rs) throws SocieteDatabaseException {
+        try {
+            obj.setIdentifiant(rs.getInt(1));
+        } catch (SocieteEntityException | SQLException e) {
+            LogManager.logs.log(Level.SEVERE, e.getMessage());
+            throw new SocieteDatabaseException("Le nouveau client n'est pas" +
+                    " bien indexé.");
+        }
     }
 }

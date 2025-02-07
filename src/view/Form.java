@@ -283,7 +283,8 @@ public class Form extends JFrame {
                                 this.commentairesTextArea.getText(),
                                 Long.parseLong(this.chiffreAffaireTextfield.getText()),
                                 Integer.parseInt(this.nbEmployesTextfield.getText()));
-                        Clients.toClientsAdd(client);
+                        MySqlFactory.getClientsDAO().create(client);
+//                        Clients.toClientsAdd(client);
 
                         JOptionPane.showMessageDialog(this, "Client ajouté avec succès !");
                     } else if (this.typeSociete == TypeSociete.PROSPECT) {
@@ -368,7 +369,6 @@ public class Form extends JFrame {
 
                         if (reponse == JOptionPane.OK_OPTION) {
                             MySqlFactory.getClientsDAO().delete(client);
-                            MySqlFactory.getAdresseDAO().delete(client.getAdresse());
                             JOptionPane.showMessageDialog(this, "Client supprimé " +
                                     "avec succès !");
                         }
