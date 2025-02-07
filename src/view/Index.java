@@ -1,7 +1,8 @@
 package view;
 
-import DAO.ClientsDAO;
+import DAO.mysql.ClientsMySqlDAO;
 import DAO.SocieteDatabaseException;
+import DAO.mysql.MySqlFactory;
 import entities.*;
 import logs.LogManager;
 import org.jetbrains.annotations.NotNull;
@@ -130,7 +131,7 @@ public class Index extends JFrame {
         selectionComboBox.removeAllItems();
         try {
             if (type == TypeSociete.CLIENT) {
-                ClientsDAO.findAll().forEach(client -> selectionComboBox.addItem(client.getRaisonSociale()));
+                MySqlFactory.getClientsDAO().findAll().forEach(client -> selectionComboBox.addItem(client.getRaisonSociale()));
             } else if (type == TypeSociete.PROSPECT) {
                 Prospects.getProspects().forEach(prospect -> selectionComboBox.addItem(prospect.getRaisonSociale()));
             }
@@ -198,7 +199,7 @@ public class Index extends JFrame {
             if (typeChoice == TypeSociete.CLIENT) {
                 // Le choix est un client
                 editChoice =
-                        ClientsDAO.findByRaisonSociale(Objects.requireNonNull(selectionComboBox.getSelectedItem()).toString());
+                        new ClientsMySqlDAO().findByRaisonSociale(Objects.requireNonNull(selectionComboBox.getSelectedItem()).toString());
             } else if (typeChoice == TypeSociete.PROSPECT) {
                 // Le choix est un prospect
                 Optional<Prospect> p = Prospects.getFromRaisonSociale(Objects.requireNonNull(selectionComboBox.getSelectedItem()).toString());

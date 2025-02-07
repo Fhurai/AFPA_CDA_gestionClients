@@ -1,11 +1,10 @@
 package view;
 
-import DAO.AdresseDAO;
-import DAO.ClientsDAO;
+import DAO.mysql.ClientsMySqlDAO;
+import DAO.mysql.MySqlFactory;
 import entities.*;
 import logs.LogManager;
 import org.jetbrains.annotations.NotNull;
-import utilities.Files;
 import utilities.Formatters;
 
 import javax.swing.*;
@@ -368,7 +367,8 @@ public class Form extends JFrame {
                                 " vous supprimer " + client.getRaisonSociale() + " ?");
 
                         if (reponse == JOptionPane.OK_OPTION) {
-                            ClientsDAO.delete(client);
+                            MySqlFactory.getClientsDAO().delete(client);
+                            MySqlFactory.getAdresseDAO().delete(client.getAdresse());
                             JOptionPane.showMessageDialog(this, "Client supprimé " +
                                     "avec succès !");
                         }

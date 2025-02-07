@@ -1,8 +1,6 @@
-import DAO.Connexion;
+import DAO.mysql.ConnexionMySql;
 import DAO.SocieteDatabaseException;
 import logs.LogManager;
-import utilities.Files;
-import utilities.SocieteUtilitiesException;
 import view.Index;
 
 import javax.swing.*;
@@ -40,7 +38,7 @@ public class Main {
 
         try{
             // Initialisation de l'accès à la base de données.
-            Connexion.getInstance();
+            ConnexionMySql.getInstance();
         }catch (SocieteDatabaseException sde){
             JOptionPane.showMessageDialog(null, sde.getMessage());
             System.exit(1);

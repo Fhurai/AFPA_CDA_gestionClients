@@ -1,8 +1,8 @@
 package utilities;
 
-import DAO.ClientsDAO;
+import DAO.mysql.ClientsMySqlDAO;
 import DAO.SocieteDatabaseException;
-import entities.Clients;
+import DAO.mysql.MySqlFactory;
 import entities.Prospects;
 import logs.LogManager;
 import org.jetbrains.annotations.NotNull;
@@ -55,7 +55,7 @@ public class ViewsUtilities {
         if(entete[5].equals("Chiffre d'affaires")){
             // Si l'entête est pour un client.
 
-            ClientsDAO.findAll().forEach(c -> modelTable.addRow(new Object[]{
+            MySqlFactory.getClientsDAO().findAll().forEach(c -> modelTable.addRow(new Object[]{
                     c.getIdentifiant(),
                     c.getRaisonSociale(),
                     c.getAdresse(),

@@ -1,8 +1,8 @@
-package DAO;
+package DAO.mysql;
 
+import DAO.SocieteDatabaseException;
 import logs.LogManager;
 
-import javax.swing.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -13,7 +13,7 @@ import java.sql.SQLException;
 import java.util.Properties;
 import java.util.logging.Level;
 
-public class Connexion {
+public class ConnexionMySql {
 
     private static Connection connexion = null;
 
@@ -32,7 +32,7 @@ public class Connexion {
         });
     }
 
-    private Connexion(){
+    private ConnexionMySql(){
 
     }
 

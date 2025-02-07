@@ -1,7 +1,8 @@
 package view;
 
-import DAO.ClientsDAO;
+import DAO.mysql.ClientsMySqlDAO;
 import DAO.SocieteDatabaseException;
+import DAO.mysql.MySqlFactory;
 import entities.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -155,7 +156,7 @@ public class List extends JFrame {
 
                 // Récupération du client
                 try {
-                    Client client = ClientsDAO.findByIdentifiant(x);
+                    Client client = MySqlFactory.getClientsDAO().findById(x);
 
                     if(client != null){
                         // Le client existe, le formulaire est à ouvrir avec l'action
