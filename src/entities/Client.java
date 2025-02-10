@@ -42,8 +42,6 @@ public final class Client extends Societe {
         super(raisonSociale, adresse, telephone, mail, commentaires);
         setChiffreAffaires(chiffreAffaires);
         setNbEmployes(nbEmployes);
-
-        setIdentifiant(Clients.getCompteurIdClient());
     }
 
     /**

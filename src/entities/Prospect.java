@@ -49,8 +49,6 @@ public final class Prospect extends Societe {
         super(raisonSociale, adresse, telephone, mail, commentaires);
         setDateProspection(dateProspection);
         setProspectInteresse(prospectInteresse);
-
-        setIdentifiant(Prospects.getCompteurIdProspects());
     }
 
     /**

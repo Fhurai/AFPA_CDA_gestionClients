@@ -25,7 +25,7 @@ abstract public class Societe {
      * @param commentaires Les commentaires
      */
     public Societe(int identifiant, String raisonSociale, Adresse adresse, String telephone, String mail, String commentaires) throws SocieteEntityException {
-        this.identifiant = identifiant;
+        setIdentifiant(identifiant);
         setRaisonSociale(raisonSociale);
         setAdresse(adresse);
         setTelephone(telephone);
@@ -42,6 +42,7 @@ abstract public class Societe {
      * @param commentaires Les commentaires
      */
     public Societe(String raisonSociale, Adresse adresse, String telephone, String mail, String commentaires) throws SocieteEntityException {
+        this.identifiant = 0;
         setRaisonSociale(raisonSociale);
         setAdresse(adresse);
         setTelephone(telephone);
