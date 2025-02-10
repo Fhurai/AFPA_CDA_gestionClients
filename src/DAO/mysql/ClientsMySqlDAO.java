@@ -17,12 +17,16 @@ import java.util.logging.Level;
  */
 public class ClientsMySqlDAO extends SocieteMySqlDAO<Client> {
 
+    /**
+     * Constructor
+     */
     public ClientsMySqlDAO() {
-        super(new String[] {"raisonSociale", "commentaires"});
+        super(new String[]{"raisonSociale", "commentaires"});
     }
 
     /**
-     * @return
+     * Méthode qui retourne la table de la classe DAO.
+     * @return String
      */
     @Override
     protected String getTable() {
@@ -30,9 +34,10 @@ public class ClientsMySqlDAO extends SocieteMySqlDAO<Client> {
     }
 
     /**
-     * @param rs
-     * @return
-     * @throws SocieteDatabaseException
+     * Méthode qui construit un Client à partir d'une ligne de résultats.
+     * @param rs Ligne de résultats
+     * @return Client Le client récupéré.
+     * @throws SocieteDatabaseException Exception lors de la récupération.
      */
     @Override
     protected Client parse(@NotNull ResultSet rs) throws SocieteDatabaseException {
@@ -59,17 +64,30 @@ public class ClientsMySqlDAO extends SocieteMySqlDAO<Client> {
     }
 
     /**
-     * @return
+     * Méthode donnant les libellés de propriétés pour la classe Client.
+     * @return String[] Le tableau des libellés.
      */
     @Override
     protected String[] getTablePropertiesLabels() {
-        return new String[]{"raisonSociale", "telephone", "mail", "commentaires", "chiffreAffaires", "nbEmployes","idAdresse"};
+        return new String[]{"raisonSociale", "telephone", "mail", "commentaires", "chiffreAffaires", "nbEmployes", "idAdresse"};
     }
 
     /**
-     * @param obj
-     * @param stmt
-     * @throws SocieteDatabaseException
+     * Méthode donnant les libellés de propriétés avec jetons pour la classe
+     * Client.
+     * @return String[] le tableau des libellés avec jetons.
+     */
+    @Override
+    protected String[] getTablePropertiesLabelsTokens() {
+        return new String[]{"raisonSociale = ?", "telephone = ?", "mail = ?",
+                "commentaires = ?", "chiffreAffaires = ?", "nbEmployes = ?", "idAdresse = ?"};
+    }
+
+    /**
+     * Méthode pour lier les valeurs du client à la requête.
+     * @param obj Le client.
+     * @param stmt La requête préparée.
+     * @throws SocieteDatabaseException Exception lors de la liaison.
      */
     @Override
     protected void bindTableProperties(Client obj, PreparedStatement stmt) throws SocieteDatabaseException {
@@ -89,9 +107,13 @@ public class ClientsMySqlDAO extends SocieteMySqlDAO<Client> {
     }
 
     /**
-     * @param obj
-     * @param rs
-     * @throws SocieteDatabaseException
+     * Méthode pour affecter la valeur de la clé primaire du client avec les
+     * données de la ligne de résultat.
+     * @param obj Le client.
+     * @param rs La ligne
+     * @throws SocieteDatabaseException Exception lors de la récupération de
+     * données depuis l'enregistrement ou exception lors de la valorisation
+     * de la clé primaire.
      */
     @Override
     protected void setPrimaryKey(@NotNull Client obj, @NotNull ResultSet rs) throws SocieteDatabaseException {

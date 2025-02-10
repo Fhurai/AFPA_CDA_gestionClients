@@ -20,18 +20,19 @@ public abstract class DAO<T> {
     /**
      * Méthode to get query string depending of query action & selection
      * conditions.
+     *
      * @return Generated query string
      */
-    protected String getQueryString(@NotNull QueryAction action, String[][] selection){
+    protected String getQueryString(@NotNull QueryAction action, String[][] selection) {
         // Initialisation du stringBuilder query à partir de la variable
         // action donnée en paramètre.
         StringBuilder query = new StringBuilder(switch (action) {
             case QueryAction.READ -> "SELECT * FROM `" + this.getTable() + "`";
-            case QueryAction.CREATE ->
-                    "INSERT INTO `" + this.getTable() +
-                    "`("+String.join(", ", this.getTablePropertiesLabels())
-                    +") VALUES ("+this.getTablePropertiesToken()+")";
-            case QueryAction.UPDATE -> "UPDATE `" + this.getTable() + "`";
+            case QueryAction.CREATE -> "INSERT INTO `" + this.getTable() +
+                    "`(" + String.join(", ", this.getTablePropertiesLabels())
+                    + ") VALUES (" + this.getTablePropertiesToken() + ")";
+            case QueryAction.UPDATE ->
+                    "UPDATE `" + this.getTable() + "` SET " + String.join(", ", this.getTablePropertiesLabelsTokens());
             case QueryAction.DELETE -> "DELETE FROM `" + this.getTable() + "`";
         });
 
@@ -39,7 +40,7 @@ public abstract class DAO<T> {
             // La sélection n'est pas vide, il faut ajouter une condition au
             // minimum.
 
-            for (int i = 0; i < selection.length ; i++) {
+            for (int i = 0; i < selection.length; i++) {
                 // Parcours de la ligne des conditions de sélection.
 
                 if (i == 0) {
@@ -67,9 +68,10 @@ public abstract class DAO<T> {
 
     /**
      * Méthode pour récupérer l'ensemble des objets de type T.
+     *
      * @return l'ensemble des objets de type T.
      */
-    public ArrayList<T> findAll() throws SocieteDatabaseException{
+    public ArrayList<T> findAll() throws SocieteDatabaseException {
         ArrayList<T> results = new ArrayList<>();
         Connection con = ConnexionMySql.getInstance();
         Statement stmt = null;
@@ -111,6 +113,7 @@ public abstract class DAO<T> {
     /**
      * Méthode pour rechercher un objet de type T à partir d'un tableau de
      * sélection.
+     *
      * @param selection Tableau de sélection.
      * @return Objet de type T recherché.
      * @throws SocieteDatabaseException
@@ -131,12 +134,12 @@ public abstract class DAO<T> {
             for (int i = 0; i < selection.length; i++) {
                 // Parcours des propriétés de sélection.
 
-                if(Arrays.asList(likeProperties).contains(selection[i][0])){
+                if (Arrays.asList(likeProperties).contains(selection[i][0])) {
                     // Propriété de sélection nécessite le mot-clé LIKE.
-                    stmt.setString(i+1, "%" + selection[i][1] + "%");
-                }else{
+                    stmt.setString(i + 1, "%" + selection[i][1] + "%");
+                } else {
                     // Propriété de sélection ne nécessite pas le mot-clé LIKE.
-                    stmt.setString(i+1, selection[i][1]);
+                    stmt.setString(i + 1, selection[i][1]);
                 }
             }
 
@@ -173,6 +176,7 @@ public abstract class DAO<T> {
 
     /**
      * Méthode pour rechercher un objet de type T à partir de son identifiant.
+     *
      * @param id Identifiant de l'objet recherché.
      * @return Objet de type T recherché.
      * @throws SocieteDatabaseException
@@ -187,6 +191,7 @@ public abstract class DAO<T> {
 
     /**
      * Méthode pour supprimer un objet de type T
+     *
      * @param obj L'objet à supprimer.
      * @return Indication que l'objet a bien été supprimé.
      * @throws SocieteDatabaseException
@@ -204,7 +209,7 @@ public abstract class DAO<T> {
         try {
             // Création de l'objet requête et exécution de celle-ci.
             stmt = con.prepareStatement(query);
-            this.bindPrimaryKey(obj, stmt);
+            this.bindPrimaryKey(obj, stmt, this.getTablePropertiesLabels().length);
             rowsAffected = stmt.executeUpdate();
 
         } catch (SQLException e) {
@@ -253,8 +258,7 @@ public abstract class DAO<T> {
             // Exception attrapée, log de l'erreur et avertissement de
             // l'utilisateur.
             LogManager.logs.log(Level.SEVERE, e.getMessage());
-            throw new SocieteDatabaseException("Erreur lors de la lecture de " +
-                    "la base de données.");
+            throw new SocieteDatabaseException("Erreur lors de la création.");
         }
 
         try {
@@ -271,8 +275,45 @@ public abstract class DAO<T> {
         return false;
     }
 
+    public boolean update(T obj) throws SocieteDatabaseException {
+        Connection con = ConnexionMySql.getInstance();
+        PreparedStatement stmt = null;
+        int rowsAffected = 0;
+        String[][] selection = selectByPrimaryKey(obj);
+
+        String query = getQueryString(QueryAction.UPDATE, selection);
+
+        try {
+            stmt = con.prepareStatement(query);
+            this.bindTableProperties(obj, stmt);
+            this.bindPrimaryKey(obj, stmt,
+                    this.getTablePropertiesLabels().length + 1);
+            rowsAffected = stmt.executeUpdate();
+        } catch (SQLException e) {
+            LogManager.logs.log(Level.SEVERE, e.getMessage());
+            throw new SocieteDatabaseException("Erreur lors de la " +
+                    "modification.");
+        }
+
+        try {
+            // Fermeture de la requête.
+            stmt.close();
+        } catch (SQLException e) {
+            // Exception attrapée, log de l'erreur et avertissement de
+            // l'utilisateur.
+            LogManager.logs.log(Level.SEVERE, e.getMessage());
+            throw new SocieteDatabaseException("Erreur lors de la " +
+                    "fermeture de l'accès aux données.");
+        }
+
+        // Retourne l'indication si la requête a modifié une et une seule
+        // ligne d'enregistrement.
+        return rowsAffected == 1;
+    }
+
     /**
      * Méthode pour récupérer la table de l'objet DAO.
+     *
      * @return La table de l'objet DAO.
      */
     protected abstract String getTable();
@@ -281,11 +322,14 @@ public abstract class DAO<T> {
 
     protected abstract String[][] selectByPrimaryKey(T obj) throws SocieteDatabaseException;
 
-    protected abstract void bindPrimaryKey(T obj, PreparedStatement stmt) throws SocieteDatabaseException;
+    protected abstract void bindPrimaryKey(T obj, PreparedStatement stmt,
+                                           int nbParameters) throws SocieteDatabaseException;
 
     protected abstract String[] getTablePropertiesLabels();
 
-    protected String getTablePropertiesToken(){
+    protected abstract String[] getTablePropertiesLabelsTokens();
+
+    protected String getTablePropertiesToken() {
         StringBuilder tokens = new StringBuilder();
         int counter = 0;
         for (String s : Arrays.asList(this.getTablePropertiesLabels())) {

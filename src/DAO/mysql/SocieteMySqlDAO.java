@@ -24,7 +24,7 @@ abstract public class SocieteMySqlDAO<T extends Societe> extends DAO<T> {
      * @throws SocieteDatabaseException
      */
     protected String[][] selectByPrimaryKey(@NotNull Client obj) throws SocieteDatabaseException {
-        return new String[][] {{"identifiant", String.valueOf(obj.getIdentifiant())}};
+        return new String[][]{{"identifiant", String.valueOf(obj.getIdentifiant())}};
     }
 
     /**
@@ -32,9 +32,11 @@ abstract public class SocieteMySqlDAO<T extends Societe> extends DAO<T> {
      * @param stmt
      * @throws SocieteDatabaseException
      */
-    protected void bindPrimaryKey(@NotNull Client obj, @NotNull PreparedStatement stmt) throws SocieteDatabaseException {
+    protected void bindPrimaryKey(@NotNull Client obj,
+                                  @NotNull PreparedStatement stmt,
+                                  int nbParameters) throws SocieteDatabaseException {
         try {
-            stmt.setInt(1, obj.getIdentifiant());
+            stmt.setInt(nbParameters, obj.getIdentifiant());
         } catch (SQLException e) {
             LogManager.logs.log(Level.SEVERE, e.getMessage());
             throw new SocieteDatabaseException("Société n'arrive pas à faire " +
@@ -44,6 +46,7 @@ abstract public class SocieteMySqlDAO<T extends Societe> extends DAO<T> {
 
     /**
      * Méthode pour rechercher un objet de type T à partir de sa raison sociale.
+     *
      * @param raisonSociale La raison sociale de l'objet recherché.
      * @return Objet de type T recherché.
      * @throws SocieteDatabaseException
@@ -56,7 +59,8 @@ abstract public class SocieteMySqlDAO<T extends Societe> extends DAO<T> {
         return this.find(selection);
     }
 
-    public boolean delete(T obj) throws SocieteDatabaseException{
+    @Override
+    public boolean delete(T obj) throws SocieteDatabaseException {
         Connection conn = ConnexionMySql.getInstance();
         boolean ret = false;
 
@@ -67,7 +71,7 @@ abstract public class SocieteMySqlDAO<T extends Societe> extends DAO<T> {
             conn.commit();
         } catch (SQLException e) {
             LogManager.logs.log(Level.SEVERE, e.getMessage());
-            if(conn != null) {
+            if (conn != null) {
                 try {
                     conn.rollback();
                 } catch (SQLException ex) {
@@ -82,7 +86,8 @@ abstract public class SocieteMySqlDAO<T extends Societe> extends DAO<T> {
         return ret;
     }
 
-    public boolean create(@NotNull T obj) throws SocieteDatabaseException{
+    @Override
+    public boolean create(@NotNull T obj) throws SocieteDatabaseException {
         Connection conn = ConnexionMySql.getInstance();
         boolean ret = false;
 
@@ -93,7 +98,7 @@ abstract public class SocieteMySqlDAO<T extends Societe> extends DAO<T> {
             conn.commit();
         } catch (SQLException e) {
             LogManager.logs.log(Level.SEVERE, e.getMessage());
-            if(conn != null) {
+            if (conn != null) {
                 try {
                     conn.rollback();
                 } catch (SQLException ex) {
@@ -105,6 +110,35 @@ abstract public class SocieteMySqlDAO<T extends Societe> extends DAO<T> {
             throw new SocieteDatabaseException("Problème lors de la " +
                     "suppression de la société.");
         }
+        return ret;
+    }
+
+    public boolean update(T obj) throws SocieteDatabaseException {
+        Connection con = ConnexionMySql.getInstance();
+        boolean ret = false;
+
+        try {
+            con.setAutoCommit(false);
+            ret = super.update(obj);
+            MySqlFactory.getAdresseDAO().update(obj.getAdresse());
+            con.commit();
+        } catch (SQLException e) {
+            LogManager.logs.log(Level.SEVERE, e.getMessage());
+            if (con != null) {
+                try {
+                    con.rollback();
+                } catch (SQLException ex) {
+                    LogManager.logs.log(Level.SEVERE, e.getMessage());
+                    throw new SocieteDatabaseException("Les données de " +
+                            "sociétés ne sont plus intègres.");
+                }
+            }
+            throw new SocieteDatabaseException("Problème lors de la " +
+                    "modification de la société.");
+        }
+
+        // Retourne l'indication si la requête a modifié une et une seule
+        // ligne d'enregistrement.
         return ret;
     }
 }

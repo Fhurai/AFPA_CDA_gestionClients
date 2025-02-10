@@ -69,9 +69,10 @@ public class AdresseMySqlDAO extends DAO<Adresse> {
      * @throws SocieteDatabaseException
      */
     @Override
-    protected void bindPrimaryKey(@NotNull Adresse obj, @NotNull PreparedStatement stmt) throws SocieteDatabaseException {
+    protected void bindPrimaryKey(@NotNull Adresse obj,
+                                  @NotNull PreparedStatement stmt, int nbParameters) throws SocieteDatabaseException {
         try {
-            stmt.setInt(1, obj.getIdentifiant());
+            stmt.setInt(nbParameters, obj.getIdentifiant());
         } catch (SQLException e) {
             LogManager.logs.log(Level.SEVERE, e.getMessage());
             throw new SocieteDatabaseException("Adresse n'arrive pas à faire " +
@@ -85,6 +86,11 @@ public class AdresseMySqlDAO extends DAO<Adresse> {
     @Override
     protected String[] getTablePropertiesLabels() {
         return new String[]{"numRue", "nomRue", "codePostal", "ville"};
+    }
+
+    @Override
+    protected String[] getTablePropertiesLabelsTokens() {
+        return new String[]{"numRue = ?", "nomRue = ?", "codePostal = ?", "ville = ?"};
     }
 
     /**
