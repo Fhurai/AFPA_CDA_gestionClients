@@ -1,7 +1,6 @@
 package DAO.mysql;
 
 import DAO.SocieteDatabaseException;
-import entities.Adresse;
 import entities.Client;
 import entities.SocieteEntityException;
 import logs.LogManager;
@@ -26,6 +25,7 @@ public class ClientsMySqlDAO extends SocieteMySqlDAO<Client> {
 
     /**
      * Méthode qui retourne la table de la classe DAO.
+     *
      * @return String
      */
     @Override
@@ -35,15 +35,18 @@ public class ClientsMySqlDAO extends SocieteMySqlDAO<Client> {
 
     /**
      * Méthode qui construit un Client à partir d'une ligne de résultats.
+     *
      * @param rs Ligne de résultats
      * @return Client Le client récupéré.
      * @throws SocieteDatabaseException Exception lors de la récupération.
      */
     @Override
     protected Client parse(@NotNull ResultSet rs) throws SocieteDatabaseException {
+        // Initialisation client.
         Client client = new Client();
 
         try {
+            // Valorisation propriétés primitives.
             client.setIdentifiant(rs.getInt("identifiant"));
             client.setRaisonSociale(rs.getString("raisonSociale"));
             client.setTelephone(rs.getString("telephone"));
@@ -52,19 +55,23 @@ public class ClientsMySqlDAO extends SocieteMySqlDAO<Client> {
             client.setChiffreAffaires(rs.getLong("chiffreAffaires"));
             client.setNbEmployes(rs.getInt("nbEmployes"));
 
-            Adresse adresse = MySqlFactory.getAdresseDAO().findById(rs.getInt("idAdresse"));
-            client.setAdresse(adresse);
+            // Valorisation propriétés objets.
+            client.setAdresse(MySqlFactory.getAdresseDAO().findById(rs.getInt("idAdresse")));
         } catch (SocieteEntityException | SQLException e) {
+            // Log exception.
             LogManager.logs.log(Level.SEVERE, e.getMessage());
-            throw new SocieteDatabaseException("Erreur de la récupération du " +
-                    "client depuis la base de données.");
+
+            // Lancement d'une exception lisible par l'utilisateur.
+            throw new SocieteDatabaseException("Erreur de la récupération du " + "client depuis la base de données.");
         }
 
+        // Retourne le client valorisé.
         return client;
     }
 
     /**
      * Méthode donnant les libellés de propriétés pour la classe Client.
+     *
      * @return String[] Le tableau des libellés.
      */
     @Override
@@ -75,23 +82,25 @@ public class ClientsMySqlDAO extends SocieteMySqlDAO<Client> {
     /**
      * Méthode donnant les libellés de propriétés avec jetons pour la classe
      * Client.
+     *
      * @return String[] le tableau des libellés avec jetons.
      */
     @Override
     protected String[] getTablePropertiesLabelsTokens() {
-        return new String[]{"raisonSociale = ?", "telephone = ?", "mail = ?",
-                "commentaires = ?", "chiffreAffaires = ?", "nbEmployes = ?", "idAdresse = ?"};
+        return new String[]{"raisonSociale = ?", "telephone = ?", "mail = ?", "commentaires = ?", "chiffreAffaires = ?", "nbEmployes = ?", "idAdresse = ?"};
     }
 
     /**
      * Méthode pour lier les valeurs du client à la requête.
-     * @param obj Le client.
+     *
+     * @param obj  Le client.
      * @param stmt La requête préparée.
      * @throws SocieteDatabaseException Exception lors de la liaison.
      */
     @Override
     protected void bindTableProperties(Client obj, PreparedStatement stmt) throws SocieteDatabaseException {
         try {
+            // Valorisation de la requête avec les propriétés du client.
             stmt.setString(1, obj.getRaisonSociale());
             stmt.setString(2, obj.getTelephone());
             stmt.setString(3, obj.getMail());
@@ -100,29 +109,11 @@ public class ClientsMySqlDAO extends SocieteMySqlDAO<Client> {
             stmt.setInt(6, obj.getNbEmployes());
             stmt.setInt(7, obj.getAdresse().getIdentifiant());
         } catch (SQLException e) {
+            // Log exception.
             LogManager.logs.log(Level.SEVERE, e.getMessage());
-            throw new SocieteDatabaseException("Client n'arrive pas à être " +
-                    "créé.");
-        }
-    }
 
-    /**
-     * Méthode pour affecter la valeur de la clé primaire du client avec les
-     * données de la ligne de résultat.
-     * @param obj Le client.
-     * @param rs La ligne
-     * @throws SocieteDatabaseException Exception lors de la récupération de
-     * données depuis l'enregistrement ou exception lors de la valorisation
-     * de la clé primaire.
-     */
-    @Override
-    protected void setPrimaryKey(@NotNull Client obj, @NotNull ResultSet rs) throws SocieteDatabaseException {
-        try {
-            obj.setIdentifiant(rs.getInt(1));
-        } catch (SocieteEntityException | SQLException e) {
-            LogManager.logs.log(Level.SEVERE, e.getMessage());
-            throw new SocieteDatabaseException("Le nouveau client n'est pas" +
-                    " bien indexé.");
+            // Lancement d'une exception lisible par l'utilisateur.
+            throw new SocieteDatabaseException("Client n'arrive pas à être " + "créé.");
         }
     }
 }

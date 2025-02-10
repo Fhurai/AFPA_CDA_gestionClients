@@ -9,10 +9,24 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.logging.Level;
 
+/**
+ * Classe abstrait d'accès DAO.
+ * @param <T> Classe pour laquelle créer la classe DAO.
+ */
 public abstract class DAO<T> {
 
+    /**
+     * Le tableau des champs nécessitant un mot-clé
+     * LIKE en SQL.
+     */
     protected String[] likeProperties;
 
+    /**
+     * Constructeur
+     *
+     * @param likeProperties Le tableau des champs nécessitant un mot-clé
+     *                       LIKE en SQL.
+     */
     public DAO(String[] likeProperties) {
         this.likeProperties = likeProperties;
     }
@@ -74,7 +88,7 @@ public abstract class DAO<T> {
     public ArrayList<T> findAll() throws SocieteDatabaseException {
         ArrayList<T> results = new ArrayList<>();
         Connection con = ConnexionMySql.getInstance();
-        Statement stmt = null;
+        Statement stmt;
         String query = this.getQueryString(QueryAction.READ, null);
 
         try {
@@ -116,12 +130,13 @@ public abstract class DAO<T> {
      *
      * @param selection Tableau de sélection.
      * @return Objet de type T recherché.
-     * @throws SocieteDatabaseException
+     * @throws SocieteDatabaseException Exception lors de la lecture ou lors
+     * de la fermeture des données.
      */
     protected T find(String[][] selection) throws SocieteDatabaseException {
         T obj = null;
         Connection con = ConnexionMySql.getInstance();
-        PreparedStatement stmt = null;
+        PreparedStatement stmt;
 
         // Récupération de la requête de lecture à partir du tableau de
         // conditions de sélection.
@@ -179,7 +194,8 @@ public abstract class DAO<T> {
      *
      * @param id Identifiant de l'objet recherché.
      * @return Objet de type T recherché.
-     * @throws SocieteDatabaseException
+     * @throws SocieteDatabaseException Exception lors de la lecture ou lors
+     * de la fermeture des données.
      */
     public T findById(int id) throws SocieteDatabaseException {
         // Initialisation de la condition de recherche.
@@ -194,13 +210,14 @@ public abstract class DAO<T> {
      *
      * @param obj L'objet à supprimer.
      * @return Indication que l'objet a bien été supprimé.
-     * @throws SocieteDatabaseException
+     * @throws SocieteDatabaseException Exception lors de la lecture ou lors
+     * de la fermeture des données.
      */
     public boolean delete(T obj) throws SocieteDatabaseException {
         // Initialisation des variables.
         Connection con = ConnexionMySql.getInstance();
-        PreparedStatement stmt = null;
-        int rowsAffected = 0;
+        PreparedStatement stmt;
+        int rowsAffected;
         String[][] selection = selectByPrimaryKey(obj);
 
         // Récupération de la requête de suppression.
@@ -209,7 +226,7 @@ public abstract class DAO<T> {
         try {
             // Création de l'objet requête et exécution de celle-ci.
             stmt = con.prepareStatement(query);
-            this.bindPrimaryKey(obj, stmt, this.getTablePropertiesLabels().length);
+            this.bindPrimaryKey(obj, stmt, 1);
             rowsAffected = stmt.executeUpdate();
 
         } catch (SQLException e) {
@@ -236,10 +253,19 @@ public abstract class DAO<T> {
         return rowsAffected == 1;
     }
 
+    /**
+     * Méthode de création d'un objet de type T
+     *
+     * @param obj L'objet à créer.
+     * @return True si la création a retourné des clés.
+     * @throws SocieteDatabaseException Exception à la création ou à la
+     * fermeture des données.
+     */
     public boolean create(T obj) throws SocieteDatabaseException {
         // Initialisation des variables.
         Connection con = ConnexionMySql.getInstance();
-        PreparedStatement stmt = null;
+        PreparedStatement stmt;
+        ResultSet rs;
 
         // Récupération de la requête de suppression.
         String query = getQueryString(QueryAction.CREATE, null);
@@ -249,7 +275,7 @@ public abstract class DAO<T> {
             stmt = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             this.bindTableProperties(obj, stmt);
             stmt.executeUpdate();
-            ResultSet rs = stmt.getGeneratedKeys();
+            rs = stmt.getGeneratedKeys();
             if (rs.next()) {
                 this.setPrimaryKey(obj, rs);
             }
@@ -272,24 +298,41 @@ public abstract class DAO<T> {
                     "fermeture de l'accès aux données.");
         }
 
-        return false;
+        return true;
     }
 
+    /**
+     * Méthode de mise à jour d'un objet de type T.
+     *
+     * @param obj L'objet à modifier.
+     * @return True si la mise à jour concerne une ligne, sinon False.
+     * @throws SocieteDatabaseException Exception lors à mise à jour ou à la
+     * fermeture des données.
+     */
     public boolean update(T obj) throws SocieteDatabaseException {
+        // Initialisation des variables.
         Connection con = ConnexionMySql.getInstance();
-        PreparedStatement stmt = null;
-        int rowsAffected = 0;
+        PreparedStatement stmt;
+        int rowsAffected;
         String[][] selection = selectByPrimaryKey(obj);
 
+        // Récupération de la requête de suppression.
         String query = getQueryString(QueryAction.UPDATE, selection);
 
         try {
+            // Création de l'objet requête.
             stmt = con.prepareStatement(query);
+
+            // Liaison requête et données.
             this.bindTableProperties(obj, stmt);
             this.bindPrimaryKey(obj, stmt,
                     this.getTablePropertiesLabels().length + 1);
+
+            // Exécution requête.
             rowsAffected = stmt.executeUpdate();
         } catch (SQLException e) {
+            // Exception attrapée, log de l'erreur et avertissement de
+            // l'utilisateur.
             LogManager.logs.log(Level.SEVERE, e.getMessage());
             throw new SocieteDatabaseException("Erreur lors de la " +
                     "modification.");
@@ -318,29 +361,90 @@ public abstract class DAO<T> {
      */
     protected abstract String getTable();
 
+    /**
+     * Méthode pour créer un objet de type T à partir de la ligne
+     * d'enregistrement.
+     *
+     * @param rs La ligne d'enregistrement.
+     * @return T L'objet créé.
+     * @throws SocieteDatabaseException Exception lors de la lecture de la
+     * ligne d'enregistrement.
+     */
     protected abstract T parse(ResultSet rs) throws SocieteDatabaseException;
 
+    /**
+     * Méthode pour récupérer le tableau de sélection par la clé primaire de
+     * l'objet T.
+     *
+     * @param obj Objet T à sélectionner.
+     * @return Tableau de sélection.
+     */
     protected abstract String[][] selectByPrimaryKey(T obj) throws SocieteDatabaseException;
 
+    /**
+     * Méthode qui lie la clé primaire de l'objet à la requête préparée.
+     * @param obj Objet à lier.
+     * @param stmt Requête préparer.
+     * @param nbParameters Nombre de paramètres à lier dans la requête.
+     * @throws SocieteDatabaseException Exception lors de la liaison.
+     */
     protected abstract void bindPrimaryKey(T obj, PreparedStatement stmt,
                                            int nbParameters) throws SocieteDatabaseException;
 
+    /**
+     * Méthode qui retourne les propriétés de l'objet sans sa clé primaire.
+     *
+     * @return Tableau des propriétés de l'objet sans sa clé primaire.
+     */
     protected abstract String[] getTablePropertiesLabels();
 
+    /**
+     * Méthode qui retourne les propriétés de l'objet et leurs jetons sans sa
+     * clé primaires.
+     *
+     * @return Tableau des propriétés de l'objet et leurs jetons sans sa clé
+     * primaire.
+     */
     protected abstract String[] getTablePropertiesLabelsTokens();
 
+    /**
+     * Méthode qui retourne autant de jetons que l'objet a de propriétés.
+     *
+     * @return Chaine des jetons de l'objet.
+     */
     protected String getTablePropertiesToken() {
+        // Initialisation des variables.
         StringBuilder tokens = new StringBuilder();
         int counter = 0;
-        for (String s : Arrays.asList(this.getTablePropertiesLabels())) {
+
+        for (String ignored : this.getTablePropertiesLabels()) {
+            // Parcours des propriétés de l'objet et ajout des jetons à la
+            // chaine.
             tokens.append(counter > 0 ? ", " : "").append(" ? ");
             counter++;
         }
 
+        // Retourne la chaine.
         return tokens.toString();
     }
 
+    /**
+     * Méthode qui lie les propriétés de l'objet à la requête.
+     *
+     * @param obj Objet à lier.
+     * @param stmt Requête à lier.
+     * @throws SocieteDatabaseException Exception lors de la liaison.
+     */
     protected abstract void bindTableProperties(T obj, PreparedStatement stmt) throws SocieteDatabaseException;
 
+    /**
+     * Méthode qui valorise la clé primaire de l'objet à partir de
+     * l'enregistrement.
+     *
+     * @param obj Objet à valoriser.
+     * @param rs La ligne d'enregistrement dont est tirée la valeur.
+     * @throws SocieteDatabaseException Exception lors de la lecture des
+     * données.
+     */
     protected abstract void setPrimaryKey(T obj, ResultSet rs) throws SocieteDatabaseException;
 }
