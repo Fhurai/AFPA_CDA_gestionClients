@@ -1,9 +1,7 @@
 package utilities;
 
-import DAO.mysql.ClientsMySqlDAO;
 import DAO.SocieteDatabaseException;
 import DAO.mysql.MySqlFactory;
-import entities.Prospects;
 import logs.LogManager;
 import org.jetbrains.annotations.NotNull;
 import view.Index;
@@ -67,7 +65,7 @@ public class ViewsUtilities {
         }else if(entete[5].equals("Date prospection")){
             // Si l'entête est pour un prospect.
 
-            Prospects.getProspects().forEach(p -> modelTable.addRow(new Object[]{
+            MySqlFactory.getProspectsDAO().findAll().forEach(p -> modelTable.addRow(new Object[]{
                     p.getIdentifiant(),
                     p.getRaisonSociale(),
                     p.getAdresse(),

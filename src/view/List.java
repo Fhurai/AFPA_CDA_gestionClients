@@ -1,6 +1,5 @@
 package view;
 
-import DAO.mysql.ClientsMySqlDAO;
 import DAO.SocieteDatabaseException;
 import DAO.mysql.MySqlFactory;
 import entities.*;
@@ -12,7 +11,6 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.Optional;
 
 import static utilities.ViewsUtilities.*;
 
@@ -177,15 +175,27 @@ public class List extends JFrame {
                 // Si la liste est pour des prospects
 
                 // Récupération du prospect
-                Optional<Prospect> p =
-                        Prospects.get(Integer.parseInt(this.table1.getValueAt(x,0).toString()));
+                Prospect prospect = null;
+                try {
+                    prospect = MySqlFactory.getProspectsDAO().findById(x);
 
-                if(p.isPresent()){
-                    // Le prospect existe, le formulaire est à ouvrir avec l'action
-                    // voulue
-                    new Form(this.typeSociete, action, p.get()).setVisible(true);
-                    dispose();
+                    if(prospect != null){
+                        // Le prospect existe, le formulaire est à ouvrir avec l'action
+                        // voulue
+                        new Form(this.typeSociete, action, prospect).setVisible(true);
+                        dispose();
+                    }else{
+
+                        JOptionPane.showMessageDialog(this,"Client introuvable, " +
+                                "rechargement de la liste des clients.");
+                        this.fillTable();
+                    }
+                } catch (SocieteDatabaseException e) {
+                    JOptionPane.showMessageDialog(null, e.getMessage());
+                    System.exit(1);
                 }
+
+
             }
         }else{
             JOptionPane.showMessageDialog(this,

@@ -304,7 +304,7 @@ public class Form extends JFrame {
                                 this.commentairesTextArea.getText(),
                                 LocalDate.parse(this.dateProspectionTextfield.getText(), Formatters.FORMAT_DDMMYYYY),
                                 (String) this.prospectInteresseComboBox.getSelectedItem());
-//                        MySqlFactory.getProspectsDAO().create(prospect);
+                        MySqlFactory.getProspectsDAO().create(prospect);
 
                         JOptionPane.showMessageDialog(this, "Prospect ajouté avec succès !");
                     }
@@ -345,8 +345,7 @@ public class Form extends JFrame {
 
                         // Recherche du prospect modifié parmi la liste des
                         // prospects et modification de celui-c.
-                        int index = Prospects.getProspects().indexOf(prospect);
-                        Prospects.getProspects().set(index, prospect);
+                        MySqlFactory.getProspectsDAO().update(prospect);
                         JOptionPane.showMessageDialog(this, "Prospect modifié " +
                                 "avec succès !");
                     }
@@ -379,7 +378,7 @@ public class Form extends JFrame {
                                 "vous supprimer " + prospect.getRaisonSociale() + " ?");
 
                         if (reponse == JOptionPane.OK_OPTION) {
-//                            MySqlFactory.getProspectsDAO().delete(prospect);
+                            MySqlFactory.getProspectsDAO().delete(prospect);
                             JOptionPane.showMessageDialog(this, "Prospect " +
                                     "supprimé avec succès !");
                         }

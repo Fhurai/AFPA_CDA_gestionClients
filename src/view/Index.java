@@ -1,9 +1,10 @@
 package view;
 
-import DAO.mysql.ClientsMySqlDAO;
 import DAO.SocieteDatabaseException;
 import DAO.mysql.MySqlFactory;
-import entities.*;
+import entities.Societe;
+import entities.TypeAction;
+import entities.TypeSociete;
 import logs.LogManager;
 import org.jetbrains.annotations.NotNull;
 
@@ -13,7 +14,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.logging.Level;
 
 import static utilities.ViewsUtilities.quitApplication;
@@ -133,7 +133,7 @@ public class Index extends JFrame {
             if (type == TypeSociete.CLIENT) {
                 MySqlFactory.getClientsDAO().findAll().forEach(client -> selectionComboBox.addItem(client.getRaisonSociale()));
             } else if (type == TypeSociete.PROSPECT) {
-                Prospects.getProspects().forEach(prospect -> selectionComboBox.addItem(prospect.getRaisonSociale()));
+                MySqlFactory.getProspectsDAO().findAll().forEach(prospect -> selectionComboBox.addItem(prospect.getRaisonSociale()));
             }
 
             // Affichage du panneau de choix d'action.
@@ -199,11 +199,10 @@ public class Index extends JFrame {
             if (typeChoice == TypeSociete.CLIENT) {
                 // Le choix est un client
                 editChoice =
-                        new ClientsMySqlDAO().findByRaisonSociale(Objects.requireNonNull(selectionComboBox.getSelectedItem()).toString());
+                        MySqlFactory.getClientsDAO().findByRaisonSociale(Objects.requireNonNull(selectionComboBox.getSelectedItem()).toString());
             } else if (typeChoice == TypeSociete.PROSPECT) {
                 // Le choix est un prospect
-                Optional<Prospect> p = Prospects.getFromRaisonSociale(Objects.requireNonNull(selectionComboBox.getSelectedItem()).toString());
-                p.ifPresent(prospect -> editChoice = prospect);
+                editChoice = MySqlFactory.getProspectsDAO().findByRaisonSociale(Objects.requireNonNull(selectionComboBox.getSelectedItem()).toString());
             }
 
             new Form(this.typeChoice, this.actionChoice, this.editChoice).setVisible(true);
