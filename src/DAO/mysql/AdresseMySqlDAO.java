@@ -1,12 +1,14 @@
 package DAO.mysql;
 
 import DAO.DAO;
+import DAO.QueryAction;
 import DAO.SocieteDatabaseException;
 import entities.Adresse;
 import entities.SocieteEntityException;
 import logs.LogManager;
 import org.jetbrains.annotations.NotNull;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -164,5 +166,81 @@ public class AdresseMySqlDAO extends DAO<Adresse> {
             throw new SocieteDatabaseException("La nouvelle adresse n'est pas" +
                     " bien indexée.");
         }
+    }
+
+    /**
+     * Méthode qui sauvegarde une adresse, soit en la créant, soit en la
+     * modifiant.
+     *
+     * @param obj L'objet à sauvegarder.
+     * @return Indication que la société a bien été sauvegardée.
+     * @throws SocieteDatabaseException Exception lors de la création, la
+     *                                  modification ou la fermeture des données.
+     */
+    public boolean save(@NotNull Adresse obj) throws SocieteDatabaseException {
+        // Initialisation des variables communes.
+        Connection conn = ConnexionMySql.getInstance();
+        PreparedStatement stmt;
+        String query;
+        boolean ret = false;
+
+        try {
+            if (obj.getIdentifiant() > 0) {
+                // Initialisation variables UPDATE
+                String[][] selection = selectByPrimaryKey(obj);
+                query = this.getQueryString(QueryAction.UPDATE, selection);
+
+                // Préparation requête à exécuter.
+                stmt = conn.prepareStatement(query);
+
+                // Liaison des données de la société dans la requête.
+                this.bindTableProperties(obj, stmt);
+                this.bindPrimaryKey(obj, stmt,
+                        this.getTablePropertiesLabels().length + 1);
+
+                // Exécution de la requête.
+                ret = stmt.executeUpdate() == 1;
+            } else {
+                // Initialisation variables CREATE
+                ResultSet rs;
+                query = this.getQueryString(QueryAction.CREATE, null);
+
+                // Préparation requête à exécuter.
+                stmt = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
+
+                // Liaison des données de la société dans la requête.
+                this.bindTableProperties(obj, stmt);
+
+                // Exécution de la requête.
+                stmt.executeUpdate();
+
+                // Récupération des clés générées.
+                rs = stmt.getGeneratedKeys();
+                if (rs.next()) {
+                    ret = true;
+                    this.setPrimaryKey(obj, rs);
+                }
+            }
+        } catch (SQLException e) {
+            // Exception attrapée, log de l'erreur et avertissement de
+            // l'utilisateur.
+            LogManager.logs.log(Level.SEVERE, e.getMessage());
+            throw new SocieteDatabaseException("Erreur lors de la " +
+                    "sauvegarde.");
+        }
+
+        try {
+            // Fermeture de la requête.
+            stmt.close();
+        } catch (SQLException e) {
+            // Exception attrapée, log de l'erreur et avertissement de
+            // l'utilisateur.
+            LogManager.logs.log(Level.SEVERE, e.getMessage());
+            throw new SocieteDatabaseException("Erreur lors de la " +
+                    "fermeture de l'accès aux données.");
+        }
+
+        // Retourne si la sauvegarde s'est bien passée ou non.
+        return ret;
     }
 }

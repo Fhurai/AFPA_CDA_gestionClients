@@ -1,6 +1,7 @@
 package DAO.mysql;
 
 import DAO.DAO;
+import DAO.QueryAction;
 import DAO.SocieteDatabaseException;
 import entities.Societe;
 import entities.SocieteEntityException;
@@ -17,6 +18,7 @@ abstract public class SocieteMySqlDAO<T extends Societe> extends DAO<T> {
 
     /**
      * Constructeur.
+     *
      * @param likeProperties Le tableau des champs nécessitant un mot-clé
      *                       LIKE en SQL.
      */
@@ -37,7 +39,7 @@ abstract public class SocieteMySqlDAO<T extends Societe> extends DAO<T> {
     /**
      * Méthode qui lie la clé primaire à partir de l'objet de type T
      *
-     * @param obj Objet à lier.
+     * @param obj  Objet à lier.
      * @param stmt La requête à préparer
      * @throws SocieteDatabaseException Exception d'impossibilité de liaison.
      */
@@ -86,7 +88,7 @@ abstract public class SocieteMySqlDAO<T extends Societe> extends DAO<T> {
      * @param raisonSociale La raison sociale de l'objet recherché.
      * @return Objet de type T recherché.
      * @throws SocieteDatabaseException Exception lors de la lecture ou lors
-     * de la fermeture des données.
+     *                                  de la fermeture des données.
      */
     public T findByRaisonSociale(String raisonSociale) throws SocieteDatabaseException {
         // Initialisation de la condition de recherche.
@@ -102,7 +104,7 @@ abstract public class SocieteMySqlDAO<T extends Societe> extends DAO<T> {
      * @param obj La société à supprimer.
      * @return Indication que la société a bien été supprimée.
      * @throws SocieteDatabaseException Exception lors de la lecture ou lors
-     * de la fermeture des données.
+     *                                  de la fermeture des données.
      */
     @Override
     public boolean delete(T obj) throws SocieteDatabaseException {
@@ -134,85 +136,96 @@ abstract public class SocieteMySqlDAO<T extends Societe> extends DAO<T> {
     }
 
     /**
-     * Méthode pour créer la société et son adresse.
+     * Méthode qui sauvegarde une société, soit en la créant, soit en la
+     * modifiant.
      *
-     * @param obj La société à créer.
-     * @return True si la création a retourné des clés.
-     * @throws SocieteDatabaseException Exception à la création ou à la
-     * fermeture des données.
+     * @param obj L'objet à sauvegarder.
+     * @return Indication que la société a bien été sauvegardée.
+     * @throws SocieteDatabaseException Exception lors de la création, la
+     *                                  modification ou la fermeture des données.
      */
-    @Override
-    public boolean create(@NotNull T obj) throws SocieteDatabaseException {
-        // Initialisation des variables.
+    public boolean save(@NotNull T obj) throws SocieteDatabaseException {
+        // Initialisation des variables communes.
         Connection conn = ConnexionMySql.getInstance();
+        PreparedStatement stmt;
+        String query;
         boolean ret = false;
 
         try {
-            // Désactive le commit automatique.
             conn.setAutoCommit(false);
 
-            // Mise à jour de la société et de son adresse.
-            MySqlFactory.getAdresseDAO().create(obj.getAdresse());
-            ret = super.create(obj);
+            MySqlFactory.getAdresseDAO().save(obj.getAdresse());
 
-            // Validation des changements en base.
+            if (obj.getIdentifiant() > 0) {
+                // Initialisation variables UPDATE
+                String[][] selection = selectByPrimaryKey(obj);
+                query = this.getQueryString(QueryAction.UPDATE, selection);
+
+                // Préparation requête à exécuter.
+                stmt = conn.prepareStatement(query);
+
+                // Liaison des données de la société dans la requête.
+                this.bindTableProperties(obj, stmt);
+                this.bindPrimaryKey(obj, stmt,
+                        this.getTablePropertiesLabels().length + 1);
+
+                // Exécution de la requête.
+                ret = stmt.executeUpdate() == 1;
+            } else {
+                // Initialisation variables CREATE
+                ResultSet rs;
+                query = this.getQueryString(QueryAction.CREATE, null);
+
+                // Préparation requête à exécuter.
+                stmt = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
+
+                // Liaison des données de la société dans la requête.
+                this.bindTableProperties(obj, stmt);
+
+                // Exécution de la requête.
+                stmt.executeUpdate();
+
+                // Récupération des clés générées.
+                rs = stmt.getGeneratedKeys();
+                if (rs.next()) {
+                    ret = true;
+                    this.setPrimaryKey(obj, rs);
+                }
+            }
+
             conn.commit();
-
-            // Ré-activation du commit automatique.
-            conn.setAutoCommit(false);
+            conn.setAutoCommit(true);
         } catch (SQLException e) {
-
-            // Si exception il y a, appel à la méthode de gestion.
             this.manageSqlException(e, conn);
+            // Exception attrapée, log de l'erreur et avertissement de
+            // l'utilisateur.
+            LogManager.logs.log(Level.SEVERE, e.getMessage());
+            throw new SocieteDatabaseException("Erreur lors de la " +
+                    "sauvegarde.");
         }
-
-        // Retourne le résultat de la méthode mère.
-        return ret;
-    }
-
-    /**
-     * Méthode pour mettre à jour la société et son adresse.
-     *
-     * @param obj La société à modifier.
-     * @return True si la mise à jour concerne une ligne, sinon False.
-     * @throws SocieteDatabaseException Exception lors à mise à jour ou à la
-     * fermeture des données.
-     */
-    @Override
-    public boolean update(T obj) throws SocieteDatabaseException {
-        // Initialisation des variables.
-        Connection con = ConnexionMySql.getInstance();
-        boolean ret = false;
 
         try {
-            // Désactive le commit automatique.
-            con.setAutoCommit(false);
-
-            // Mise à jour de la société et de son adresse.
-            ret = super.update(obj);
-            MySqlFactory.getAdresseDAO().update(obj.getAdresse());
-
-            // Validation des changements en base.
-            con.commit();
-
-            // Ré-activation du commit automatique.
-            con.setAutoCommit(false);
+            // Fermeture de la requête.
+            stmt.close();
         } catch (SQLException e) {
-
-            // Si exception il y a, appel à la méthode de gestion.
-            this.manageSqlException(e, con);
+            // Exception attrapée, log de l'erreur et avertissement de
+            // l'utilisateur.
+            LogManager.logs.log(Level.SEVERE, e.getMessage());
+            throw new SocieteDatabaseException("Erreur lors de la " +
+                    "fermeture de l'accès aux données.");
         }
 
-        // Retourne le résultat de la méthode mère.
+        // Retourne si la sauvegarde s'est bien passée ou non.
         return ret;
     }
 
     /**
      * Méthode de gestion d'une SqlException.
-     * @param e L'exception à gérer.
+     *
+     * @param e   L'exception à gérer.
      * @param con La connexion a fermer.
      * @throws SocieteDatabaseException Exception d'intégrité ou de
-     * modification des données.
+     *                                  modification des données.
      */
     private void manageSqlException(@NotNull SQLException e, Connection con) throws SocieteDatabaseException {
         // Log le message de l'exception.

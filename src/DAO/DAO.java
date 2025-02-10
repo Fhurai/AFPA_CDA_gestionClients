@@ -254,105 +254,14 @@ public abstract class DAO<T> {
     }
 
     /**
-     * Méthode de création d'un objet de type T
+     * Méthode qui sauvegarde un objet, soit en le créant, soit en le modifiant.
      *
-     * @param obj L'objet à créer.
-     * @return True si la création a retourné des clés.
-     * @throws SocieteDatabaseException Exception à la création ou à la
-     * fermeture des données.
+     * @param obj L'objet à sauvegarder.
+     * @return Indication si la sauvegarde s'est bien passé.
+     * @throws SocieteDatabaseException Exception lors de la création, de la
+     * modification ou de la fermeture des données.
      */
-    public boolean create(T obj) throws SocieteDatabaseException {
-        // Initialisation des variables.
-        Connection con = ConnexionMySql.getInstance();
-        PreparedStatement stmt;
-        ResultSet rs;
-
-        // Récupération de la requête de suppression.
-        String query = getQueryString(QueryAction.CREATE, null);
-
-        try {
-            // Création de l'objet requête et exécution de celle-ci.
-            stmt = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-            this.bindTableProperties(obj, stmt);
-            stmt.executeUpdate();
-            rs = stmt.getGeneratedKeys();
-            if (rs.next()) {
-                this.setPrimaryKey(obj, rs);
-            }
-
-        } catch (SQLException e) {
-            // Exception attrapée, log de l'erreur et avertissement de
-            // l'utilisateur.
-            LogManager.logs.log(Level.SEVERE, e.getMessage());
-            throw new SocieteDatabaseException("Erreur lors de la création.");
-        }
-
-        try {
-            // Fermeture de la requête.
-            stmt.close();
-        } catch (SQLException e) {
-            // Exception attrapée, log de l'erreur et avertissement de
-            // l'utilisateur.
-            LogManager.logs.log(Level.SEVERE, e.getMessage());
-            throw new SocieteDatabaseException("Erreur lors de la " +
-                    "fermeture de l'accès aux données.");
-        }
-
-        return true;
-    }
-
-    /**
-     * Méthode de mise à jour d'un objet de type T.
-     *
-     * @param obj L'objet à modifier.
-     * @return True si la mise à jour concerne une ligne, sinon False.
-     * @throws SocieteDatabaseException Exception lors à mise à jour ou à la
-     * fermeture des données.
-     */
-    public boolean update(T obj) throws SocieteDatabaseException {
-        // Initialisation des variables.
-        Connection con = ConnexionMySql.getInstance();
-        PreparedStatement stmt;
-        int rowsAffected;
-        String[][] selection = selectByPrimaryKey(obj);
-
-        // Récupération de la requête de suppression.
-        String query = getQueryString(QueryAction.UPDATE, selection);
-
-        try {
-            // Création de l'objet requête.
-            stmt = con.prepareStatement(query);
-
-            // Liaison requête et données.
-            this.bindTableProperties(obj, stmt);
-            this.bindPrimaryKey(obj, stmt,
-                    this.getTablePropertiesLabels().length + 1);
-
-            // Exécution requête.
-            rowsAffected = stmt.executeUpdate();
-        } catch (SQLException e) {
-            // Exception attrapée, log de l'erreur et avertissement de
-            // l'utilisateur.
-            LogManager.logs.log(Level.SEVERE, e.getMessage());
-            throw new SocieteDatabaseException("Erreur lors de la " +
-                    "modification.");
-        }
-
-        try {
-            // Fermeture de la requête.
-            stmt.close();
-        } catch (SQLException e) {
-            // Exception attrapée, log de l'erreur et avertissement de
-            // l'utilisateur.
-            LogManager.logs.log(Level.SEVERE, e.getMessage());
-            throw new SocieteDatabaseException("Erreur lors de la " +
-                    "fermeture de l'accès aux données.");
-        }
-
-        // Retourne l'indication si la requête a modifié une et une seule
-        // ligne d'enregistrement.
-        return rowsAffected == 1;
-    }
+    abstract public boolean save(T obj) throws SocieteDatabaseException;
 
     /**
      * Méthode pour récupérer la table de l'objet DAO.
