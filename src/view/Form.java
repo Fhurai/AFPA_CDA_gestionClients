@@ -283,7 +283,7 @@ public class Form extends JFrame {
                                 this.commentairesTextArea.getText(),
                                 Long.parseLong(this.chiffreAffaireTextfield.getText()),
                                 Integer.parseInt(this.nbEmployesTextfield.getText()));
-                        MySqlFactory.getClientsDAO().create(client);
+                        MySqlFactory.getClientsDAO().save(client);
 
                         JOptionPane.showMessageDialog(this, "Client ajouté avec succès !");
                     } else if (this.typeSociete == TypeSociete.PROSPECT) {
@@ -304,7 +304,7 @@ public class Form extends JFrame {
                                 this.commentairesTextArea.getText(),
                                 LocalDate.parse(this.dateProspectionTextfield.getText(), Formatters.FORMAT_DDMMYYYY),
                                 (String) this.prospectInteresseComboBox.getSelectedItem());
-                        MySqlFactory.getProspectsDAO().create(prospect);
+                        MySqlFactory.getProspectsDAO().save(prospect);
 
                         JOptionPane.showMessageDialog(this, "Prospect ajouté avec succès !");
                     }
@@ -327,7 +327,7 @@ public class Form extends JFrame {
 
                         // Recherche du client modifié parmi la liste des clients
                         // et modification de celui-c.
-                        MySqlFactory.getClientsDAO().update(client);
+                        MySqlFactory.getClientsDAO().save(client);
                         JOptionPane.showMessageDialog(this, "Client modifié " +
                                 "avec succès !");
                     } else if (this.typeSociete == TypeSociete.PROSPECT) {
@@ -345,7 +345,7 @@ public class Form extends JFrame {
 
                         // Recherche du prospect modifié parmi la liste des
                         // prospects et modification de celui-c.
-                        MySqlFactory.getProspectsDAO().update(prospect);
+                        MySqlFactory.getProspectsDAO().save(prospect);
                         JOptionPane.showMessageDialog(this, "Prospect modifié " +
                                 "avec succès !");
                     }
