@@ -8,7 +8,8 @@ public enum TypeAction {
     CREATION(1,"creation"),
     MODIFICATION(2,"modification"),
     SUPPRESSION(3,"suppression"),
-    LISTE(4,"liste");
+    LISTE(4,"liste"),
+    CONTRATS(5, "contrats");
 
     // Variable d'instance
     private final int number;

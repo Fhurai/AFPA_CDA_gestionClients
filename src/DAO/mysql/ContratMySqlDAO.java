@@ -187,27 +187,13 @@ public class ContratMySqlDAO extends DAO<Contrat> {
         String query = "DELETE FROM contrats WHERE idContrat = ?";
 
         try {
-            con.setAutoCommit(false);
 
             // Création de l'objet requête et exécution de celle-ci.
             stmt = con.prepareStatement(query);
             stmt.setInt(1, obj.getIdentifiant());
             rowsAffected = stmt.executeUpdate();
 
-            con.commit();
-            con.setAutoCommit(true);
-
         } catch (SQLException e) {
-            try {
-                con.rollback();
-                con.setAutoCommit(true);
-            } catch (SQLException ex) {
-                // Exception attrapée, log de l'erreur et avertissement de
-                // l'utilisateur.
-                LogManager.logs.log(Level.SEVERE, e.getMessage());
-                throw new SocieteDatabaseException("Erreur lors de la sauvegarde.");
-            }
-
             // Exception attrapée, log de l'erreur et avertissement de
             // l'utilisateur.
             LogManager.logs.log(Level.SEVERE, e.getMessage());

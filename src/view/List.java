@@ -6,6 +6,8 @@ import entities.*;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -30,6 +32,7 @@ public class List extends JFrame {
     private JTable table1;
     private JButton modificationButton;
     private JButton suppressionButton;
+    private JButton contratsButton;
 
     /**
      * Constructeur
@@ -91,6 +94,13 @@ public class List extends JFrame {
         // sélectionnée dans la liste.
         modificationButton.addActionListener(e -> selectEdit(TypeAction.MODIFICATION));
         suppressionButton.addActionListener(e -> selectEdit(TypeAction.SUPPRESSION));
+
+        if (typeSociete == TypeSociete.CLIENT) {
+            contratsButton.setVisible(true);
+            contratsButton.addActionListener(e -> openContracts());
+        }else{
+            contratsButton.setVisible(false);
+        }
     }
 
     /**
@@ -196,6 +206,41 @@ public class List extends JFrame {
                 }
 
 
+            }
+        }else{
+            JOptionPane.showMessageDialog(this,
+                    "Pas de "+this.typeSociete.getName()+ " sélectionné.");
+        }
+    }
+
+    private void openContracts(){
+        // Récupération de l'index de la ligne sélectionnée.
+        int x = table1.getSelectedRow();
+
+        if(x != -1){
+            try {
+                Client client = MySqlFactory.getClientDAO().findById(x);
+
+                if(client != null){
+                    if(client.getContrats() != null && !client.getContrats().isEmpty()){
+                        // Le client existe, le formulaire est à ouvrir avec l'action
+                        // voulue
+                        new Contracts(client).setVisible(true);
+                        dispose();
+                    }else{
+                        JOptionPane.showMessageDialog(this, "Client sans " +
+                                "contrat, veuillez sélectionner un autre " +
+                                "client.");
+                    }
+                }else{
+
+                    JOptionPane.showMessageDialog(this,"Client introuvable, " +
+                            "rechargement de la liste des clients.");
+                    this.fillTable();
+                }
+            } catch (SocieteDatabaseException e) {
+                JOptionPane.showMessageDialog(null, e.getMessage());
+                System.exit(1);
             }
         }else{
             JOptionPane.showMessageDialog(this,

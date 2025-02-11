@@ -2,6 +2,7 @@ package DAO.mysql;
 
 import DAO.SocieteDatabaseException;
 import entities.Client;
+import entities.Contrat;
 import entities.SocieteEntityException;
 import logs.LogManager;
 import org.jetbrains.annotations.NotNull;
@@ -101,6 +102,7 @@ public class ClientMySqlDAO extends SocieteMySqlDAO<Client> {
                 // Si une ligne de résultat existe, l'objet de type T peut
                 // être valorisé.
                 client = this.parse(rs);
+                client.setContrats(MySqlFactory.getContratDAO().findByIdClient(client.getIdentifiant()));
             }
 
         } catch (SQLException e) {
@@ -154,6 +156,7 @@ public class ClientMySqlDAO extends SocieteMySqlDAO<Client> {
                 // Si une ligne de résultat existe, l'objet de type T peut
                 // être valorisé.
                 client = this.parse(rs);
+                client.setContrats(MySqlFactory.getContratDAO().findByIdClient(client.getIdentifiant()));
             }
 
         } catch (SQLException e) {
@@ -196,6 +199,11 @@ public class ClientMySqlDAO extends SocieteMySqlDAO<Client> {
 
         try {
             con.setAutoCommit(false);
+
+            // Suppression des contrats du client.
+            for (Contrat contrat : obj.getContrats()) {
+                MySqlFactory.getContratDAO().delete(contrat);
+            }
 
             // Création de l'objet requête et exécution de celle-ci.
             stmt = con.prepareStatement(query);

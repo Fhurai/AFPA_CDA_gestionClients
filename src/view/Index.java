@@ -2,6 +2,7 @@ package view;
 
 import DAO.SocieteDatabaseException;
 import DAO.mysql.MySqlFactory;
+import entities.Client;
 import entities.Societe;
 import entities.TypeAction;
 import entities.TypeSociete;
@@ -22,7 +23,7 @@ import static utilities.ViewsUtilities.quitApplication;
  * Fenêtre d'accueil sur l'application.
  */
 public class Index extends JFrame {
-    private final Dimension windowSize = new Dimension(600, 250);
+    private final Dimension windowSize = new Dimension(700, 250);
     private JPanel contentPane;
     private JButton quitButton;
     private JPanel AppliNamePanel;
@@ -44,6 +45,7 @@ public class Index extends JFrame {
     private JLabel choiceTypeLabel;
     private JLabel choiceActionLabel;
     private JLabel choiceEditLabel;
+    private JButton contratsButton;
 
     private TypeSociete typeChoice;
     private TypeAction actionChoice;
@@ -110,6 +112,7 @@ public class Index extends JFrame {
         listeButton.addActionListener(e -> choiceAction(TypeAction.LISTE));
         modificationButton.addActionListener(e -> choiceAction(TypeAction.MODIFICATION));
         suppressionButton.addActionListener(e -> choiceAction(TypeAction.SUPPRESSION));
+        contratsButton.addActionListener(e -> choiceAction(TypeAction.CONTRATS));
 
         // Boutons sélection
         selectionnerButton.addActionListener(e -> choiceEdit());
@@ -131,8 +134,10 @@ public class Index extends JFrame {
         selectionComboBox.removeAllItems();
         try {
             if (type == TypeSociete.CLIENT) {
+                this.contratsButton.setVisible(true);
                 MySqlFactory.getClientDAO().findAll().forEach(client -> selectionComboBox.addItem(client.getRaisonSociale()));
             } else if (type == TypeSociete.PROSPECT) {
+                this.contratsButton.setVisible(false);
                 MySqlFactory.getProspectDAO().findAll().forEach(prospect -> selectionComboBox.addItem(prospect.getRaisonSociale()));
             }
 
@@ -176,6 +181,12 @@ public class Index extends JFrame {
                 this.dispose();
                 break;
 
+            case TypeAction.CONTRATS:
+                // Contrats choisis
+                EditPanel.setVisible(true);
+                choiceEditLabel.setText("Quelle société consulter ?");
+                break;
+
             case TypeAction.MODIFICATION:
                 // Modification choisie
                 EditPanel.setVisible(true);
@@ -205,7 +216,11 @@ public class Index extends JFrame {
                 editChoice = MySqlFactory.getProspectDAO().find(Objects.requireNonNull(selectionComboBox.getSelectedItem()).toString());
             }
 
-            new Form(this.typeChoice, this.actionChoice, this.editChoice).setVisible(true);
+            if(this.actionChoice == TypeAction.CONTRATS && this.editChoice instanceof Client){
+                new Contracts((Client) this.editChoice).setVisible(true);
+            }else {
+                new Form(this.typeChoice, this.actionChoice, this.editChoice).setVisible(true);
+            }
             dispose();
         } catch (SocieteDatabaseException e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
