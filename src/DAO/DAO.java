@@ -88,13 +88,13 @@ public abstract class DAO<T> {
     public ArrayList<T> findAll() throws SocieteDatabaseException {
         ArrayList<T> results = new ArrayList<>();
         Connection con = ConnexionMySql.getInstance();
-        Statement stmt;
+        PreparedStatement stmt;
         String query = this.getQueryString(QueryAction.READ, null);
 
         try {
             // Création de l'objet requête et exécution de celle-ci.
-            stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery(query);
+            stmt = con.prepareStatement(query);
+            ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
                 // Tant qu'une ligne de données est disponible, ajout du

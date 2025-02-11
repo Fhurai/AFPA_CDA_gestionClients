@@ -18,15 +18,6 @@ class SocieteTest {
 
     static Societe societe;
 
-    @BeforeAll
-    static void setUpBeforeClass() {
-        try {
-            Clients.populateClients();
-        } catch (SocieteEntityException e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
     @BeforeEach
     void setUp() {
         societe = new Client();
