@@ -2,6 +2,8 @@ package entities;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+
 /**
  * Classe Client
  */
@@ -10,6 +12,7 @@ public final class Client extends Societe {
     // Variables d'instance
     private long chiffreAffaires;
     private int nbEmployes;
+    private ArrayList<Contrat> contrats;
 
     /**
      * Constructeur avec toutes les variables
@@ -19,7 +22,7 @@ public final class Client extends Societe {
      * @param telephone Le numéro de téléphone
      * @param mail L'adresse mail
      * @param commentaires Les commentaires
-     * @param chiffreAffaires Le chifffre d'affaire
+     * @param chiffreAffaires Le chiffre d'affaires
      * @param nbEmployes Le nombre d'employés
      */
     public Client(int identifiant, String raisonSociale, Adresse adresse, String telephone, String mail, String commentaires, long chiffreAffaires, int nbEmployes) throws SocieteEntityException {
@@ -35,7 +38,7 @@ public final class Client extends Societe {
      * @param telephone Le numéro de téléphone
      * @param mail L'adresse mail
      * @param commentaires Les commentaires
-     * @param chiffreAffaires Le chifffre d'affaire
+     * @param chiffreAffaires Le chiffre d'affaires
      * @param nbEmployes Le nombre d'employés
      */
     public Client(String raisonSociale, Adresse adresse, String telephone, String mail, String commentaires, long chiffreAffaires, int nbEmployes) throws SocieteEntityException {
@@ -93,6 +96,24 @@ public final class Client extends Societe {
         }
 
         this.nbEmployes = nbEmployes;
+    }
+
+    /**
+     * Getter contrats.
+     *
+     * @return Liste des contrats du client.
+     */
+    public ArrayList<Contrat> getContrats() {
+        return contrats;
+    }
+
+    /**
+     * Setter contrats.
+     *
+     * @param contrats La nouvelle liste des contrats.
+     */
+    public void setContrats(ArrayList<Contrat> contrats) {
+        this.contrats = contrats;
     }
 
     /**

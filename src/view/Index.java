@@ -131,9 +131,9 @@ public class Index extends JFrame {
         selectionComboBox.removeAllItems();
         try {
             if (type == TypeSociete.CLIENT) {
-                MySqlFactory.getClientsDAO().findAll().forEach(client -> selectionComboBox.addItem(client.getRaisonSociale()));
+                MySqlFactory.getClientDAO().findAll().forEach(client -> selectionComboBox.addItem(client.getRaisonSociale()));
             } else if (type == TypeSociete.PROSPECT) {
-                MySqlFactory.getProspectsDAO().findAll().forEach(prospect -> selectionComboBox.addItem(prospect.getRaisonSociale()));
+                MySqlFactory.getProspectDAO().findAll().forEach(prospect -> selectionComboBox.addItem(prospect.getRaisonSociale()));
             }
 
             // Affichage du panneau de choix d'action.
@@ -199,10 +199,10 @@ public class Index extends JFrame {
             if (typeChoice == TypeSociete.CLIENT) {
                 // Le choix est un client
                 editChoice =
-                        MySqlFactory.getClientsDAO().findByRaisonSociale(Objects.requireNonNull(selectionComboBox.getSelectedItem()).toString());
+                        MySqlFactory.getClientDAO().find(Objects.requireNonNull(selectionComboBox.getSelectedItem()).toString());
             } else if (typeChoice == TypeSociete.PROSPECT) {
                 // Le choix est un prospect
-                editChoice = MySqlFactory.getProspectsDAO().findByRaisonSociale(Objects.requireNonNull(selectionComboBox.getSelectedItem()).toString());
+                editChoice = MySqlFactory.getProspectDAO().find(Objects.requireNonNull(selectionComboBox.getSelectedItem()).toString());
             }
 
             new Form(this.typeChoice, this.actionChoice, this.editChoice).setVisible(true);

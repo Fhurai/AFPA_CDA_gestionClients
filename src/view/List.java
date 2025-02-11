@@ -154,7 +154,7 @@ public class List extends JFrame {
 
                 // Récupération du client
                 try {
-                    Client client = MySqlFactory.getClientsDAO().findById(x);
+                    Client client = MySqlFactory.getClientDAO().findById(x);
 
                     if(client != null){
                         // Le client existe, le formulaire est à ouvrir avec l'action
@@ -177,7 +177,7 @@ public class List extends JFrame {
                 // Récupération du prospect
                 Prospect prospect = null;
                 try {
-                    prospect = MySqlFactory.getProspectsDAO().findById(x);
+                    prospect = MySqlFactory.getProspectDAO().findById(x);
 
                     if(prospect != null){
                         // Le prospect existe, le formulaire est à ouvrir avec l'action

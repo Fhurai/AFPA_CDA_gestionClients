@@ -168,7 +168,7 @@ abstract public class Societe {
     public void setRaisonSociale(String raisonSociale) throws SocieteEntityException {
         // Cas chaîne vide ou null
         if(raisonSociale == null || raisonSociale.isEmpty()){
-            throw new SocieteEntityException("La raison sociale ne peut etre" +
+            throw new SocieteEntityException("La raison sociale ne peut être" +
                     " vide !");
         }
 
