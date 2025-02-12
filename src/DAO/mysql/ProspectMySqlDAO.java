@@ -1,6 +1,5 @@
 package DAO.mysql;
 
-import DAO.AbstractFactory;
 import DAO.SocieteDatabaseException;
 import entities.Prospect;
 import entities.SocieteEntityException;

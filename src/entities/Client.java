@@ -29,6 +29,7 @@ public final class Client extends Societe {
         super(identifiant, raisonSociale, adresse, telephone, mail, commentaires);
         setChiffreAffaires(chiffreAffaires);
         setNbEmployes(nbEmployes);
+        setContrats(new ArrayList<>());
     }
 
     /**
@@ -45,6 +46,7 @@ public final class Client extends Societe {
         super(raisonSociale, adresse, telephone, mail, commentaires);
         setChiffreAffaires(chiffreAffaires);
         setNbEmployes(nbEmployes);
+        setContrats(new ArrayList<>());
     }
 
     /**
@@ -52,6 +54,7 @@ public final class Client extends Societe {
      */
     public Client() {
         super();
+        setContrats(new ArrayList<>());
     }
 
     /**

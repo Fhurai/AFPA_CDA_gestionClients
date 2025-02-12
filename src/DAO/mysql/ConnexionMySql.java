@@ -41,7 +41,7 @@ public class ConnexionMySql {
 
             final Properties dataProperties = new Properties();
 
-            File fichier = new File("database.properties");
+            File fichier = new File("database.mysql.properties");
             FileInputStream input = null;
             try {
                 input = new FileInputStream(fichier);
@@ -52,6 +52,7 @@ public class ConnexionMySql {
                         dataProperties.getProperty("login"),
                         dataProperties.getProperty("password")
                 );
+                LogManager.logs.log(Level.INFO, "Database ouverte");
             } catch (FileNotFoundException e) {
                 LogManager.logs.log(Level.SEVERE, e.getMessage());
                 throw new SocieteDatabaseException("Fichier de paramétrage " +

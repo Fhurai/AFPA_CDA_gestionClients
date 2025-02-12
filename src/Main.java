@@ -7,6 +7,7 @@ import view.Index;
 
 import javax.swing.*;
 import java.io.IOException;
+import java.sql.Connection;
 import java.util.Arrays;
 import java.util.logging.Level;
 
@@ -42,7 +43,7 @@ public class Main {
 //            ConnexionMySql.getInstance();
         AbstractFactory.setTypeDatabase(TypeDatabase.MYSQL);
         try {
-            new AbstractFactory().getFactory().getInstance();
+            new AbstractFactory().getFactory().init();
         } catch (SocieteDatabaseException e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
             System.exit(1);

@@ -49,7 +49,6 @@ public class ViewsUtilities {
                 return false;
             }
         };
-        modelTable.addRow(entete);
 
         if(entete[5].equals("Chiffre d'affaires")){
             // Si l'entête est pour un client.

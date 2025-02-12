@@ -1,10 +1,13 @@
 package DAO;
 
+import entities.TypeSociete;
+import org.jetbrains.annotations.Nullable;
+
 public enum TypeDatabase {
     // Valeurs énumérées
-    MYSQL(1, "MySQL"),
-    MONGODB(2, "MongoDB"),
-    FILESYSTEM(3, "FileSystem");
+    MYSQL(1, "MySql"),
+    MONGODB(2, "MongoDB");
+//    FILESYSTEM(3, "FileSystem");
 
     // Variable d'instance
     private final int number;
@@ -35,5 +38,35 @@ public enum TypeDatabase {
      */
     public String getName() {
         return name;
+    }
+
+    /**
+     * Méthode pour retrouver un type de base par sa valeur numérique.
+     *
+     * @param number Valeur numérique recherchée.
+     * @return Type de base de donnée recherchée.
+     */
+    public static @Nullable TypeDatabase findByNumber(int number) {
+        for(TypeDatabase db : TypeDatabase.values()) {
+            if(db.getNumber() == number) {
+                return db;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Méthode pour retrouver un type de base par sa valeur numérique.
+     *
+     * @param name Valeur alphanumérique recherchée.
+     * @return Type de base de donnée recherchée.
+     */
+    public static @Nullable TypeDatabase findByString(String name) {
+        for(TypeDatabase db : TypeDatabase.values()) {
+            if(db.getName().equals(name)) {
+                return db;
+            }
+        }
+        return null;
     }
 }

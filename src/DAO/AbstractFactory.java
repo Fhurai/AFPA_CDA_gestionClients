@@ -1,5 +1,6 @@
 package DAO;
 
+import DAO.mongo.MongoFactory;
 import DAO.mysql.MySqlFactory;
 
 /**
@@ -33,7 +34,18 @@ public class AbstractFactory {
      *
      * @return La factory.
      */
-    public DAOFactory getFactory() {
-        return new MySqlFactory();
+    public DAOFactory getFactory() throws SocieteDatabaseException {
+        DAOFactory daoFactory = null;
+        if (typeDatabase == null) {
+            throw new SocieteDatabaseException("Aucun type de base de données" +
+                    " n'a été définie");
+        } else if (typeDatabase == TypeDatabase.MYSQL) {
+            daoFactory = new MySqlFactory();
+        } else if (typeDatabase == TypeDatabase.MONGODB) {
+            daoFactory = new MongoFactory();
+        }else{
+            throw new SocieteDatabaseException("Erreur inconnue");
+        }
+        return daoFactory;
     }
 }

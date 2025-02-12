@@ -132,6 +132,10 @@ public class Form extends JFrame {
         // Valorisation du contenu de la vue.
         setContentPane(contentPane);
 
+        // Nom de l'appli en fonction de la base de donnée en cours
+        // d'utilisation.
+        this.AppliNameLabel.setText("Gestion fichier clients "+AbstractFactory.getTypeDatabase().getName());
+
         // Valorisation du bouton par défaut.
         this.getRootPane().setDefaultButton(accueilButton);
 

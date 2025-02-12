@@ -57,6 +57,10 @@ public class List extends JFrame {
         // Valorisation du contenu de la vue.
         setContentPane(contentPane);
 
+        // Nom de l'appli en fonction de la base de donnée en cours
+        // d'utilisation.
+        this.AppliNameLabel.setText("Gestion fichier clients "+AbstractFactory.getTypeDatabase().getName());
+
         // Valorisation du bouton par défaut.
         this.getRootPane().setDefaultButton(accueilButton);
 
@@ -156,10 +160,13 @@ public class List extends JFrame {
      * @param action Action à accomplir sur la ligne sélectionnée.
      */
     private void selectEdit(TypeAction action){
-        // Récupération de l'index de la ligne sélectionnée.
+        // Récupération de la ligne sélectionnée.
         int x = table1.getSelectedRow();
 
         if(x != -1){
+            // Récupération de l'identifiant de la ligne sélectionnée.
+            int identifiant = (int) table1.getValueAt(x, 0);
+
             if(this.typeSociete == TypeSociete.CLIENT){
                 // Si la liste est pour des clients
 
@@ -197,8 +204,9 @@ public class List extends JFrame {
                         dispose();
                     }else{
 
-                        JOptionPane.showMessageDialog(this,"Client introuvable, " +
-                                "rechargement de la liste des clients.");
+                        JOptionPane.showMessageDialog(this,"Prospect " +
+                                "introuvable, rechargement de la liste des " +
+                                "prospectss .");
                         this.fillTable();
                     }
                 } catch (SocieteDatabaseException e) {
@@ -209,41 +217,60 @@ public class List extends JFrame {
 
             }
         }else{
+            // Pas de ligne sélectionnée, avertissement de l'utilisateur.
             JOptionPane.showMessageDialog(this,
                     "Pas de "+this.typeSociete.getName()+ " sélectionné.");
         }
     }
 
+    /**
+     * Méthode pour ouvrir la fenêtre des contrats d'un client.
+     */
     private void openContracts(){
-        // Récupération de l'index de la ligne sélectionnée.
+        // Récupération de la ligne sélectionnée.
         int x = table1.getSelectedRow();
 
         if(x != -1){
+            // Récupération de l'identifiant de la ligne sélectionnée.
+            int identifiant = (int) table1.getValueAt(table1.getSelectedRow(), 0);
+
             try {
-                Client client = new AbstractFactory().getFactory().getClientDAO().findById(x);
+                // Récupération du client dont les contrats sont consultés.
+                Client client = new AbstractFactory().getFactory().getClientDAO().findById(identifiant);
 
                 if(client != null){
+                    // Client bien récupéré.
+
                     if(client.getContrats() != null && !client.getContrats().isEmpty()){
-                        // Le client existe, le formulaire est à ouvrir avec l'action
-                        // voulue
+                        // Client a des contrats, ouverture de la fenêtre des
+                        // contrats.
                         new Contracts(client).setVisible(true);
                         dispose();
                     }else{
+                        // Pas de contrat pour le client, avertissement de
+                        // l'utilisateur.
                         JOptionPane.showMessageDialog(this, "Client sans " +
                                 "contrat, veuillez sélectionner un autre " +
                                 "client.");
                     }
                 }else{
-
+                    // Client non trouvé (possible collision d'utilisateurs),
+                    // avertissement de l'utilisateur.
                     JOptionPane.showMessageDialog(this,"Client introuvable, " +
                             "rechargement de la liste des clients.");
+
+                    // Client possiblement disparu, rechargement de la liste
+                    // des clients.
                     this.fillTable();
                 }
-            } catch (SocieteDatabaseException e) {
+            } catch (Exception e) {
+                // Erreur rencontrée, affichage à l'utilisateur et fermeture
+                // de l'application.
                 JOptionPane.showMessageDialog(null, e.getMessage());
                 System.exit(1);
             }
         }else{
+            // Pas de ligne sélectionnée, avertissement de l'utilisateur.
             JOptionPane.showMessageDialog(this,
                     "Pas de "+this.typeSociete.getName()+ " sélectionné.");
         }

@@ -1,6 +1,5 @@
 package DAO.mysql;
 
-import DAO.AbstractFactory;
 import DAO.SocieteDatabaseException;
 import entities.Client;
 import entities.Contrat;
@@ -16,7 +15,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 
 /**
- * Classe DAO pour les clients.
+ * Classe DAO MySql pour les clients.
  */
 public class ClientMySqlDAO extends SocieteMySqlDAO<Client> {
 
