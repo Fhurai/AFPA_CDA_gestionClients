@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 /**
  * Classe abstrait d'accès DAO.
+ *
  * @param <T> Classe pour laquelle créer la classe DAO.
  */
 public abstract class DAO<T> {
@@ -29,7 +30,7 @@ public abstract class DAO<T> {
      * @param name Nom de l'objet T recherché.
      * @return Objet de type T recherché.
      * @throws SocieteDatabaseException Exception lors de la lecture ou lors
-     * de la fermeture des données.
+     *                                  de la fermeture des données.
      */
     abstract public T find(String name) throws SocieteDatabaseException;
 
@@ -39,7 +40,7 @@ public abstract class DAO<T> {
      * @param obj L'objet à supprimer.
      * @return Indication que l'objet a bien été supprimé.
      * @throws SocieteDatabaseException Exception lors de la lecture ou lors
-     * de la fermeture des données.
+     *                                  de la fermeture des données.
      */
     abstract public boolean delete(@NotNull T obj) throws SocieteDatabaseException;
 
@@ -49,7 +50,7 @@ public abstract class DAO<T> {
      * @param obj L'objet à sauvegarder.
      * @return Indication si la sauvegarde s'est bien passé.
      * @throws SocieteDatabaseException Exception lors de la création, de la
-     * modification ou de la fermeture des données.
+     *                                  modification ou de la fermeture des données.
      */
     abstract public boolean save(T obj) throws SocieteDatabaseException;
 }

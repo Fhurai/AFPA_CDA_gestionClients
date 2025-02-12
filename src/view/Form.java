@@ -1,7 +1,6 @@
 package view;
 
 import DAO.AbstractFactory;
-import DAO.mysql.MySqlFactory;
 import entities.*;
 import logs.LogManager;
 import org.jetbrains.annotations.NotNull;
@@ -84,10 +83,11 @@ public class Form extends JFrame {
     /**
      * Constructeur avec toutes les variables nécessaires à la modification
      * ou à la suppression.
+     *
      * @param typeSociete Le type de société (CLIENT ou PROSPECT)
-     * @param typeAction Le type d'action (CREATION, LISTE, MODIFICATION ou
-     *                   SUPPRESSION).
-     * @param societe La société en cours de modification ou de suppression.
+     * @param typeAction  Le type d'action (CREATION, LISTE, MODIFICATION ou
+     *                    SUPPRESSION).
+     * @param societe     La société en cours de modification ou de suppression.
      */
     public Form(TypeSociete typeSociete, TypeAction typeAction,
                 Societe societe) {
@@ -112,6 +112,7 @@ public class Form extends JFrame {
 
     /**
      * Constructeur avec toutes les variables nécessaires à la création
+     *
      * @param typeSociete Le type de société (CLIENT ou PROSPECT)
      */
     public Form(TypeSociete typeSociete) {
@@ -134,7 +135,7 @@ public class Form extends JFrame {
 
         // Nom de l'appli en fonction de la base de donnée en cours
         // d'utilisation.
-        this.AppliNameLabel.setText("Gestion fichier clients "+AbstractFactory.getTypeDatabase().getName());
+        this.AppliNameLabel.setText("Gestion fichier clients " + AbstractFactory.getTypeDatabase().getName());
 
         // Valorisation du bouton par défaut.
         this.getRootPane().setDefaultButton(accueilButton);
@@ -263,7 +264,7 @@ public class Form extends JFrame {
      */
     private void actionPerformed() {
 
-        try{
+        try {
             switch (this.typeAction) {
                 // Cas d'utilisation du formulaire.
 
@@ -395,13 +396,13 @@ public class Form extends JFrame {
             LogManager.logs.log(Level.SEVERE, nfe.getMessage(), nfe);
             JOptionPane.showMessageDialog(null, "Erreur dans le format du " +
                     "nombre.");
-        }catch (DateTimeException dte) {
+        } catch (DateTimeException dte) {
             LogManager.logs.log(Level.SEVERE, dte.getMessage(), dte);
             JOptionPane.showMessageDialog(null, "Erreur dans la date.");
-        }catch (SocieteEntityException see) {
+        } catch (SocieteEntityException see) {
             LogManager.logs.log(Level.SEVERE, see.getMessage(), see);
             JOptionPane.showMessageDialog(null, see.getMessage());
-        }catch (Exception e) {
+        } catch (Exception e) {
             LogManager.logs.log(Level.SEVERE, e.getMessage());
             JOptionPane.showMessageDialog(null, "Erreur inconnue.");
             System.exit(1);

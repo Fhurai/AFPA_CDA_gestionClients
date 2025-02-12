@@ -1,6 +1,5 @@
 package entities;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EmptySource;
@@ -26,7 +25,9 @@ class SocieteTest {
     @ParameterizedTest
     @NullSource
     void setCommentairesInvalid(String commentaire) {
-        assertThrows(SocieteEntityException.class,() -> {societe.setCommentaires(commentaire);});
+        assertThrows(SocieteEntityException.class, () -> {
+            societe.setCommentaires(commentaire);
+        });
     }
 
     @ParameterizedTest

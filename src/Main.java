@@ -1,13 +1,11 @@
 import DAO.AbstractFactory;
-import DAO.TypeDatabase;
-import DAO.mysql.ConnexionMySql;
 import DAO.SocieteDatabaseException;
+import DAO.TypeDatabase;
 import logs.LogManager;
 import view.Index;
 
 import javax.swing.*;
 import java.io.IOException;
-import java.sql.Connection;
 import java.util.Arrays;
 import java.util.logging.Level;
 
@@ -18,6 +16,7 @@ public class Main {
 
     /**
      * Méthode principale de lancement de l'application.
+     *
      * @param args Arguments de lancement.
      */
     public static void main(String[] args) {
@@ -40,7 +39,6 @@ public class Main {
         }
 
         // Initialisation de l'accès à la base de données.
-//            ConnexionMySql.getInstance();
         AbstractFactory.setTypeDatabase(TypeDatabase.MYSQL);
         try {
             new AbstractFactory().getFactory().init();

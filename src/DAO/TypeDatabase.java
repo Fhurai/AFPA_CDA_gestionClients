@@ -1,6 +1,5 @@
 package DAO;
 
-import entities.TypeSociete;
 import org.jetbrains.annotations.Nullable;
 
 public enum TypeDatabase {
@@ -17,27 +16,11 @@ public enum TypeDatabase {
      * Constructeur type database.
      *
      * @param number Valeur numérique
-     * @param name Nom de la valeur
+     * @param name   Nom de la valeur
      */
     TypeDatabase(int number, String name) {
         this.number = number;
         this.name = name;
-    }
-
-    /**
-     * Getter number
-     * @return Valeur numérique de la valeur énumérée
-     */
-    public int getNumber() {
-        return number;
-    }
-
-    /**
-     * Getter name
-     * @return Nom de la valeur énumérée
-     */
-    public String getName() {
-        return name;
     }
 
     /**
@@ -47,8 +30,8 @@ public enum TypeDatabase {
      * @return Type de base de donnée recherchée.
      */
     public static @Nullable TypeDatabase findByNumber(int number) {
-        for(TypeDatabase db : TypeDatabase.values()) {
-            if(db.getNumber() == number) {
+        for (TypeDatabase db : TypeDatabase.values()) {
+            if (db.getNumber() == number) {
                 return db;
             }
         }
@@ -62,11 +45,29 @@ public enum TypeDatabase {
      * @return Type de base de donnée recherchée.
      */
     public static @Nullable TypeDatabase findByString(String name) {
-        for(TypeDatabase db : TypeDatabase.values()) {
-            if(db.getName().equals(name)) {
+        for (TypeDatabase db : TypeDatabase.values()) {
+            if (db.getName().equals(name)) {
                 return db;
             }
         }
         return null;
+    }
+
+    /**
+     * Getter number
+     *
+     * @return Valeur numérique de la valeur énumérée
+     */
+    public int getNumber() {
+        return number;
+    }
+
+    /**
+     * Getter name
+     *
+     * @return Nom de la valeur énumérée
+     */
+    public String getName() {
+        return name;
     }
 }

@@ -2,13 +2,13 @@ package view;
 
 import DAO.AbstractFactory;
 import DAO.SocieteDatabaseException;
-import DAO.mysql.MySqlFactory;
-import entities.*;
+import entities.Client;
+import entities.Prospect;
+import entities.TypeAction;
+import entities.TypeSociete;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -37,6 +37,7 @@ public class List extends JFrame {
 
     /**
      * Constructeur
+     *
      * @param typeSociete Le type de sociétés à lister.
      */
     public List(TypeSociete typeSociete) {
@@ -59,7 +60,7 @@ public class List extends JFrame {
 
         // Nom de l'appli en fonction de la base de donnée en cours
         // d'utilisation.
-        this.AppliNameLabel.setText("Gestion fichier clients "+AbstractFactory.getTypeDatabase().getName());
+        this.AppliNameLabel.setText("Gestion fichier clients " + AbstractFactory.getTypeDatabase().getName());
 
         // Valorisation du bouton par défaut.
         this.getRootPane().setDefaultButton(accueilButton);
@@ -103,7 +104,7 @@ public class List extends JFrame {
         if (typeSociete == TypeSociete.CLIENT) {
             contratsButton.setVisible(true);
             contratsButton.addActionListener(e -> openContracts());
-        }else{
+        } else {
             contratsButton.setVisible(false);
         }
     }
@@ -157,31 +158,32 @@ public class List extends JFrame {
 
     /**
      * Méthode d'action sur le tableau et sa ligne sélectionnée.
+     *
      * @param action Action à accomplir sur la ligne sélectionnée.
      */
-    private void selectEdit(TypeAction action){
+    private void selectEdit(TypeAction action) {
         // Récupération de la ligne sélectionnée.
         int x = table1.getSelectedRow();
 
-        if(x != -1){
+        if (x != -1) {
             // Récupération de l'identifiant de la ligne sélectionnée.
             int identifiant = (int) table1.getValueAt(x, 0);
 
-            if(this.typeSociete == TypeSociete.CLIENT){
+            if (this.typeSociete == TypeSociete.CLIENT) {
                 // Si la liste est pour des clients
 
                 // Récupération du client
                 try {
                     Client client = new AbstractFactory().getFactory().getClientDAO().findById(x);
 
-                    if(client != null){
+                    if (client != null) {
                         // Le client existe, le formulaire est à ouvrir avec l'action
                         // voulue
                         new Form(this.typeSociete, action, client).setVisible(true);
                         dispose();
-                    }else{
+                    } else {
 
-                        JOptionPane.showMessageDialog(this,"Client introuvable, " +
+                        JOptionPane.showMessageDialog(this, "Client introuvable, " +
                                 "rechargement de la liste des clients.");
                         this.fillTable();
                     }
@@ -189,7 +191,7 @@ public class List extends JFrame {
                     JOptionPane.showMessageDialog(null, e.getMessage());
                     System.exit(1);
                 }
-            }else if(this.typeSociete == TypeSociete.PROSPECT){
+            } else if (this.typeSociete == TypeSociete.PROSPECT) {
                 // Si la liste est pour des prospects
 
                 // Récupération du prospect
@@ -197,14 +199,14 @@ public class List extends JFrame {
                 try {
                     prospect = new AbstractFactory().getFactory().getProspectDAO().findById(x);
 
-                    if(prospect != null){
+                    if (prospect != null) {
                         // Le prospect existe, le formulaire est à ouvrir avec l'action
                         // voulue
                         new Form(this.typeSociete, action, prospect).setVisible(true);
                         dispose();
-                    }else{
+                    } else {
 
-                        JOptionPane.showMessageDialog(this,"Prospect " +
+                        JOptionPane.showMessageDialog(this, "Prospect " +
                                 "introuvable, rechargement de la liste des " +
                                 "prospectss .");
                         this.fillTable();
@@ -216,21 +218,21 @@ public class List extends JFrame {
 
 
             }
-        }else{
+        } else {
             // Pas de ligne sélectionnée, avertissement de l'utilisateur.
             JOptionPane.showMessageDialog(this,
-                    "Pas de "+this.typeSociete.getName()+ " sélectionné.");
+                    "Pas de " + this.typeSociete.getName() + " sélectionné.");
         }
     }
 
     /**
      * Méthode pour ouvrir la fenêtre des contrats d'un client.
      */
-    private void openContracts(){
+    private void openContracts() {
         // Récupération de la ligne sélectionnée.
         int x = table1.getSelectedRow();
 
-        if(x != -1){
+        if (x != -1) {
             // Récupération de l'identifiant de la ligne sélectionnée.
             int identifiant = (int) table1.getValueAt(table1.getSelectedRow(), 0);
 
@@ -238,25 +240,25 @@ public class List extends JFrame {
                 // Récupération du client dont les contrats sont consultés.
                 Client client = new AbstractFactory().getFactory().getClientDAO().findById(identifiant);
 
-                if(client != null){
+                if (client != null) {
                     // Client bien récupéré.
 
-                    if(client.getContrats() != null && !client.getContrats().isEmpty()){
+                    if (client.getContrats() != null && !client.getContrats().isEmpty()) {
                         // Client a des contrats, ouverture de la fenêtre des
                         // contrats.
                         new Contracts(client).setVisible(true);
                         dispose();
-                    }else{
+                    } else {
                         // Pas de contrat pour le client, avertissement de
                         // l'utilisateur.
                         JOptionPane.showMessageDialog(this, "Client sans " +
                                 "contrat, veuillez sélectionner un autre " +
                                 "client.");
                     }
-                }else{
+                } else {
                     // Client non trouvé (possible collision d'utilisateurs),
                     // avertissement de l'utilisateur.
-                    JOptionPane.showMessageDialog(this,"Client introuvable, " +
+                    JOptionPane.showMessageDialog(this, "Client introuvable, " +
                             "rechargement de la liste des clients.");
 
                     // Client possiblement disparu, rechargement de la liste
@@ -269,10 +271,10 @@ public class List extends JFrame {
                 JOptionPane.showMessageDialog(null, e.getMessage());
                 System.exit(1);
             }
-        }else{
+        } else {
             // Pas de ligne sélectionnée, avertissement de l'utilisateur.
             JOptionPane.showMessageDialog(this,
-                    "Pas de "+this.typeSociete.getName()+ " sélectionné.");
+                    "Pas de " + this.typeSociete.getName() + " sélectionné.");
         }
     }
 }

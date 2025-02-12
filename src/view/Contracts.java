@@ -1,7 +1,6 @@
 package view;
 
 import DAO.AbstractFactory;
-import DAO.SocieteDatabaseException;
 import entities.Client;
 import entities.Contrat;
 import org.jetbrains.annotations.NotNull;
@@ -13,8 +12,12 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import static utilities.ViewsUtilities.*;
+import static utilities.ViewsUtilities.quitApplication;
+import static utilities.ViewsUtilities.returnIndex;
 
+/**
+ * Fenêtre des contrats.
+ */
 public class Contracts extends JFrame {
     private final Dimension windowSize = new Dimension(450, 350);
     private Client client;
@@ -53,7 +56,7 @@ public class Contracts extends JFrame {
 
         // Nom de l'appli en fonction de la base de donnée en cours
         // d'utilisation.
-        this.AppliNameLabel.setText("Gestion fichier clients "+ AbstractFactory.getTypeDatabase().getName());
+        this.AppliNameLabel.setText("Gestion fichier clients " + AbstractFactory.getTypeDatabase().getName());
 
         // Valorisation du bouton par défaut.
         this.getRootPane().setDefaultButton(accueilButton);
@@ -89,16 +92,19 @@ public class Contracts extends JFrame {
         this.addWindowListener(windowAdapter);
     }
 
+    /**
+     * Méthode de remplissage du tableau.
+     */
     private void fillTable() {
         // Initialisation des variables nécessaires au remplissage du tableau.
         DefaultTableModel modelTable = null;
         String[] entete;
 
-        entete = new String[] {"Identifiant", "Libellé", "Montant (€)"};
+        entete = new String[]{"Identifiant", "Libellé", "Montant (€)"};
 
         // Création du modèle de table avec toutes les lignes non éditables.
         modelTable = new DefaultTableModel(new Object[][]{}
-                , entete){
+                , entete) {
 
             // Rend toutes les lignes non éditables.
             @Override
@@ -111,8 +117,8 @@ public class Contracts extends JFrame {
         modelTable.addRow(entete);
 
         // Remplissage du tableau avec les contrats du client.
-        if(this.client.getContrats() != null && !this.client.getContrats().isEmpty()) {
-            for(Contrat contrat: this.client.getContrats()){
+        if (this.client.getContrats() != null && !this.client.getContrats().isEmpty()) {
+            for (Contrat contrat : this.client.getContrats()) {
                 modelTable.addRow(new Object[]{
                         contrat.getIdentifiant(),
                         contrat.getLibelle(),

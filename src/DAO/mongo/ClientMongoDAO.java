@@ -203,7 +203,7 @@ public class ClientMongoDAO extends SocieteMongoDAO<Client> {
 
             // Vérification qu'une unique ligne a été modifiée.
             ret = result.getModifiedCount() == 1;
-        }else{
+        } else {
             // identifiant à 0, c'est une création.
 
             // Récupération du nouvel identifiant.

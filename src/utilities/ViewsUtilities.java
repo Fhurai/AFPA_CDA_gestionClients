@@ -2,7 +2,6 @@ package utilities;
 
 import DAO.AbstractFactory;
 import DAO.SocieteDatabaseException;
-import DAO.mysql.MySqlFactory;
 import logs.LogManager;
 import org.jetbrains.annotations.NotNull;
 import view.Index;
@@ -25,6 +24,7 @@ public class ViewsUtilities {
 
     /**
      * Méthode pour retourner sur la fenêtre d'accueil
+     *
      * @param frame La vue à disposer.
      */
     public static void returnIndex(@NotNull JFrame frame) {
@@ -35,13 +35,14 @@ public class ViewsUtilities {
     /**
      * Méthode qui prépare le modèle de table en fonction de l'entête de
      * table fournie.
+     *
      * @param entete L'entête fourni.
      * @return Le modèle de table préparé.
      */
     public static @NotNull DefaultTableModel getModelTable(String[] entete) throws SocieteDatabaseException {
         // Création du modèle de table avec toutes les lignes non éditables.
         DefaultTableModel modelTable = new DefaultTableModel(new Object[][]{}
-                , entete){
+                , entete) {
 
             // Rend toutes les lignes non éditables.
             @Override
@@ -50,7 +51,7 @@ public class ViewsUtilities {
             }
         };
 
-        if(entete[5].equals("Chiffre d'affaires")){
+        if (entete[5].equals("Chiffre d'affaires")) {
             // Si l'entête est pour un client.
 
             new AbstractFactory().getFactory().getClientDAO().findAll().forEach(c -> modelTable.addRow(new Object[]{
@@ -62,7 +63,7 @@ public class ViewsUtilities {
                     c.getChiffreAffaires(),
                     c.getNbEmployes()
             }));
-        }else if(entete[5].equals("Date prospection")){
+        } else if (entete[5].equals("Date prospection")) {
             // Si l'entête est pour un prospect.
 
             new AbstractFactory().getFactory().getProspectDAO().findAll().forEach(p -> modelTable.addRow(new Object[]{

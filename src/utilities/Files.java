@@ -2,7 +2,6 @@ package utilities;
 
 import entities.*;
 import logs.LogManager;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -94,7 +93,7 @@ public class Files {
                                 throw new SocieteUtilitiesException("Erreur " +
                                         "lors de la charge des données des " +
                                         "clients");
-                            }catch(Exception e){
+                            } catch (Exception e) {
                                 LogManager.logs.log(Level.SEVERE, e.getMessage());
                                 LogManager.logs.log(Level.WARNING, Arrays.toString(line.split(";")));
                                 System.out.println("Erreur " +
@@ -126,13 +125,14 @@ public class Files {
                                                 Formatters.FORMAT_DDMMYYYY),
                                         line.split(";")[10]);
 //                                Prospects.getProspects().add(p);
-                            } catch (SocieteEntityException | NumberFormatException e) {
+                            } catch (SocieteEntityException |
+                                     NumberFormatException e) {
                                 LogManager.logs.log(Level.SEVERE, e.getMessage());
 
                                 throw new SocieteUtilitiesException("Erreur " +
                                         "lors de la charge des données des " +
                                         "prospects");
-                            }catch(Exception e){
+                            } catch (Exception e) {
                                 LogManager.logs.log(Level.SEVERE, e.getMessage());
                                 LogManager.logs.log(Level.WARNING, Arrays.toString(line.split(";")));
                                 System.out.println("Erreur " +

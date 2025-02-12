@@ -5,7 +5,12 @@ package DAO;
  */
 public final class SocieteDatabaseException extends Exception {
 
-  public SocieteDatabaseException(String message) {
+    /**
+     * Constructor.
+     *
+     * @param message Message d'erreur concernant la base de données.
+     */
+    public SocieteDatabaseException(String message) {
         super(message);
     }
 }

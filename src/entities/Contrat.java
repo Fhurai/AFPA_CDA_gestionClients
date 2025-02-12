@@ -15,9 +15,9 @@ public class Contrat {
      * Constructeur avec toutes les variables.
      *
      * @param identifiant Identifiant du contrat.
-     * @param idClient Identifiant du client derrière le contrat.
-     * @param libelle Libellé du contrat.
-     * @param montant Montant de contrat.
+     * @param idClient    Identifiant du client derrière le contrat.
+     * @param libelle     Libellé du contrat.
+     * @param montant     Montant de contrat.
      */
     public Contrat(int identifiant, int idClient, String libelle, double montant) throws SocieteEntityException {
         this.setIdentifiant(identifiant);
@@ -30,8 +30,8 @@ public class Contrat {
      * Constructeur sans identifiant.
      *
      * @param idClient Identifiant du client derrière le contrat.
-     * @param libelle Libellé du contrat.
-     * @param montant Montant de contrat.
+     * @param libelle  Libellé du contrat.
+     * @param montant  Montant de contrat.
      */
     public Contrat(int idClient, String libelle, double montant) throws SocieteEntityException {
         this.setIdClient(idClient);
@@ -61,7 +61,7 @@ public class Contrat {
      */
     public void setIdentifiant(int identifiant) throws SocieteEntityException {
         // Cas nombre négatif
-        if(identifiant <= 0){
+        if (identifiant <= 0) {
             throw new SocieteEntityException("L'identifiant ne peut être " +
                     "inférieur ou égal à 0 !");
         }
@@ -84,7 +84,7 @@ public class Contrat {
      */
     public void setIdClient(int idClient) throws SocieteEntityException {
         // Cas nombre négatif
-        if(identifiant <= 0){
+        if (identifiant <= 0) {
             throw new SocieteEntityException("L'identifiant du client ne peut" +
                     " être inférieur ou égal à 0 !");
         }
@@ -106,7 +106,7 @@ public class Contrat {
      * @param libelle Le nouveau libellé du contrat.
      */
     public void setLibelle(String libelle) throws SocieteEntityException {
-        if(libelle == null || libelle.isEmpty()){
+        if (libelle == null || libelle.isEmpty()) {
             throw new SocieteEntityException("Le libellé du contrat ne peut " +
                     "pas être vide.");
         }
@@ -128,7 +128,7 @@ public class Contrat {
      * @param montant Le nouveau montant.
      */
     public void setMontant(double montant) throws SocieteEntityException {
-        if(montant < 0){
+        if (montant < 0) {
             throw new SocieteEntityException("Un contrat ne peut pas avoir de" +
                     " montant négatif.");
         }
@@ -137,7 +137,7 @@ public class Contrat {
 
     @Override
     public String toString() {
-        return "Contrat n°"  + this.getIdentifiant() +
+        return "Contrat n°" + this.getIdentifiant() +
                 " pour le client n°" + this.getIdClient() +
                 " nommé '" + this.getLibelle() + '\'' +
                 ", de valeur " + this.getMontant() + "€";
