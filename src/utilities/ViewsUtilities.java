@@ -1,5 +1,6 @@
 package utilities;
 
+import DAO.AbstractFactory;
 import DAO.SocieteDatabaseException;
 import DAO.mysql.MySqlFactory;
 import logs.LogManager;
@@ -53,7 +54,7 @@ public class ViewsUtilities {
         if(entete[5].equals("Chiffre d'affaires")){
             // Si l'entête est pour un client.
 
-            MySqlFactory.getClientDAO().findAll().forEach(c -> modelTable.addRow(new Object[]{
+            new AbstractFactory().getFactory().getClientDAO().findAll().forEach(c -> modelTable.addRow(new Object[]{
                     c.getIdentifiant(),
                     c.getRaisonSociale(),
                     c.getAdresse(),
@@ -65,7 +66,7 @@ public class ViewsUtilities {
         }else if(entete[5].equals("Date prospection")){
             // Si l'entête est pour un prospect.
 
-            MySqlFactory.getProspectDAO().findAll().forEach(p -> modelTable.addRow(new Object[]{
+            new AbstractFactory().getFactory().getProspectDAO().findAll().forEach(p -> modelTable.addRow(new Object[]{
                     p.getIdentifiant(),
                     p.getRaisonSociale(),
                     p.getAdresse(),

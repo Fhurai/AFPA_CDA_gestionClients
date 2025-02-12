@@ -1,5 +1,6 @@
 package view;
 
+import DAO.AbstractFactory;
 import DAO.SocieteDatabaseException;
 import DAO.mysql.MySqlFactory;
 import entities.Client;
@@ -135,10 +136,10 @@ public class Index extends JFrame {
         try {
             if (type == TypeSociete.CLIENT) {
                 this.contratsButton.setVisible(true);
-                MySqlFactory.getClientDAO().findAll().forEach(client -> selectionComboBox.addItem(client.getRaisonSociale()));
+                new AbstractFactory().getFactory().getClientDAO().findAll().forEach(client -> selectionComboBox.addItem(client.getRaisonSociale()));
             } else if (type == TypeSociete.PROSPECT) {
                 this.contratsButton.setVisible(false);
-                MySqlFactory.getProspectDAO().findAll().forEach(prospect -> selectionComboBox.addItem(prospect.getRaisonSociale()));
+                new AbstractFactory().getFactory().getProspectDAO().findAll().forEach(prospect -> selectionComboBox.addItem(prospect.getRaisonSociale()));
             }
 
             // Affichage du panneau de choix d'action.
@@ -210,10 +211,10 @@ public class Index extends JFrame {
             if (typeChoice == TypeSociete.CLIENT) {
                 // Le choix est un client
                 editChoice =
-                        MySqlFactory.getClientDAO().find(Objects.requireNonNull(selectionComboBox.getSelectedItem()).toString());
+                        new AbstractFactory().getFactory().getClientDAO().find(Objects.requireNonNull(selectionComboBox.getSelectedItem()).toString());
             } else if (typeChoice == TypeSociete.PROSPECT) {
                 // Le choix est un prospect
-                editChoice = MySqlFactory.getProspectDAO().find(Objects.requireNonNull(selectionComboBox.getSelectedItem()).toString());
+                editChoice = new AbstractFactory().getFactory().getProspectDAO().find(Objects.requireNonNull(selectionComboBox.getSelectedItem()).toString());
             }
 
             if(this.actionChoice == TypeAction.CONTRATS && this.editChoice instanceof Client){

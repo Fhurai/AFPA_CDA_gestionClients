@@ -1,0 +1,66 @@
+[
+  {
+    "_id": 1,
+    "raisonSociale": "CGI",
+    "telephone": "0388553370",
+    "mail": "contact@cgi.com",
+    "commentaires": null,
+    "dateProspection": "2025-10-30",
+    "prospectInteresse": false,
+    "adresse": {
+      "_id": 4,
+      "numRue": "28",
+      "nomRue": "Boulevard Albert 1er",
+      "codePostal": "54000",
+      "ville": "NANCY"
+    }
+  },
+  {
+    "_id": 2,
+    "raisonSociale": "ATOS",
+    "telephone": "0173260000",
+    "mail": "contact@atos.fr",
+    "commentaires": null,
+    "dateProspection": "2024-05-28",
+    "prospectInteresse": false,
+    "adresse": {
+      "_id": 5,
+      "numRue": "80",
+      "nomRue": "QUAI VOLTAIRE",
+      "codePostal": "95870",
+      "ville": "BEZONS"
+    }
+  },
+  {
+    "_id": 3,
+    "raisonSociale": "Expectra",
+    "telephone": "0387172390",
+    "mail": "contact@expectra.fr",
+    "commentaires": null,
+    "dateProspection": "2024-10-10",
+    "prospectInteresse": true,
+    "adresse": {
+      "_id": 6,
+      "numRue": "276",
+      "nomRue": "AVENUE DU PRESIDENT WILSON",
+      "codePostal": "93210",
+      "ville": "SAINT-DENIS"
+    }
+  },
+  {
+    "_id": 4,
+    "raisonSociale": "Artistsnclients",
+    "telephone": "0354626298",
+    "mail": "luku@free.fr",
+    "commentaires": "test",
+    "dateProspection": "2023-10-15",
+    "prospectInteresse": true,
+    "adresse": {
+      "_id": 7,
+      "numRue": "25",
+      "nomRue": "rue Serpenoise",
+      "codePostal": "57000",
+      "ville": "Metz"
+    }
+  }
+]

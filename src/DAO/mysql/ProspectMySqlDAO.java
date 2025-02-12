@@ -1,5 +1,6 @@
 package DAO.mysql;
 
+import DAO.AbstractFactory;
 import DAO.SocieteDatabaseException;
 import entities.Prospect;
 import entities.SocieteEntityException;
@@ -366,7 +367,8 @@ public class ProspectMySqlDAO extends SocieteMySqlDAO<Prospect> {
             prospect.setProspectInteresse(rs.getInt("prospectInteresse") == 1 ? "oui" : "non");
 
             // Valorisation propriétés objets.
-            prospect.setAdresse(MySqlFactory.getAdresseDAO().findById(rs.getInt("idAdresse")));
+            prospect.setAdresse(MySqlFactory.getAdresseDAO().findById(rs.getInt(
+                    "idAdresse")));
         } catch (SocieteEntityException | SQLException e) {
             // Log exception.
             LogManager.logs.log(Level.SEVERE, e.getMessage());

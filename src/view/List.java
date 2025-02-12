@@ -1,5 +1,6 @@
 package view;
 
+import DAO.AbstractFactory;
 import DAO.SocieteDatabaseException;
 import DAO.mysql.MySqlFactory;
 import entities.*;
@@ -164,7 +165,7 @@ public class List extends JFrame {
 
                 // Récupération du client
                 try {
-                    Client client = MySqlFactory.getClientDAO().findById(x);
+                    Client client = new AbstractFactory().getFactory().getClientDAO().findById(x);
 
                     if(client != null){
                         // Le client existe, le formulaire est à ouvrir avec l'action
@@ -187,7 +188,7 @@ public class List extends JFrame {
                 // Récupération du prospect
                 Prospect prospect = null;
                 try {
-                    prospect = MySqlFactory.getProspectDAO().findById(x);
+                    prospect = new AbstractFactory().getFactory().getProspectDAO().findById(x);
 
                     if(prospect != null){
                         // Le prospect existe, le formulaire est à ouvrir avec l'action
@@ -219,7 +220,7 @@ public class List extends JFrame {
 
         if(x != -1){
             try {
-                Client client = MySqlFactory.getClientDAO().findById(x);
+                Client client = new AbstractFactory().getFactory().getClientDAO().findById(x);
 
                 if(client != null){
                     if(client.getContrats() != null && !client.getContrats().isEmpty()){

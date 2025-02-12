@@ -1,6 +1,6 @@
 package DAO.mysql;
 
-import DAO.DAO;
+import DAO.SocieteDAO;
 import entities.Societe;
 
 /**
@@ -8,6 +8,6 @@ import entities.Societe;
  *
  * @param <T> Le type de classe à typer.
  */
-abstract public class SocieteMySqlDAO<T extends Societe> extends DAO<T> {
+abstract public class SocieteMySqlDAO<T extends Societe> extends SocieteDAO<T> {
 
 }

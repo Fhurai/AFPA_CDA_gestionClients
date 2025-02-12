@@ -1,27 +1,22 @@
-package entities;
+package DAO;
 
-/**
- * Classe Énumérée Type Action
- */
-public enum TypeAction {
+public enum TypeDatabase {
     // Valeurs énumérées
-    CREATION(1,"creation"),
-    MODIFICATION(2,"modification"),
-    SUPPRESSION(3,"suppression"),
-    LISTE(4,"liste"),
-    CONTRATS(5, "contrats");
+    MYSQL(1, "MySQL"),
+    MONGODB(2, "MongoDB"),
+    FILESYSTEM(3, "FileSystem");
 
     // Variable d'instance
     private final int number;
     private final String name;
 
     /**
-     * Constructeur type action
+     * Constructeur type database.
      *
      * @param number Valeur numérique
      * @param name Nom de la valeur
      */
-    TypeAction(int number, String name) {
+    TypeDatabase(int number, String name) {
         this.number = number;
         this.name = name;
     }

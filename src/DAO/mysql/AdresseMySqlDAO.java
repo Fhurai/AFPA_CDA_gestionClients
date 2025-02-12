@@ -131,7 +131,7 @@ public class AdresseMySqlDAO extends DAO<Adresse> {
      * @throws SocieteDatabaseException Exception lors de la lecture ou lors
      *                                  de la fermeture des données.
      */
-    protected Adresse findById(int identifiant) throws SocieteDatabaseException {
+    public Adresse findById(int identifiant) throws SocieteDatabaseException {
         Adresse adresse = null;
         Connection con = ConnexionMySql.getInstance();
         PreparedStatement stmt;

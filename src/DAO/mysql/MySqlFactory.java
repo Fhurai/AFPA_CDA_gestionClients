@@ -1,12 +1,20 @@
 package DAO.mysql;
 
+import DAO.DAOFactory;
+import DAO.SocieteDatabaseException;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+
+import java.sql.Connection;
 
 /**
  * Classe factory pour les objets DAO MySql.
  */
-public class MySqlFactory {
+public class MySqlFactory implements DAOFactory {
+
+    public Connection getInstance() throws SocieteDatabaseException {
+        return ConnexionMySql.getInstance();
+    }
 
     /**
      * Méthode pour obtenir un objet DAO MySql pour adresse.
@@ -22,7 +30,7 @@ public class MySqlFactory {
      * @return objet DAO MySql pour client.
      */
     @Contract(" -> new")
-    public static @NotNull ClientMySqlDAO getClientDAO() {
+    public @NotNull ClientMySqlDAO getClientDAO() {
         return new ClientMySqlDAO();
     }
 
@@ -32,7 +40,7 @@ public class MySqlFactory {
      * @return objet DAO pour prospect.
      */
     @Contract(" -> new")
-    public static @NotNull ProspectMySqlDAO getProspectDAO() {
+    public @NotNull ProspectMySqlDAO getProspectDAO() {
         return new ProspectMySqlDAO();
     }
 

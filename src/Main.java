@@ -1,3 +1,5 @@
+import DAO.AbstractFactory;
+import DAO.TypeDatabase;
 import DAO.mysql.ConnexionMySql;
 import DAO.SocieteDatabaseException;
 import logs.LogManager;
@@ -36,11 +38,13 @@ public class Main {
             System.exit(1);
         }
 
-        try{
-            // Initialisation de l'accès à la base de données.
-            ConnexionMySql.getInstance();
-        }catch (SocieteDatabaseException sde){
-            JOptionPane.showMessageDialog(null, sde.getMessage());
+        // Initialisation de l'accès à la base de données.
+//            ConnexionMySql.getInstance();
+        AbstractFactory.setTypeDatabase(TypeDatabase.MYSQL);
+        try {
+            new AbstractFactory().getFactory().getInstance();
+        } catch (SocieteDatabaseException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
             System.exit(1);
         }
 

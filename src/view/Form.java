@@ -1,5 +1,6 @@
 package view;
 
+import DAO.AbstractFactory;
 import DAO.mysql.MySqlFactory;
 import entities.*;
 import logs.LogManager;
@@ -282,7 +283,7 @@ public class Form extends JFrame {
                                 this.commentairesTextArea.getText(),
                                 Long.parseLong(this.chiffreAffaireTextfield.getText()),
                                 Integer.parseInt(this.nbEmployesTextfield.getText()));
-                        MySqlFactory.getClientDAO().save(client);
+                        new AbstractFactory().getFactory().getClientDAO().save(client);
 
                         JOptionPane.showMessageDialog(this, "Client ajouté avec succès !");
                     } else if (this.typeSociete == TypeSociete.PROSPECT) {
@@ -303,7 +304,7 @@ public class Form extends JFrame {
                                 this.commentairesTextArea.getText(),
                                 LocalDate.parse(this.dateProspectionTextfield.getText(), Formatters.FORMAT_DDMMYYYY),
                                 (String) this.prospectInteresseComboBox.getSelectedItem());
-                        MySqlFactory.getProspectDAO().save(prospect);
+                        new AbstractFactory().getFactory().getProspectDAO().save(prospect);
 
                         JOptionPane.showMessageDialog(this, "Prospect ajouté avec succès !");
                     }
@@ -326,7 +327,7 @@ public class Form extends JFrame {
 
                         // Recherche du client modifié parmi la liste des clients
                         // et modification de celui-c.
-                        MySqlFactory.getClientDAO().save(client);
+                        new AbstractFactory().getFactory().getClientDAO().save(client);
                         JOptionPane.showMessageDialog(this, "Client modifié " +
                                 "avec succès !");
                     } else if (this.typeSociete == TypeSociete.PROSPECT) {
@@ -344,7 +345,7 @@ public class Form extends JFrame {
 
                         // Recherche du prospect modifié parmi la liste des
                         // prospects et modification de celui-c.
-                        MySqlFactory.getProspectDAO().save(prospect);
+                        new AbstractFactory().getFactory().getProspectDAO().save(prospect);
                         JOptionPane.showMessageDialog(this, "Prospect modifié " +
                                 "avec succès !");
                     }
@@ -364,7 +365,7 @@ public class Form extends JFrame {
                                 " vous supprimer " + client.getRaisonSociale() + " ?");
 
                         if (reponse == JOptionPane.OK_OPTION) {
-                            MySqlFactory.getClientDAO().delete(client);
+                            new AbstractFactory().getFactory().getClientDAO().delete(client);
                             JOptionPane.showMessageDialog(this, "Client supprimé " +
                                     "avec succès !");
                         }
@@ -377,7 +378,7 @@ public class Form extends JFrame {
                                 "vous supprimer " + prospect.getRaisonSociale() + " ?");
 
                         if (reponse == JOptionPane.OK_OPTION) {
-                            MySqlFactory.getProspectDAO().delete(prospect);
+                            new AbstractFactory().getFactory().getProspectDAO().delete(prospect);
                             JOptionPane.showMessageDialog(this, "Prospect " +
                                     "supprimé avec succès !");
                         }
