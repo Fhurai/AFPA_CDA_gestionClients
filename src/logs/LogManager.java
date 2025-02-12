@@ -25,6 +25,7 @@ public class LogManager {
         logs.setUseParentHandlers(false);
         logs.addHandler(fh);
         fh.setFormatter(new LogFormatter());
+        logs.info(System.lineSeparator());
     }
 
     /**
