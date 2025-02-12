@@ -15,7 +15,6 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.logging.Level;
 
@@ -55,6 +54,8 @@ public class Index extends JFrame {
     private TypeAction actionChoice;
     private Societe editChoice = null;
 
+    private AbstractFactory factory;
+
     /**
      * Constructeur
      */
@@ -62,6 +63,8 @@ public class Index extends JFrame {
         // Initialisation de la vue et de ses écouteurs d'évènements.
         init();
         setListeners();
+
+        factory = new AbstractFactory();
     }
 
     /**
@@ -73,11 +76,11 @@ public class Index extends JFrame {
 
         // Nom de l'appli en fonction de la base de donnée en cours
         // d'utilisation.
-        this.AppliNameLabel.setText("Gestion fichier clients "+AbstractFactory.getTypeDatabase().getName());
+        this.AppliNameLabel.setText("Gestion fichier clients " + AbstractFactory.getTypeDatabase().getName());
 
         // Remplissage du combobox de sélection de la base de données.
         dbComboBox.removeAllItems();
-        for(TypeDatabase tdb: TypeDatabase.values()){
+        for (TypeDatabase tdb : TypeDatabase.values()) {
             dbComboBox.addItem(tdb.getName());
         }
         dbComboBox.setSelectedIndex(AbstractFactory.getTypeDatabase().getNumber() - 1);
@@ -141,15 +144,15 @@ public class Index extends JFrame {
         // Bouton sélection base de données.
         connecterButton.addActionListener(e -> {
             try {
-                new AbstractFactory().getFactory().close();
+                factory.getFactory().close();
                 AbstractFactory.setTypeDatabase(TypeDatabase.findByString((String) dbComboBox.getSelectedItem()));
-                new AbstractFactory().getFactory().init();
+                factory.getFactory().init();
             } catch (SocieteDatabaseException ex) {
                 LogManager.logs.log(Level.SEVERE, ex.getMessage());
                 JOptionPane.showMessageDialog(null, ex.getMessage(), "Erreur",
                         JOptionPane.ERROR_MESSAGE);
             }
-           init();
+            init();
         });
     }
 
@@ -251,16 +254,16 @@ public class Index extends JFrame {
                 editChoice = new AbstractFactory().getFactory().getProspectDAO().find(Objects.requireNonNull(selectionComboBox.getSelectedItem()).toString());
             }
 
-            if(this.actionChoice == TypeAction.CONTRATS){
-                if(this.typeChoice == TypeSociete.CLIENT && !((Client) this.editChoice).getContrats().isEmpty()){
+            if (this.actionChoice == TypeAction.CONTRATS) {
+                if (this.typeChoice == TypeSociete.CLIENT && !((Client) this.editChoice).getContrats().isEmpty()) {
                     new Contracts((Client) this.editChoice).setVisible(true);
                     dispose();
-                }else{
+                } else {
                     JOptionPane.showMessageDialog(this, "Client sans " +
                             "contrat, veuillez sélectionner un autre " +
                             "client.");
                 }
-            }else{
+            } else {
                 new Form(this.typeChoice, this.actionChoice, this.editChoice).setVisible(true);
                 dispose();
             }

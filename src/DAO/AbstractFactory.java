@@ -43,7 +43,7 @@ public class AbstractFactory {
             daoFactory = new MySqlFactory();
         } else if (typeDatabase == TypeDatabase.MONGODB) {
             daoFactory = new MongoFactory();
-        }else{
+        } else {
             throw new SocieteDatabaseException("Erreur inconnue");
         }
         return daoFactory;

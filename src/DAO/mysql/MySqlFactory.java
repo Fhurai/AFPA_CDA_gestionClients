@@ -6,10 +6,7 @@ import logs.LogManager;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.sql.SQLException;
 import java.util.logging.Level;
-
-import static DAO.mysql.ConnexionMySql.getInstance;
 
 /**
  * Classe factory pour les objets DAO MySql.
@@ -26,21 +23,38 @@ public class MySqlFactory implements DAOFactory {
         return new AdresseMySqlDAO();
     }
 
-    @Override
-    public void init() throws SocieteDatabaseException {
-        getInstance();
+    /**
+     * Méthode pour obtenir un objet DAO MySql pour contrat.
+     *
+     * @return objet DAO pour contrat.
+     */
+    @Contract(" -> new")
+    public static @NotNull ContratMySqlDAO getContratDAO() {
+        return new ContratMySqlDAO();
     }
 
+    /**
+     * Méthode d'initialisation de l'usine et de la connexion DAO.
+     *
+     * @throws SocieteDatabaseException Exception lors de l'ouverture de la
+     *                                  connexion.
+     */
+    @Override
+    public void init() throws SocieteDatabaseException {
+        ConnexionMySql.getInstance();
+    }
+
+    /**
+     * Méthode de fermeture de la connexion.
+     *
+     * @throws SocieteDatabaseException Exception lors de la fermeture de la
+     *                                  connexion.
+     */
     @Override
     public void close() throws SocieteDatabaseException {
-        try {
-            ConnexionMySql.getInstance().close();
-        } catch (SQLException e) {
-            // Log de l'exception
-            LogManager.logs.log(Level.SEVERE, e.getMessage());
-            throw new SocieteDatabaseException("Erreur lors de la fermeture " +
-                    "de la connexion");
-        }
+        // Log de la fermeture et fermeture de la connexion.
+        LogManager.logs.log(Level.INFO, "Database fermée");
+        ConnexionMySql.close();
     }
 
     /**
@@ -56,20 +70,10 @@ public class MySqlFactory implements DAOFactory {
     /**
      * Méthode pour obtenir un objet DAO MySql pour prospect.
      *
-     * @return objet DAO pour prospect.
+     * @return objet DAO MySql pour prospect.
      */
     @Contract(" -> new")
     public @NotNull ProspectMySqlDAO getProspectDAO() {
         return new ProspectMySqlDAO();
-    }
-
-    /**
-     * Méthode pour obtenir un objet DAO MySql pour contrat.
-     *
-     * @return objet DAO pour contrat.
-     */
-    @Contract(" -> new")
-    public static @NotNull ContratMySqlDAO getContratDAO() {
-        return new ContratMySqlDAO();
     }
 }
