@@ -39,7 +39,7 @@ public class Main {
         }
 
         // Initialisation de l'accès à la base de données.
-        AbstractFactory.setTypeDatabase(TypeDatabase.MYSQL);
+        AbstractFactory.setTypeDatabase(TypeDatabase.FILESYSTEM);
         try {
             new AbstractFactory().getFactory().init();
         } catch (SocieteDatabaseException e) {

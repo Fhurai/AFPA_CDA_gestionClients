@@ -25,6 +25,9 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.logging.Level;
 
+/**
+ * Classe DAO MongoDB pour les prospects.
+ */
 public class ProspectMongoDAO extends SocieteMongoDAO<Prospect> {
 
     /**
@@ -161,7 +164,7 @@ public class ProspectMongoDAO extends SocieteMongoDAO<Prospect> {
      *                                  modification ou de la fermeture des données.
      */
     @Override
-    public boolean save(Prospect obj) throws SocieteDatabaseException {
+    public boolean save(@NotNull Prospect obj) throws SocieteDatabaseException {
         // Initialisation de la variable.
         MongoDatabase db = ConnexionMongo.getInstance();
         boolean ret;

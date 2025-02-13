@@ -54,7 +54,7 @@ public class Index extends JFrame {
     private TypeAction actionChoice;
     private Societe editChoice = null;
 
-    private AbstractFactory factory;
+    private final AbstractFactory factory;
 
     /**
      * Constructeur

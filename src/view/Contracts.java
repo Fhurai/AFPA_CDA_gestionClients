@@ -20,7 +20,7 @@ import static utilities.ViewsUtilities.returnIndex;
  */
 public class Contracts extends JFrame {
     private final Dimension windowSize = new Dimension(450, 350);
-    private Client client;
+    private final Client client;
     private JPanel contentPane;
     private JPanel AppliNamePanel;
     private JLabel AppliNameLabel;
@@ -97,7 +97,7 @@ public class Contracts extends JFrame {
      */
     private void fillTable() {
         // Initialisation des variables nécessaires au remplissage du tableau.
-        DefaultTableModel modelTable = null;
+        DefaultTableModel modelTable;
         String[] entete;
 
         entete = new String[]{"Identifiant", "Libellé", "Montant (€)"};

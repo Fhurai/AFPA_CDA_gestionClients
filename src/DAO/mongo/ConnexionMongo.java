@@ -3,16 +3,19 @@ package DAO.mongo;
 import DAO.SocieteDatabaseException;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
+import com.mongodb.MongoTimeoutException;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 import logs.LogManager;
+import org.bson.Document;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
 /**
@@ -70,7 +73,7 @@ public class ConnexionMongo {
             // configuration.
             final Properties dataProperties = new Properties();
             File fichier = new File("database.mongo.properties");
-            FileInputStream input = null;
+            FileInputStream input;
 
             try {
                 // Chargement de la configuration.
@@ -94,6 +97,16 @@ public class ConnexionMongo {
 
             // Paramètres Mongo
             MongoClientSettings settings = MongoClientSettings.builder()
+                    // Timer Socket
+                    .applyToSocketSettings(builder -> {
+                        builder.connectTimeout(1, TimeUnit.SECONDS);
+                        builder.readTimeout(1, TimeUnit.SECONDS);
+                    })
+                    // Timer application
+                    .applyToClusterSettings(builder -> {
+                        builder.serverSelectionTimeout(1, TimeUnit.SECONDS);
+                    })
+                    // Paramètres de connexion.
                     .applyConnectionString(new ConnectionString(
                             dataProperties.getProperty("protocol") +
                                     dataProperties.getProperty("login") + ":" +
@@ -107,6 +120,18 @@ public class ConnexionMongo {
 
             // Ouverture de la base de données.
             db = connexion.getDatabase("gestionclients");
+
+            try {
+                // Ping de la base de données.
+                Document pingCommand = new Document("ping", 1);
+                Document response = db.runCommand(pingCommand);
+            } catch (MongoTimeoutException e) {
+                // Exception attrapée, la base a timeout.
+                // Log de l'exception et avertissement de l'utilisateur.
+                LogManager.logs.log(Level.SEVERE, e.getMessage());
+                throw new SocieteDatabaseException("Timeout de connexion " +
+                        "NoSQL.");
+            }
 
             // Logging de l'ouverture de la connexion.
             LogManager.logs.log(Level.INFO, "Database ouverte");

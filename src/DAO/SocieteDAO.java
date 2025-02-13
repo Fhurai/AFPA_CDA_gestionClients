@@ -2,7 +2,7 @@ package DAO;
 
 import entities.Societe;
 
-/*
+/**
  * Classe DAO Société abstraite.
  */
 abstract public class SocieteDAO<T extends Societe> extends DAO<T> {

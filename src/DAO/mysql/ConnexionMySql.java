@@ -74,7 +74,7 @@ public class ConnexionMySql {
             // configuration.
             final Properties dataProperties = new Properties();
             File fichier = new File("database.mysql.properties");
-            FileInputStream input = null;
+            FileInputStream input;
 
             try {
                 // Chargement de la configuration.
