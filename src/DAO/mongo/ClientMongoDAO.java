@@ -50,7 +50,7 @@ public class ClientMongoDAO extends SocieteMongoDAO<Client> {
         // Récupération de la collection de données clients.
         MongoCollection<Document> collection = db.getCollection("clients");
 
-        // Récupération du premier document correspondant au nom donnée.
+        // Récupération du premier document correspondant à l'identifiant donné.
         Document doc = collection.find(Filters.eq("identifiant", identifiant)).first();
 
         if (doc != null) {

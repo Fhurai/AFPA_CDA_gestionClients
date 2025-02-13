@@ -121,7 +121,7 @@ public class ContratMySqlDAO extends DAO<Contrat> {
     }
 
     /**
-     * Méthode pour rechercher un contrat.
+     * Méthode pour rechercher un contrat par l'identifiant du client.
      *
      * @param idClient Le client du contrat recherché.
      * @return La liste des contrats du client.

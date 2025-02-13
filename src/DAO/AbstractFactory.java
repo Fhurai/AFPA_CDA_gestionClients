@@ -1,5 +1,6 @@
 package DAO;
 
+import DAO.filesystem.FilesystemFactory;
 import DAO.mongo.MongoFactory;
 import DAO.mysql.MySqlFactory;
 
@@ -43,6 +44,8 @@ public class AbstractFactory {
             daoFactory = new MySqlFactory();
         } else if (typeDatabase == TypeDatabase.MONGODB) {
             daoFactory = new MongoFactory();
+        }else if(typeDatabase == TypeDatabase.FILESYSTEM){
+            daoFactory = new FilesystemFactory();
         } else {
             throw new SocieteDatabaseException("Erreur inconnue");
         }

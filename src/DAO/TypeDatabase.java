@@ -5,8 +5,8 @@ import org.jetbrains.annotations.Nullable;
 public enum TypeDatabase {
     // Valeurs énumérées
     MYSQL(1, "MySql"),
-    MONGODB(2, "MongoDB");
-//    FILESYSTEM(3, "FileSystem");
+    MONGODB(2, "MongoDB"),
+    FILESYSTEM(3, "FileSystem");
 
     // Variable d'instance
     private final int number;
