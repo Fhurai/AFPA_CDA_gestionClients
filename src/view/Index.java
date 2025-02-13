@@ -1,6 +1,13 @@
 package view;
 
-import entities.*;
+import DAO.AbstractFactory;
+import DAO.SocieteDatabaseException;
+import DAO.TypeDatabase;
+import entities.Client;
+import entities.Societe;
+import entities.TypeAction;
+import entities.TypeSociete;
+import logs.LogManager;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -9,7 +16,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Objects;
-import java.util.Optional;
+import java.util.logging.Level;
 
 import static utilities.ViewsUtilities.quitApplication;
 
@@ -17,7 +24,7 @@ import static utilities.ViewsUtilities.quitApplication;
  * Fenêtre d'accueil sur l'application.
  */
 public class Index extends JFrame {
-    private final Dimension windowSize = new Dimension(600, 250);
+    private final Dimension windowSize = new Dimension(700, 250);
     private JPanel contentPane;
     private JButton quitButton;
     private JPanel AppliNamePanel;
@@ -39,10 +46,15 @@ public class Index extends JFrame {
     private JLabel choiceTypeLabel;
     private JLabel choiceActionLabel;
     private JLabel choiceEditLabel;
+    private JButton contratsButton;
+    private JComboBox dbComboBox;
+    private JButton connecterButton;
 
     private TypeSociete typeChoice;
     private TypeAction actionChoice;
     private Societe editChoice = null;
+
+    private AbstractFactory factory;
 
     /**
      * Constructeur
@@ -51,6 +63,8 @@ public class Index extends JFrame {
         // Initialisation de la vue et de ses écouteurs d'évènements.
         init();
         setListeners();
+
+        factory = new AbstractFactory();
     }
 
     /**
@@ -59,6 +73,18 @@ public class Index extends JFrame {
     private void init() {
         // Valorisation du contenu de la vue.
         setContentPane(contentPane);
+
+        // Nom de l'appli en fonction de la base de donnée en cours
+        // d'utilisation.
+        this.AppliNameLabel.setText("Gestion fichier clients " + AbstractFactory.getTypeDatabase().getName());
+
+        // Remplissage du combobox de sélection de la base de données.
+        dbComboBox.removeAllItems();
+        for (TypeDatabase tdb : TypeDatabase.values()) {
+            dbComboBox.addItem(tdb.getName());
+        }
+        dbComboBox.setSelectedIndex(AbstractFactory.getTypeDatabase().getNumber() - 1);
+        connecterButton.setVisible(false);
 
         // Valorisation du bouton par défaut.
         this.getRootPane().setDefaultButton(quitButton);
@@ -105,9 +131,29 @@ public class Index extends JFrame {
         listeButton.addActionListener(e -> choiceAction(TypeAction.LISTE));
         modificationButton.addActionListener(e -> choiceAction(TypeAction.MODIFICATION));
         suppressionButton.addActionListener(e -> choiceAction(TypeAction.SUPPRESSION));
+        contratsButton.addActionListener(e -> choiceAction(TypeAction.CONTRATS));
 
-        // Boutons sélection
+        // Boutons sélection société.
         selectionnerButton.addActionListener(e -> choiceEdit());
+
+        // Combobox sélection base de données.
+        dbComboBox.addActionListener(e -> {
+            connecterButton.setVisible(!Objects.equals(dbComboBox.getSelectedItem(), AbstractFactory.getTypeDatabase().getName()));
+        });
+
+        // Bouton sélection base de données.
+        connecterButton.addActionListener(e -> {
+            try {
+                factory.getFactory().close();
+                AbstractFactory.setTypeDatabase(TypeDatabase.findByString((String) dbComboBox.getSelectedItem()));
+                factory.getFactory().init();
+            } catch (SocieteDatabaseException ex) {
+                LogManager.logs.log(Level.SEVERE, ex.getMessage());
+                JOptionPane.showMessageDialog(null, ex.getMessage(), "Erreur",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+            init();
+        });
     }
 
     /**
@@ -124,17 +170,23 @@ public class Index extends JFrame {
         // Reset de la liste déroulante et remplissage de celle-ci avec les
         // sociétés correspondantes au type choisi.
         selectionComboBox.removeAllItems();
-        if (type == TypeSociete.CLIENT) {
-            Clients.getClients().forEach(client -> selectionComboBox.addItem(client.getRaisonSociale()));
-        } else if (type == TypeSociete.PROSPECT) {
-            Prospects.getProspects().forEach(prospect -> selectionComboBox.addItem(prospect.getRaisonSociale()));
+        try {
+            if (type == TypeSociete.CLIENT) {
+                this.contratsButton.setVisible(true);
+                new AbstractFactory().getFactory().getClientDAO().findAll().forEach(client -> selectionComboBox.addItem(client.getRaisonSociale()));
+            } else if (type == TypeSociete.PROSPECT) {
+                this.contratsButton.setVisible(false);
+                new AbstractFactory().getFactory().getProspectDAO().findAll().forEach(prospect -> selectionComboBox.addItem(prospect.getRaisonSociale()));
+            }
+
+            // Affichage du panneau de choix d'action.
+            ActionPanel.setVisible(true);
+
+            // Valorisation de la valeur globale du choix de type de société.
+            this.typeChoice = type;
+        } catch (SocieteDatabaseException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
         }
-
-        // Affichage du panneau de choix d'action.
-        ActionPanel.setVisible(true);
-
-        // Valorisation de la valeur globale du choix de type de société.
-        this.typeChoice = type;
     }
 
     /**
@@ -167,6 +219,12 @@ public class Index extends JFrame {
                 this.dispose();
                 break;
 
+            case TypeAction.CONTRATS:
+                // Contrats choisis
+                EditPanel.setVisible(true);
+                choiceEditLabel.setText("Quelle société consulter ?");
+                break;
+
             case TypeAction.MODIFICATION:
                 // Modification choisie
                 EditPanel.setVisible(true);
@@ -186,17 +244,35 @@ public class Index extends JFrame {
      */
     private void choiceEdit() {
 
-        if (typeChoice == TypeSociete.CLIENT) {
-            // Le choix est un client
-            Optional<Client> c = Clients.getFromRaisonSociale(Objects.requireNonNull(selectionComboBox.getSelectedItem()).toString());
-            c.ifPresent(client -> editChoice = client);
-        } else if (typeChoice == TypeSociete.PROSPECT) {
-            // Le choix est un prospect
-            Optional<Prospect> p = Prospects.getFromRaisonSociale(Objects.requireNonNull(selectionComboBox.getSelectedItem()).toString());
-            p.ifPresent(prospect -> editChoice = prospect);
-        }
+        try {
+            if (typeChoice == TypeSociete.CLIENT) {
+                // Le choix est un client
+                editChoice =
+                        new AbstractFactory().getFactory().getClientDAO().find(Objects.requireNonNull(selectionComboBox.getSelectedItem()).toString());
+            } else if (typeChoice == TypeSociete.PROSPECT) {
+                // Le choix est un prospect
+                editChoice = new AbstractFactory().getFactory().getProspectDAO().find(Objects.requireNonNull(selectionComboBox.getSelectedItem()).toString());
+            }
 
-        new Form(this.typeChoice, this.actionChoice, this.editChoice).setVisible(true);
-        dispose();
+            if (this.actionChoice == TypeAction.CONTRATS) {
+                if (this.typeChoice == TypeSociete.CLIENT && !((Client) this.editChoice).getContrats().isEmpty()) {
+                    new Contracts((Client) this.editChoice).setVisible(true);
+                    dispose();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Client sans " +
+                            "contrat, veuillez sélectionner un autre " +
+                            "client.");
+                }
+            } else {
+                new Form(this.typeChoice, this.actionChoice, this.editChoice).setVisible(true);
+                dispose();
+            }
+        } catch (SocieteDatabaseException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        } catch (Exception e) {
+            LogManager.logs.log(Level.SEVERE, e.getMessage());
+            JOptionPane.showMessageDialog(null, "Erreur lors de l'ouverture " +
+                    "du formulaire.");
+        }
     }
 }

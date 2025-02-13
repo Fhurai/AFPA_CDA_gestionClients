@@ -1,0 +1,79 @@
+[
+  {
+    "_id": {
+      "$oid": "67aca678132aa41899d27402"
+    },
+    "identifiant": 1,
+    "raisonSociale": "Falcom",
+    "telephone": "0387543400",
+    "mail": "contact@falcom.com",
+    "commentaires": null,
+    "chiffreAffaires": "999999999999999.9999",
+    "nbEmployes": 80,
+    "adresse": {
+      "identifiant": 1,
+      "numRue": "2bis",
+      "nomRue": "rue Ardant du Picq",
+      "codePostal": "57004",
+      "ville": "Metz"
+    },
+    "contrats": [
+      {
+        "identifiant": "1",
+        "libelleContrat": "Contrat test Efluid",
+        "montant": "1500.0000"
+      },
+      {
+        "identifiant": "2",
+        "libelleContrat": "Contrat Interim Efluid",
+        "montant": "45000.0000"
+      }
+    ]
+  },
+  {
+    "_id": {
+      "$oid": "67aca678132aa41899d27403"
+    },
+    "identifiant": 2,
+    "raisonSociale": "Capcom",
+    "telephone": "0387758575",
+    "mail": "contact@capcom.com",
+    "commentaires": null,
+    "chiffreAffaires": "4813.0000",
+    "nbEmployes": 6,
+    "adresse": {
+      "identifiant": 3,
+      "numRue": "25",
+      "nomRue": "rue de la Taye",
+      "codePostal": "57130",
+      "ville": "Jussy"
+    },
+    "contrats": [
+      {
+        "identifiant": "3",
+        "libelleContrat": "Contrat Pro Happiso",
+        "montant": "75000.0000"
+      }
+    ]
+  },
+  {
+    "_id": {
+      "$oid": "67aca678132aa41899d27404"
+    },
+    "identifiant": 3,
+    "raisonSociale": "Monolith Soft",
+    "telephone": "0383375640",
+    "mail": "contact@monolith-soft.com",
+    "commentaires": null,
+    "chiffreAffaires": "50000.0000",
+    "nbEmployes": 1,
+    "adresse": {
+      "identifiant": 2,
+      "numRue": "3",
+      "nomRue": "rue des Michottes",
+      "codePostal": "54000",
+      "ville": "Nancy"
+    },
+    "contrats": []
+  }
+]

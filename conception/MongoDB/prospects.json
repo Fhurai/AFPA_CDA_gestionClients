@@ -1,0 +1,107 @@
+[
+  {
+    "_id": {
+      "$oid": "67aca367132aa41899d273fc"
+    },
+    "identifiant": 1,
+    "raisonSociale": "Skeb",
+    "telephone": "0388553370",
+    "mail": "contact@skeb.com",
+    "commentaires": "",
+    "dateProspection": {
+      "$date": "2025-10-30T00:00:00.000Z"
+    },
+    "prospectInteresse": false,
+    "adresse": {
+      "identifiant": 4,
+      "numRue": "28",
+      "nomRue": "Boulevard Albert 1er",
+      "codePostal": "54000",
+      "ville": "NANCY"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "67aca367132aa41899d273fd"
+    },
+    "identifiant": 2,
+    "raisonSociale": "Vgen",
+    "telephone": "0173260000",
+    "mail": "contact@vgen.com",
+    "commentaires": "",
+    "dateProspection": {
+      "$date": "2024-05-28T00:00:00.000Z"
+    },
+    "prospectInteresse": false,
+    "adresse": {
+      "identifiant": 5,
+      "numRue": "80",
+      "nomRue": "QUAI VOLTAIRE",
+      "codePostal": "95870",
+      "ville": "BEZONS"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "67aca367132aa41899d273fe"
+    },
+    "identifiant": 3,
+    "raisonSociale": "Gank",
+    "telephone": "0387172390",
+    "mail": "contact@gank.com",
+    "commentaires": "",
+    "dateProspection": {
+      "$date": "2024-10-10T00:00:00.000Z"
+    },
+    "prospectInteresse": true,
+    "adresse": {
+      "identifiant": 6,
+      "numRue": "276",
+      "nomRue": "AVENUE DU PRESIDENT WILSON",
+      "codePostal": "93210",
+      "ville": "SAINT-DENIS"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "67aca367132aa41899d273ff"
+    },
+    "identifiant": 4,
+    "raisonSociale": "Artistsnclients",
+    "telephone": "0354626299",
+    "mail": "ct@artistnclients.com",
+    "commentaires": "test",
+    "dateProspection": {
+      "$date": "2023-10-15T00:00:00.000Z"
+    },
+    "prospectInteresse": true,
+    "adresse": {
+      "identifiant": 0,
+      "numRue": "25",
+      "nomRue": "rue Serpenoise",
+      "codePostal": "57000",
+      "ville": "Metz"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "67aca8641b1fe266f5b4300c"
+    },
+    "identifiant": 5,
+    "raisonSociale": "Discord",
+    "telephone": "0384135679",
+    "mail": "contact@discord.gg",
+    "commentaires": "",
+    "dateProspection": {
+      "$date": "2024-10-12T00:00:00.000Z"
+    },
+    "prospectInteresse": false,
+    "adresse": {
+      "identifiant": 5,
+      "numRue": "46",
+      "nomRue": "Rue des rats",
+      "codePostal": "54000",
+      "ville": "Nancy"
+    }
+  }
+]

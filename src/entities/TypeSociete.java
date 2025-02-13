@@ -14,8 +14,9 @@ public enum TypeSociete {
 
     /**
      * Constructeur type société
+     *
      * @param number Valeur numérique
-     * @param name Nom de la valeur
+     * @param name   Nom de la valeur
      */
     TypeSociete(int number, String name) {
         this.number = number;
@@ -24,6 +25,7 @@ public enum TypeSociete {
 
     /**
      * Getter number
+     *
      * @return Valeur numérique de la valeur énumérée
      */
     public int getNumber() {
@@ -32,6 +34,7 @@ public enum TypeSociete {
 
     /**
      * Getter name
+     *
      * @return Nom de la valeur énumérée
      */
     public String getName() {

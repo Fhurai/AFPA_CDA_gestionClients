@@ -17,15 +17,16 @@ abstract public class Societe {
 
     /**
      * Constructeur avec toutes les variables
-     * @param identifiant Identifiant
+     *
+     * @param identifiant   Identifiant
      * @param raisonSociale La raison sociale, ou nom
-     * @param adresse Adresse
-     * @param telephone Le numéro de téléphone
-     * @param mail L'adresse mail
-     * @param commentaires Les commentaires
+     * @param adresse       Adresse
+     * @param telephone     Le numéro de téléphone
+     * @param mail          L'adresse mail
+     * @param commentaires  Les commentaires
      */
     public Societe(int identifiant, String raisonSociale, Adresse adresse, String telephone, String mail, String commentaires) throws SocieteEntityException {
-        this.identifiant = identifiant;
+        setIdentifiant(identifiant);
         setRaisonSociale(raisonSociale);
         setAdresse(adresse);
         setTelephone(telephone);
@@ -35,13 +36,15 @@ abstract public class Societe {
 
     /**
      * Constructeur avec toutes les variables sauf l'identifiant
+     *
      * @param raisonSociale La raison sociale, ou nom
-     * @param adresse Adresse
-     * @param telephone Le numéro de téléphone
-     * @param mail L'adresse mail
-     * @param commentaires Les commentaires
+     * @param adresse       Adresse
+     * @param telephone     Le numéro de téléphone
+     * @param mail          L'adresse mail
+     * @param commentaires  Les commentaires
      */
     public Societe(String raisonSociale, Adresse adresse, String telephone, String mail, String commentaires) throws SocieteEntityException {
+        this.identifiant = 0;
         setRaisonSociale(raisonSociale);
         setAdresse(adresse);
         setTelephone(telephone);
@@ -57,6 +60,7 @@ abstract public class Societe {
 
     /**
      * Getter commentaires
+     *
      * @return Commentaires
      */
     public String getCommentaires() {
@@ -65,18 +69,16 @@ abstract public class Societe {
 
     /**
      * Setter commentaires
+     *
      * @param commentaires Commentaires, possiblement null
      */
-    public void setCommentaires(String commentaires) throws SocieteEntityException {
-        if(commentaires == null){
-            throw new SocieteEntityException("Les commentaires ne peuvent pas" +
-                    " être null !");
-        }
+    public void setCommentaires(String commentaires) {
         this.commentaires = commentaires;
     }
 
     /**
      * Getter mail
+     *
      * @return Adresse mail
      */
     public String getMail() {
@@ -85,17 +87,18 @@ abstract public class Societe {
 
     /**
      * Setter adresse mail
+     *
      * @param mail L'adresse mail
      */
     public void setMail(String mail) throws SocieteEntityException {
         // Cas chaîne vide ou null
-        if(mail == null || mail.isEmpty()){
+        if (mail == null || mail.isEmpty()) {
             throw new SocieteEntityException("L'adresse mail ne peut être " +
                     "vide !");
         }
 
         // Cas regex non matché
-        if(!Patterns.PATTERN_MAIL.matcher(mail).matches()){
+        if (!Patterns.PATTERN_MAIL.matcher(mail).matches()) {
             throw new SocieteEntityException("L'adresse mail doit être de " +
                     "format destinataire@fournisseur.extension");
         }
@@ -104,6 +107,7 @@ abstract public class Societe {
 
     /**
      * Getter téléphone
+     *
      * @return Numéro de téléphone
      */
     public String getTelephone() {
@@ -112,17 +116,18 @@ abstract public class Societe {
 
     /**
      * Setter téléphone
+     *
      * @param telephone Le numéro de téléphone
      */
     public void setTelephone(String telephone) throws SocieteEntityException {
         // Cas chaîne vide ou null
-        if(telephone == null || telephone.isEmpty()){
+        if (telephone == null || telephone.isEmpty()) {
             throw new SocieteEntityException("Le numéro de téléphone ne peut " +
                     "être vide !");
         }
 
         // Cas regex non matché
-        if(!Patterns.PATTERN_TELEPHONE.matcher(telephone).matches()){
+        if (!Patterns.PATTERN_TELEPHONE.matcher(telephone).matches()) {
             throw new SocieteEntityException("Le numéro de téléphone doit " +
                     "comporter maximum quinze chiffres !");
         }
@@ -132,6 +137,7 @@ abstract public class Societe {
 
     /**
      * Getter adresse
+     *
      * @return Adresse
      */
     public Adresse getAdresse() {
@@ -140,11 +146,12 @@ abstract public class Societe {
 
     /**
      * Setter adresse
+     *
      * @param adresse L'adresse
      */
     public void setAdresse(Adresse adresse) throws SocieteEntityException {
         // Cas chaîne vide
-        if(adresse == null){
+        if (adresse == null) {
             throw new SocieteEntityException("L'adresse ne peut être vide !");
         }
 
@@ -153,6 +160,7 @@ abstract public class Societe {
 
     /**
      * Getter raison social
+     *
      * @return Raison sociale, ou nom
      */
     public String getRaisonSociale() {
@@ -161,33 +169,41 @@ abstract public class Societe {
 
     /**
      * Setter raison sociale
+     *
      * @param raisonSociale La raison sociale, ou nom
      */
     public void setRaisonSociale(String raisonSociale) throws SocieteEntityException {
         // Cas chaîne vide ou null
-        if(raisonSociale == null || raisonSociale.isEmpty()){
-            throw new SocieteEntityException("La raison sociale ne peut etre" +
+        if (raisonSociale == null || raisonSociale.isEmpty()) {
+            throw new SocieteEntityException("La raison sociale ne peut être" +
                     " vide !");
         }
 
-        for(Client c : Clients.getClients()){
-            if(raisonSociale.equals(c.getRaisonSociale()) && this.identifiant != c.getIdentifiant()){
-                throw new SocieteEntityException("La raison sociale donnée " +
-                        "existe déjà en base de données.");
-            }
-        }
-
-        for(Prospect p : Prospects.getProspects()){
-            if(raisonSociale.equals(p.getRaisonSociale()) && this.identifiant != p.getIdentifiant()){
-                throw new SocieteEntityException("La raison sociale donnée " +
-                        "existe déjà en base de données.");
-            }
-        }
+//        try {
+//            for(Client c : MySqlFactory.getClientsDAO().findAll()){
+//                if(raisonSociale.equals(c.getRaisonSociale()) && this.identifiant != c.getIdentifiant()){
+//                    throw new SocieteEntityException("La raison sociale donnée " +
+//                            "existe déjà en base de données.");
+//                }
+//            }
+//
+//            for(Prospect p : MySqlFactory.getProspectsDAO().findAll()){
+//                if(raisonSociale.equals(p.getRaisonSociale()) && this.identifiant != p.getIdentifiant()){
+//                    throw new SocieteEntityException("La raison sociale donnée " +
+//                            "existe déjà en base de données.");
+//                }
+//            }
+//        } catch (SocieteDatabaseException e) {
+//            LogManager.logs.log(Level.SEVERE, e.getMessage());
+//            throw new SocieteEntityException("La vérification de l'unicité de" +
+//                    " la raison sociale ne peut être faite !");
+//        }
         this.raisonSociale = raisonSociale;
     }
 
     /**
      * Getter identifiant
+     *
      * @return Identifiant
      */
     public int getIdentifiant() {
@@ -196,11 +212,12 @@ abstract public class Societe {
 
     /**
      * Setter identifiant
+     *
      * @param identifiant L'identifiant
      */
     public void setIdentifiant(int identifiant) throws SocieteEntityException {
         // Cas nombre négatif
-        if(identifiant <= 0){
+        if (identifiant <= 0) {
             throw new SocieteEntityException("L'identifiant ne peut être " +
                     "inférieur ou égal à 0 !");
         }
@@ -210,6 +227,7 @@ abstract public class Societe {
 
     /**
      * Méthode pour convertir la société en chaîne de caractères.
+     *
      * @return la société en chaîne de caractères.
      */
     @Override

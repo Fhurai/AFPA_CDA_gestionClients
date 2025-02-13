@@ -1,6 +1,5 @@
 package entities;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EmptySource;
@@ -8,7 +7,8 @@ import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Classe de test sur les instances de société.
@@ -16,15 +16,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class SocieteTest {
 
     static Societe societe;
-
-    @BeforeAll
-    static void setUpBeforeClass() {
-        try {
-            Clients.populateClients();
-        } catch (SocieteEntityException e) {
-            System.out.println(e.getMessage());
-        }
-    }
 
     @BeforeEach
     void setUp() {
@@ -34,7 +25,9 @@ class SocieteTest {
     @ParameterizedTest
     @NullSource
     void setCommentairesInvalid(String commentaire) {
-        assertThrows(SocieteEntityException.class,() -> {societe.setCommentaires(commentaire);});
+        assertThrows(SocieteEntityException.class, () -> {
+            societe.setCommentaires(commentaire);
+        });
     }
 
     @ParameterizedTest

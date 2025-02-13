@@ -1,11 +1,10 @@
 package view;
 
+import DAO.AbstractFactory;
 import entities.*;
 import logs.LogManager;
 import org.jetbrains.annotations.NotNull;
-import utilities.Files;
 import utilities.Formatters;
-import utilities.SocieteUtilitiesException;
 
 import javax.swing.*;
 import java.awt.*;
@@ -84,10 +83,11 @@ public class Form extends JFrame {
     /**
      * Constructeur avec toutes les variables nécessaires à la modification
      * ou à la suppression.
+     *
      * @param typeSociete Le type de société (CLIENT ou PROSPECT)
-     * @param typeAction Le type d'action (CREATION, LISTE, MODIFICATION ou
-     *                   SUPPRESSION).
-     * @param societe La société en cours de modification ou de suppression.
+     * @param typeAction  Le type d'action (CREATION, LISTE, MODIFICATION ou
+     *                    SUPPRESSION).
+     * @param societe     La société en cours de modification ou de suppression.
      */
     public Form(TypeSociete typeSociete, TypeAction typeAction,
                 Societe societe) {
@@ -112,6 +112,7 @@ public class Form extends JFrame {
 
     /**
      * Constructeur avec toutes les variables nécessaires à la création
+     *
      * @param typeSociete Le type de société (CLIENT ou PROSPECT)
      */
     public Form(TypeSociete typeSociete) {
@@ -131,6 +132,10 @@ public class Form extends JFrame {
     private void init() {
         // Valorisation du contenu de la vue.
         setContentPane(contentPane);
+
+        // Nom de l'appli en fonction de la base de donnée en cours
+        // d'utilisation.
+        this.AppliNameLabel.setText("Gestion fichier clients " + AbstractFactory.getTypeDatabase().getName());
 
         // Valorisation du bouton par défaut.
         this.getRootPane().setDefaultButton(accueilButton);
@@ -223,7 +228,7 @@ public class Form extends JFrame {
             // Si le formulaire est pour de la création, valorisation
             // uniquement pour le champ identifiant.
 
-            this.identifiantTextfield.setText(String.valueOf(typeSociete == TypeSociete.CLIENT ? Clients.getCompteurIdClient() : Prospects.getCompteurIdProspects()));
+            this.identifiantTextfield.setText("0");
         }
     }
 
@@ -259,7 +264,7 @@ public class Form extends JFrame {
      */
     private void actionPerformed() {
 
-        try{
+        try {
             switch (this.typeAction) {
                 // Cas d'utilisation du formulaire.
 
@@ -272,7 +277,7 @@ public class Form extends JFrame {
                         // Création du client et ajout de celui-ci à la liste des
                         // clients en mémoire.
                         client = new Client(this.raisonTextfield.getText(),
-                                new Adresse(
+                                new Adresse(0,
                                         this.numRueTextfield.getText(),
                                         this.nomRueTextfield.getText(),
                                         this.codePostalTextfield.getText(),
@@ -283,7 +288,7 @@ public class Form extends JFrame {
                                 this.commentairesTextArea.getText(),
                                 Long.parseLong(this.chiffreAffaireTextfield.getText()),
                                 Integer.parseInt(this.nbEmployesTextfield.getText()));
-                        Clients.toClientsAdd(client);
+                        new AbstractFactory().getFactory().getClientDAO().save(client);
 
                         JOptionPane.showMessageDialog(this, "Client ajouté avec succès !");
                     } else if (this.typeSociete == TypeSociete.PROSPECT) {
@@ -293,7 +298,7 @@ public class Form extends JFrame {
                         // prospects en mémoire.
                         prospect = new Prospect(
                                 this.raisonTextfield.getText(),
-                                new Adresse(
+                                new Adresse(0,
                                         this.numRueTextfield.getText(),
                                         this.nomRueTextfield.getText(),
                                         this.codePostalTextfield.getText(),
@@ -304,7 +309,7 @@ public class Form extends JFrame {
                                 this.commentairesTextArea.getText(),
                                 LocalDate.parse(this.dateProspectionTextfield.getText(), Formatters.FORMAT_DDMMYYYY),
                                 (String) this.prospectInteresseComboBox.getSelectedItem());
-                        Prospects.toProspectsAdd(prospect);
+                        new AbstractFactory().getFactory().getProspectDAO().save(prospect);
 
                         JOptionPane.showMessageDialog(this, "Prospect ajouté avec succès !");
                     }
@@ -327,8 +332,7 @@ public class Form extends JFrame {
 
                         // Recherche du client modifié parmi la liste des clients
                         // et modification de celui-c.
-                        int index = Clients.getClients().indexOf(client);
-                        Clients.getClients().set(index, client);
+                        new AbstractFactory().getFactory().getClientDAO().save(client);
                         JOptionPane.showMessageDialog(this, "Client modifié " +
                                 "avec succès !");
                     } else if (this.typeSociete == TypeSociete.PROSPECT) {
@@ -346,8 +350,7 @@ public class Form extends JFrame {
 
                         // Recherche du prospect modifié parmi la liste des
                         // prospects et modification de celui-c.
-                        int index = Prospects.getProspects().indexOf(prospect);
-                        Prospects.getProspects().set(index, prospect);
+                        new AbstractFactory().getFactory().getProspectDAO().save(prospect);
                         JOptionPane.showMessageDialog(this, "Prospect modifié " +
                                 "avec succès !");
                     }
@@ -367,7 +370,7 @@ public class Form extends JFrame {
                                 " vous supprimer " + client.getRaisonSociale() + " ?");
 
                         if (reponse == JOptionPane.OK_OPTION) {
-                            Clients.getClients().remove(client);
+                            new AbstractFactory().getFactory().getClientDAO().delete(client);
                             JOptionPane.showMessageDialog(this, "Client supprimé " +
                                     "avec succès !");
                         }
@@ -380,7 +383,7 @@ public class Form extends JFrame {
                                 "vous supprimer " + prospect.getRaisonSociale() + " ?");
 
                         if (reponse == JOptionPane.OK_OPTION) {
-                            Prospects.getProspects().remove(prospect);
+                            new AbstractFactory().getFactory().getProspectDAO().delete(prospect);
                             JOptionPane.showMessageDialog(this, "Prospect " +
                                     "supprimé avec succès !");
                         }
@@ -388,19 +391,18 @@ public class Form extends JFrame {
                     break;
             }
 
-            Files.dbSave(this.typeSociete);
             returnIndex(this);
         } catch (NumberFormatException nfe) {
             LogManager.logs.log(Level.SEVERE, nfe.getMessage(), nfe);
             JOptionPane.showMessageDialog(null, "Erreur dans le format du " +
                     "nombre.");
-        }catch (DateTimeException dte) {
+        } catch (DateTimeException dte) {
             LogManager.logs.log(Level.SEVERE, dte.getMessage(), dte);
             JOptionPane.showMessageDialog(null, "Erreur dans la date.");
-        }catch (SocieteEntityException see) {
+        } catch (SocieteEntityException see) {
             LogManager.logs.log(Level.SEVERE, see.getMessage(), see);
             JOptionPane.showMessageDialog(null, see.getMessage());
-        }catch (Exception e) {
+        } catch (Exception e) {
             LogManager.logs.log(Level.SEVERE, e.getMessage());
             JOptionPane.showMessageDialog(null, "Erreur inconnue.");
             System.exit(1);

@@ -1,9 +1,7 @@
 package utilities;
 
 import entities.*;
-import entities.Clients;
 import logs.LogManager;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -68,7 +66,7 @@ public class Files {
                         if (!line.contains(";")) {
                             // Première ligne, sans ';', c'est donc le
                             // compteur d'identifiant.
-                            Clients.setCompteurIdClients(Integer.parseInt(line));
+//                            Clients.setCompteurIdClients(Integer.parseInt(line));
                         } else {
                             // Autre ligne, c'est un enregistrement en bdd.
                             try {
@@ -77,7 +75,8 @@ public class Files {
                                 Client c =
                                         new Client(Integer.parseInt(line.split(";")[0]),
                                                 line.split(";")[1],
-                                                new Adresse(line.split(";")[2],
+                                                new Adresse(0,
+                                                        line.split(";")[2],
                                                         line.split(";")[3],
                                                         line.split(";")[4],
                                                         line.split(";")[5]),
@@ -86,7 +85,7 @@ public class Files {
                                                 line.split(";")[8],
                                                 Long.parseLong(line.split(";")[9]),
                                                 Integer.parseInt(line.split(";")[10]));
-                                Clients.getClients().add(c);
+//                                Clients.getClients().add(c);
 
                             } catch (SocieteEntityException e) {
                                 LogManager.logs.log(Level.SEVERE, e.getMessage());
@@ -94,7 +93,7 @@ public class Files {
                                 throw new SocieteUtilitiesException("Erreur " +
                                         "lors de la charge des données des " +
                                         "clients");
-                            }catch(Exception e){
+                            } catch (Exception e) {
                                 LogManager.logs.log(Level.SEVERE, e.getMessage());
                                 LogManager.logs.log(Level.WARNING, Arrays.toString(line.split(";")));
                                 System.out.println("Erreur " +
@@ -107,15 +106,15 @@ public class Files {
                         if (!line.contains(";")) {
                             // Première ligne, sans ';', c'est donc le
                             // compteur d'identifiant.
-                            Prospects.setCompteurIdProspects(Integer.parseInt(line));
+//                            Prospects.setCompteurIdProspects(Integer.parseInt(line));
                         } else {
                             // Autre ligne, c'est un enregistrement en bdd.
                             try {
                                 // Création du prospect depuis les données de
                                 // la bdd et ajout à la liste.
-                                Prospects.getProspects().add(new Prospect(Integer.parseInt(line.split(";")[0]),
+                                Prospect p = new Prospect(Integer.parseInt(line.split(";")[0]),
                                         line.split(";")[1],
-                                        new Adresse(line.split(";")[2],
+                                        new Adresse(0, line.split(";")[2],
                                                 line.split(";")[3],
                                                 line.split(";")[4],
                                                 line.split(";")[5]),
@@ -123,14 +122,17 @@ public class Files {
                                         line.split(";")[7],
                                         line.split(";")[8],
                                         LocalDate.parse(line.split(";")[9],
-                                                Formatters.FORMAT_DDMMYYYY), line.split(";")[10]));
-                            } catch (SocieteEntityException | NumberFormatException e) {
+                                                Formatters.FORMAT_DDMMYYYY),
+                                        line.split(";")[10]);
+//                                Prospects.getProspects().add(p);
+                            } catch (SocieteEntityException |
+                                     NumberFormatException e) {
                                 LogManager.logs.log(Level.SEVERE, e.getMessage());
 
                                 throw new SocieteUtilitiesException("Erreur " +
                                         "lors de la charge des données des " +
                                         "prospects");
-                            }catch(Exception e){
+                            } catch (Exception e) {
                                 LogManager.logs.log(Level.SEVERE, e.getMessage());
                                 LogManager.logs.log(Level.WARNING, Arrays.toString(line.split(";")));
                                 System.out.println("Erreur " +
@@ -156,81 +158,81 @@ public class Files {
      * @param typeSociete Le type de société à sauvegarder.
      * @throws SocieteUtilitiesException L'exception sur les utilitaires.
      */
-    public static void dbSave(@NotNull TypeSociete typeSociete) throws SocieteUtilitiesException {
-
-        // Initialisation du fichier avec son chemin, et de son lecteur.
-        File file = new File("save/" + typeSociete.getName().toLowerCase() + "Table.csv");
-
-        if (file.exists()) {
-            // Le fichier existe, possibilité d'écrire dedans.
-            FileWriter fw;
-
-            try {
-                // Initialisation de l'écrivain du fichier.
-                fw = new FileWriter("save/" + typeSociete.getName().toLowerCase() + "Table.csv");
-            } catch (IOException e) {
-                LogManager.logs.log(Level.SEVERE, e.getMessage());
-
-                throw new SocieteUtilitiesException("Erreur lors de " +
-                        "l'ouverture de la base de données");
-            }
-
-            if (typeSociete == TypeSociete.CLIENT) {
-
-                try {
-                    // Tentative d'écriture du compteur d'identifiants dans
-                    // le fichier.
-                    fw.write(Clients.getCompteurIdClient() + "\n");
-                } catch (IOException e) {
-                    LogManager.logs.log(Level.SEVERE, e.getMessage());
-
-                    throw new SocieteUtilitiesException("Erreur lors " +
-                            "de l'écriture dans la base de données des clients");
-                }
-
-                for (Client c : Clients.getClients()) {
-                    // Pour chaque client dans la liste, écriture d'une ligne
-                    // d'enregistrement
-                    dbWriteLine(c, fw);
-                }
-            } else {
-
-                try {
-                    // Tentative d'écriture du compteur d'identifiants dans
-                    // le fichier.
-                    fw.write(Prospects.getCompteurIdProspects() + "\n");
-                } catch (IOException e) {
-                    LogManager.logs.log(Level.SEVERE, e.getMessage());
-
-                    throw new SocieteUtilitiesException("Erreur lors " +
-                            "de l'écriture dans la base de données des " +
-                            "prospects");
-                }
-                for (Prospect p : Prospects.getProspects()) {
-                    // Pour chaque prospect dans la liste, écriture d'une ligne
-                    // d'enregistrement
-                    dbWriteLine(p, fw);
-                }
-            }
-
-            try {
-                // Tentative de fermeture du fichier
-                fw.close();
-            } catch (IOException e) {
-                LogManager.logs.log(Level.SEVERE, e.getMessage());
-
-                throw new SocieteUtilitiesException("Erreur lors de " +
-                        "la fermeture de la base de données");
-            }
-        } else {
-            // Fichier non existant.
-            LogManager.logs.log(Level.SEVERE,
-                    "Fichier " + typeSociete.getName().toLowerCase() + "Table.csv manquant");
-
-            throw new SocieteUtilitiesException("Fichier de sauvegarde " +
-                    "manquant pour les " + typeSociete.getName().toLowerCase() + "s");
-        }
-    }
+//    public static void dbSave(@NotNull TypeSociete typeSociete) throws SocieteUtilitiesException {
+//
+//        // Initialisation du fichier avec son chemin, et de son lecteur.
+//        File file = new File("save/" + typeSociete.getName().toLowerCase() + "Table.csv");
+//
+//        if (file.exists()) {
+//            // Le fichier existe, possibilité d'écrire dedans.
+//            FileWriter fw;
+//
+//            try {
+//                // Initialisation de l'écrivain du fichier.
+//                fw = new FileWriter("save/" + typeSociete.getName().toLowerCase() + "Table.csv");
+//            } catch (IOException e) {
+//                LogManager.logs.log(Level.SEVERE, e.getMessage());
+//
+//                throw new SocieteUtilitiesException("Erreur lors de " +
+//                        "l'ouverture de la base de données");
+//            }
+//
+//            if (typeSociete == TypeSociete.CLIENT) {
+//
+//                try {
+//                    // Tentative d'écriture du compteur d'identifiants dans
+//                    // le fichier.
+//                    fw.write(Clients.getCompteurIdClient() + "\n");
+//                } catch (IOException e) {
+//                    LogManager.logs.log(Level.SEVERE, e.getMessage());
+//
+//                    throw new SocieteUtilitiesException("Erreur lors " +
+//                            "de l'écriture dans la base de données des clients");
+//                }
+//
+//                for (Client c : Clients.getClients()) {
+//                    // Pour chaque client dans la liste, écriture d'une ligne
+//                    // d'enregistrement
+//                    dbWriteLine(c, fw);
+//                }
+//            } else {
+//
+//                try {
+//                    // Tentative d'écriture du compteur d'identifiants dans
+//                    // le fichier.
+//                    fw.write(Prospects.getCompteurIdProspects() + "\n");
+//                } catch (IOException e) {
+//                    LogManager.logs.log(Level.SEVERE, e.getMessage());
+//
+//                    throw new SocieteUtilitiesException("Erreur lors " +
+//                            "de l'écriture dans la base de données des " +
+//                            "prospects");
+//                }
+//                for (Prospect p : Prospects.getProspects()) {
+//                    // Pour chaque prospect dans la liste, écriture d'une ligne
+//                    // d'enregistrement
+//                    dbWriteLine(p, fw);
+//                }
+//            }
+//
+//            try {
+//                // Tentative de fermeture du fichier
+//                fw.close();
+//            } catch (IOException e) {
+//                LogManager.logs.log(Level.SEVERE, e.getMessage());
+//
+//                throw new SocieteUtilitiesException("Erreur lors de " +
+//                        "la fermeture de la base de données");
+//            }
+//        } else {
+//            // Fichier non existant.
+//            LogManager.logs.log(Level.SEVERE,
+//                    "Fichier " + typeSociete.getName().toLowerCase() + "Table.csv manquant");
+//
+//            throw new SocieteUtilitiesException("Fichier de sauvegarde " +
+//                    "manquant pour les " + typeSociete.getName().toLowerCase() + "s");
+//        }
+//    }
 
     /**
      * Méthode d'écriture d'une ligne d'enregistrement dans les fichiers bdd

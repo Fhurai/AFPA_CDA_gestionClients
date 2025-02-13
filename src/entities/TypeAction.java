@@ -5,10 +5,11 @@ package entities;
  */
 public enum TypeAction {
     // Valeurs énumérées
-    CREATION(1,"creation"),
-    MODIFICATION(2,"modification"),
-    SUPPRESSION(3,"suppression"),
-    LISTE(4,"liste");
+    CREATION(1, "creation"),
+    MODIFICATION(2, "modification"),
+    SUPPRESSION(3, "suppression"),
+    LISTE(4, "liste"),
+    CONTRATS(5, "contrats");
 
     // Variable d'instance
     private final int number;
@@ -16,8 +17,9 @@ public enum TypeAction {
 
     /**
      * Constructeur type action
+     *
      * @param number Valeur numérique
-     * @param name Nom de la valeur
+     * @param name   Nom de la valeur
      */
     TypeAction(int number, String name) {
         this.number = number;
@@ -26,6 +28,7 @@ public enum TypeAction {
 
     /**
      * Getter number
+     *
      * @return Valeur numérique de la valeur énumérée
      */
     public int getNumber() {
@@ -34,6 +37,7 @@ public enum TypeAction {
 
     /**
      * Getter name
+     *
      * @return Nom de la valeur énumérée
      */
     public String getName() {
