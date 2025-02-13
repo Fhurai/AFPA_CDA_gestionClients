@@ -3,10 +3,7 @@ package view;
 import DAO.AbstractFactory;
 import DAO.SocieteDatabaseException;
 import DAO.TypeDatabase;
-import entities.Client;
-import entities.Societe;
-import entities.TypeAction;
-import entities.TypeSociete;
+import entities.*;
 import logs.LogManager;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,6 +12,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.logging.Level;
 
@@ -172,11 +170,62 @@ public class Index extends JFrame {
         selectionComboBox.removeAllItems();
         try {
             if (type == TypeSociete.CLIENT) {
+                // Affiche le bouton de sélection pour les contrats.
                 this.contratsButton.setVisible(true);
-                new AbstractFactory().getFactory().getClientDAO().findAll().forEach(client -> selectionComboBox.addItem(client.getRaisonSociale()));
+
+                // Récupération de tous les clients de la base de données.
+                ArrayList<Client> clients =
+                        new AbstractFactory().getFactory().getClientDAO().findAll();
+
+                if(!clients.isEmpty()) {
+                    // Un client existe.
+
+                    // Remplissage de la liste déroulante des clients.
+                    clients.forEach(client -> selectionComboBox.addItem(client.getRaisonSociale()));
+
+                    // Activation des boutons nécessitant au moins un
+                    // client.
+                    this.listeButton.setEnabled(true);
+                    this.contratsButton.setEnabled(true);
+                    this.modificationButton.setEnabled(true);
+                    this.suppressionButton.setEnabled(true);
+                }else{
+                    // Aucun client n'existe.
+
+                    // Désactivation des boutons nécessitant au moins un
+                    // client.
+                    this.listeButton.setEnabled(false);
+                    this.contratsButton.setEnabled(false);
+                    this.modificationButton.setEnabled(false);
+                    this.suppressionButton.setEnabled(false);
+                }
             } else if (type == TypeSociete.PROSPECT) {
+                // N'affiche pas le bouton de sélection pour les contrats.
                 this.contratsButton.setVisible(false);
-                new AbstractFactory().getFactory().getProspectDAO().findAll().forEach(prospect -> selectionComboBox.addItem(prospect.getRaisonSociale()));
+
+                ArrayList<Prospect> prospects =
+                        new AbstractFactory().getFactory().getProspectDAO().findAll();
+
+                if(!prospects.isEmpty()) {
+                    // Un prospect existe.
+
+                    // Remplissage de la liste déroulante des prospects.
+                    prospects.forEach(prospect -> selectionComboBox.addItem(prospect.getRaisonSociale()));
+
+                    // Activation des boutons nécessitant au moins un
+                    // prospect.
+                    this.listeButton.setEnabled(true);
+                    this.modificationButton.setEnabled(true);
+                    this.suppressionButton.setEnabled(true);
+                }else{
+                    // Aucun client n'existe.
+
+                    // Désactivation des boutons nécessitant au moins un
+                    // prospect.
+                    this.listeButton.setEnabled(false);
+                    this.modificationButton.setEnabled(false);
+                    this.suppressionButton.setEnabled(false);
+                }
             }
 
             // Affichage du panneau de choix d'action.

@@ -2,6 +2,7 @@ package DAO.mongo;
 
 import DAO.SocieteDatabaseException;
 import builders.AdresseBuilder;
+import builders.ClientBuilder;
 import builders.ContratBuilder;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
@@ -251,44 +252,36 @@ public class ClientMongoDAO extends SocieteMongoDAO<Client> {
      * @throws SocieteDatabaseException Exception lors de la récupération.
      */
     private @NotNull Client parse(@NotNull Document document) throws SocieteDatabaseException {
-        // Initialisation client.
-        Client client = new Client();
-
         try {
-            // Valorisation propriétés primitives.
-            client.setIdentifiant(document.getInteger("identifiant"));
-            client.setRaisonSociale(document.getString("raisonSociale"));
-            client.setTelephone(document.getString("telephone"));
-            client.setMail(document.getString("mail"));
-            client.setCommentaires(document.getString("commentaires"));
-
-            //Valorisation CA (string -> double, car la BDD comprend par le
-            // type Long)
-            String CaString = document.getString("chiffreAffaires");
-            double ca = Double.parseDouble(CaString);
-
-            client.setChiffreAffaires((long) ca);
-            client.setNbEmployes(document.getInteger("nbEmployes"));
-
-            // Valorisation propriétés objets.
             Document adresse = document.get("adresse", Document.class);
-            client.setAdresse(AdresseBuilder.getNewAdresseBuilder()
-                    .dIdentifiant(adresse.getInteger("identifiant"))
-                    .deNumeroRue(adresse.getString("numRue"))
-                    .deNomRue(adresse.getString("nomRue"))
-                    .deCodePostal(adresse.getString("codePostal"))
-                    .deVille(adresse.getString("ville"))
-                    .build());
 
-            ArrayList<Contrat> contrats = new ArrayList<>();
+            ClientBuilder clientBuilder = ClientBuilder.getNewClientBuilder()
+                    .dIdentifiant(document.getInteger("identifiant"))
+                    .deRaisonSociale(document.getString("raisonSociale"))
+                    .deTelephone(document.getString("telephone"))
+                    .deMail(document.getString("mail"))
+                    .deCommentaires(document.getString("commentaires"))
+                    .deChiffreAffaires(document.getString("chiffreAffaires"))
+                    .deNombreEmployes(document.getInteger("nbEmployes"))
+                    .dAdresse(AdresseBuilder.getNewAdresseBuilder()
+                            .dIdentifiant(adresse.getInteger("identifiant"))
+                            .deNumeroRue(adresse.getString("numRue"))
+                            .deNomRue(adresse.getString("nomRue"))
+                            .deCodePostal(adresse.getString("codePostal"))
+                            .deVille(adresse.getString("ville"))
+                            .build())
+                    .deContrats(new ArrayList<>());
+
+
             for (Document contrat : document.getList("contrats", Document.class)) {
-                contrats.add(ContratBuilder.getNewContratBuilder()
+                clientBuilder.ajouterContrat(ContratBuilder.getNewContratBuilder()
                         .dIdentifiant(contrat.getString("identifiant"))
                         .deLibelle(contrat.getString("libelleContrat"))
                         .deMontant(contrat.getString("montant"))
                         .build());
             }
-            client.setContrats(contrats);
+
+            return clientBuilder.build();
         } catch (SocieteEntityException | NumberFormatException e) {
             // Log exception.
             LogManager.logs.log(Level.SEVERE, e.getMessage());
@@ -296,8 +289,5 @@ public class ClientMongoDAO extends SocieteMongoDAO<Client> {
             // Lancement d'une exception lisible par l'utilisateur.
             throw new SocieteDatabaseException("Erreur de la récupération du client depuis la base de données.");
         }
-
-        // Retourne le client valorisé.
-        return client;
     }
 }

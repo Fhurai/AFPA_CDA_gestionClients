@@ -1,6 +1,7 @@
 package DAO.mysql;
 
 import DAO.SocieteDatabaseException;
+import builders.ClientBuilder;
 import entities.Client;
 import entities.Contrat;
 import entities.SocieteEntityException;
@@ -269,6 +270,10 @@ public class ClientMySqlDAO extends SocieteMySqlDAO<Client> {
             conn.setAutoCommit(false);
 
             if (obj.getIdentifiant() > 0) {
+
+                // Update date.
+                MySqlFactory.getAdresseDAO().save(obj.getAdresse());
+
                 // Initialisation variables UPDATE
                 query = "UPDATE clients SET `raisonSociale` = ?,`telephone` = ?,`mail` = ?, `commentaires` = ?,`chiffreAffaires` = ?,`nbEmployes` = ?,`idAdresse` = ?  WHERE `identifiant` = ?";
 
@@ -288,6 +293,10 @@ public class ClientMySqlDAO extends SocieteMySqlDAO<Client> {
                 // Exécution de la requête.
                 ret = stmt.executeUpdate() == 1;
             } else {
+
+                // Création date.
+                MySqlFactory.getAdresseDAO().save(obj.getAdresse());
+
                 // Initialisation variables CREATE
                 ResultSet rs;
                 query = "INSERT INTO `clients`(`raisonSociale`, `telephone`, `mail`, `commentaires`, `chiffreAffaires`, `nbEmployes`, `idAdresse`) " +
@@ -312,7 +321,7 @@ public class ClientMySqlDAO extends SocieteMySqlDAO<Client> {
                 rs = stmt.getGeneratedKeys();
                 if (rs.next()) {
                     ret = true;
-                    obj.setIdentifiant(rs.getInt("identifiant"));
+                    obj.setIdentifiant(rs.getInt(1));
                 }
             }
             conn.commit();
@@ -356,21 +365,17 @@ public class ClientMySqlDAO extends SocieteMySqlDAO<Client> {
      * @throws SocieteDatabaseException Exception lors de la récupération.
      */
     private @NotNull Client parse(@NotNull ResultSet rs) throws SocieteDatabaseException {
-        // Initialisation client.
-        Client client = new Client();
-
         try {
-            // Valorisation propriétés primitives.
-            client.setIdentifiant(rs.getInt("identifiant"));
-            client.setRaisonSociale(rs.getString("raisonSociale"));
-            client.setTelephone(rs.getString("telephone"));
-            client.setMail(rs.getString("mail"));
-            client.setCommentaires(rs.getString("commentaires"));
-            client.setChiffreAffaires(rs.getLong("chiffreAffaires"));
-            client.setNbEmployes(rs.getInt("nbEmployes"));
-
-            // Valorisation propriétés objets.
-            client.setAdresse(MySqlFactory.getAdresseDAO().findById(rs.getInt("idAdresse")));
+            return ClientBuilder.getNewClientBuilder()
+                    .dIdentifiant(rs.getInt("identifiant"))
+                    .deRaisonSociale(rs.getString("raisonSociale"))
+                    .deTelephone(rs.getString("telephone"))
+                    .deMail(rs.getString("mail"))
+                    .deCommentaires(rs.getString("commentaires"))
+                    .deChiffreAffaires(rs.getString("chiffreAffaires"))
+                    .deNombreEmployes(rs.getInt("nbEmployes"))
+                    .dAdresse(MySqlFactory.getAdresseDAO().findById(rs.getInt("idAdresse")))
+                    .build();
         } catch (SocieteEntityException | SQLException e) {
             // Log exception.
             LogManager.logs.log(Level.SEVERE, e.getMessage());
@@ -378,8 +383,5 @@ public class ClientMySqlDAO extends SocieteMySqlDAO<Client> {
             // Lancement d'une exception lisible par l'utilisateur.
             throw new SocieteDatabaseException("Erreur de la récupération du client depuis la base de données.");
         }
-
-        // Retourne le client valorisé.
-        return client;
     }
 }

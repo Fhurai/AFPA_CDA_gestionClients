@@ -2,6 +2,7 @@ package DAO.filesystem;
 
 import DAO.SocieteDatabaseException;
 import builders.AdresseBuilder;
+import builders.ClientBuilder;
 import entities.Client;
 import entities.SocieteEntityException;
 import logs.LogManager;
@@ -194,27 +195,25 @@ public class ClientFilesystemDAO extends SocieteFilesystemDAO<Client> {
      * @throws SocieteDatabaseException Exception lors de la récupération.
      */
     private @NotNull Client parse(String[] record) throws SocieteDatabaseException {
-        // Initialisation client.
-        Client client = new Client();
-
         try {
-            // Valorisation propriétés primitives.
-            client.setIdentifiant(Integer.parseInt(record[0]));
-            client.setRaisonSociale(record[1]);
-            client.setTelephone(record[6]);
-            client.setMail(record[7]);
-            client.setCommentaires(record[8]);
-            client.setChiffreAffaires(Long.parseLong(record[9]));
-            client.setNbEmployes(Integer.parseInt(record[10]));
-
-            // Valorisation propriétés objets.
-            client.setAdresse(AdresseBuilder.getNewAdresseBuilder()
+            // Valorisation propriétés primitives et retourne le Client
+            // construit.
+            return ClientBuilder.getNewClientBuilder()
                     .dIdentifiant(record[0])
-                    .deNumeroRue(record[2])
-                    .deNomRue(record[3])
-                    .deCodePostal(record[4])
-                    .deVille(record[5])
-                    .build());
+                    .deRaisonSociale(record[1])
+                    .dAdresse(AdresseBuilder.getNewAdresseBuilder()
+                            .dIdentifiant(record[0])
+                            .deNumeroRue(record[2])
+                            .deNomRue(record[3])
+                            .deCodePostal(record[4])
+                            .deVille(record[5])
+                            .build())
+                    .deTelephone(record[6])
+                    .deMail(record[7])
+                    .deCommentaires(record[8])
+                    .deChiffreAffaires(record[9])
+                    .deNombreEmployes(Integer.parseInt(record[10]))
+                    .build();
         } catch (SocieteEntityException e) {
             // Log exception.
             LogManager.logs.log(Level.SEVERE, e.getMessage());
@@ -222,8 +221,5 @@ public class ClientFilesystemDAO extends SocieteFilesystemDAO<Client> {
             // Lancement d'une exception lisible par l'utilisateur.
             throw new SocieteDatabaseException("Erreur de la récupération du client depuis la base de données.");
         }
-
-        // Retourne le client valorisé.
-        return client;
     }
 }

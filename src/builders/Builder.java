@@ -5,7 +5,7 @@ package builders;
  *
  * @param <T> Classe de l'objet à construire.
  */
-public class Builder<T> {
+abstract public class Builder<T> {
 
     /**
      * L'objet en cours de construction.
@@ -29,4 +29,6 @@ public class Builder<T> {
     public T getEntity() {
         return entity;
     }
+
+    abstract public T build();
 }

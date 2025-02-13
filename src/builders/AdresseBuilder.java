@@ -99,6 +99,7 @@ public class AdresseBuilder extends Builder<Adresse> {
 
     /**
      * Getter Adresse construite.
+     *
      * @return Adresse construite.
      */
     public Adresse build() {

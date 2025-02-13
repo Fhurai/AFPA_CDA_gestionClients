@@ -258,7 +258,8 @@ public class AdresseMySqlDAO extends DAO<Adresse> {
             } else {
                 // Initialisation variables CREATE
                 ResultSet rs;
-                query = "INSERT INTO adresses VALUES (?, ?, ?, ?)";
+                query = "INSERT INTO adresses (`numRue`,`nomRue`," +
+                        "`codePostal`,`ville`) VALUES (?, ?, ?, ?)";
 
                 // Préparation requête à exécuter.
                 stmt = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
@@ -276,7 +277,7 @@ public class AdresseMySqlDAO extends DAO<Adresse> {
                 rs = stmt.getGeneratedKeys();
                 if (rs.next()) {
                     ret = true;
-                    obj.setIdentifiant(rs.getInt("identifiant"));
+                    obj.setIdentifiant(rs.getInt(1));
                 }
             }
         } catch (SQLException | SocieteEntityException e) {
