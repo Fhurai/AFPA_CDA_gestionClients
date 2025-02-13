@@ -14,6 +14,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
+/**
+ * Classe DAO Filesystem pour les contrats.
+ */
 public class ContratMySqlDAO extends DAO<Contrat> {
 
     /**
@@ -32,7 +35,7 @@ public class ContratMySqlDAO extends DAO<Contrat> {
     public ArrayList<Contrat> findAll() throws SocieteDatabaseException {
         ArrayList<Contrat> contrats = new ArrayList<>();
         Connection con = ConnexionMySql.getInstance();
-        PreparedStatement stmt = null;
+        PreparedStatement stmt;
         String query = "SELECT * FROM contrats";
 
         try {
@@ -78,7 +81,7 @@ public class ContratMySqlDAO extends DAO<Contrat> {
         // Initialisation des variables.
         Contrat contrat = null;
         Connection con = ConnexionMySql.getInstance();
-        PreparedStatement stmt = null;
+        PreparedStatement stmt;
 
         // Récupération de la requête de lecture à partir du tableau de
         // conditions de sélection.
@@ -132,7 +135,7 @@ public class ContratMySqlDAO extends DAO<Contrat> {
         // Initialisation variables.
         ArrayList<Contrat> contrats = new ArrayList<>();
         Connection con = ConnexionMySql.getInstance();
-        PreparedStatement stmt = null;
+        PreparedStatement stmt;
         String query = "SELECT * FROM contrats where `idClient` = ?";
 
         try {

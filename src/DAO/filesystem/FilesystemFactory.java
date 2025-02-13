@@ -11,6 +11,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.logging.Level;
 
+/**
+ * Classe factory pour les objets DAO Filesystem.
+ */
 public class FilesystemFactory implements DAOFactory {
 
     /**
@@ -22,6 +25,7 @@ public class FilesystemFactory implements DAOFactory {
     public static @NotNull ContratFilesystemDAO getContratDAO() {
         return new ContratFilesystemDAO();
     }
+
     /**
      * Méthode d'initialisation de l'usine et de la connexion DAO.
      *

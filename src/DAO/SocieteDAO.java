@@ -2,9 +2,7 @@ package DAO;
 
 import entities.Societe;
 
-import java.util.ArrayList;
-
-/*
+/**
  * Classe DAO Société abstraite.
  */
 abstract public class SocieteDAO<T extends Societe> extends DAO<T> {

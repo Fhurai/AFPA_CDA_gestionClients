@@ -52,13 +52,13 @@ public class FilesystemTable {
      * Méthode de chargement de la table.
      *
      * @throws SocieteDatabaseException Exception lors du chargement ou de la
-     * création de la base de données
+     *                                  création de la base de données
      */
     private void loadTable() throws SocieteDatabaseException {
         // Initialisation du fichier table.
-        File f = new File("save/"+tableName+".csv");
+        File f = new File("save/" + tableName + ".csv");
 
-        if(f.exists()) {
+        if (f.exists()) {
             // Chargement du fichier dans l'objet table.
 
             try {
@@ -71,11 +71,11 @@ public class FilesystemTable {
                     // Récupération de la ligne depuis le fichier.
                     String line = sc.nextLine();
 
-                    if(!line.contains(";")) {
+                    if (!line.contains(";")) {
                         // Ligne n'est pas une ligne d'enregistrement, c'est
                         // la valeur du compteur qui est valorisé.
                         this.setAutoIncrement(Integer.parseInt(line));
-                    }else{
+                    } else {
                         // Ligne est une ligne d'enregistrement, ajout de
                         // celle-ci dans la ligne des enregistrements.
                         this.addRecord(line.split(";"));
@@ -89,17 +89,17 @@ public class FilesystemTable {
                 throw new SocieteDatabaseException("Erreur lors du chargement" +
                         " de la base de données.");
             }
-        }else{
+        } else {
             // Création du fichier correspondant à l'objet table.
 
             try {
                 //Tentative de création du fichier table.
 
-                if(f.createNewFile()){
+                if (f.createNewFile()) {
                     // Le fichier a bien été créé.
 
                     // Log de la création.
-                    LogManager.logs.log(Level.INFO, "Table créée pour la fichier "+tableName+".csv");
+                    LogManager.logs.log(Level.INFO, "Table créée pour la fichier " + tableName + ".csv");
 
                     // Écriture du compteur d'identifiant à 1.
                     FileWriter fw = new FileWriter(f);
@@ -126,16 +126,15 @@ public class FilesystemTable {
      * Méthode de fermeture de la table.
      *
      * @throws SocieteDatabaseException Exception lors de la sauvegarde ou de
-     * la fermeture de la table.
+     *                                  la fermeture de la table.
      */
     public void closeTable() throws SocieteDatabaseException {
         // Initialisation du fichier table.
-        String path = "save/"+tableName+".csv";
+        String path = "save/" + tableName + ".csv";
         File f = new File(path);
 
-        if(f.exists()) {
+        if (f.exists()) {
             // Fichier table existe.
-
 
 
             try {
@@ -143,12 +142,12 @@ public class FilesystemTable {
                 FileWriter fw = new FileWriter(path);
 
                 // Écriture de la valeur du compteur d'incrémentation.
-                fw.write(this.getAutoIncrement()+"\n");
+                fw.write(this.getAutoIncrement() + "\n");
 
-                for(String[] record : this.getRecords()) {
+                for (String[] record : this.getRecords()) {
                     // Parcours des enregistrements qui sont écrits un à un
                     // dans le fichier.
-                    fw.write(String.join(";", record)+ "\n");
+                    fw.write(String.join(";", record) + "\n");
                 }
 
                 // Fermeture du fichier.
@@ -160,14 +159,14 @@ public class FilesystemTable {
                 throw new SocieteDatabaseException("Erreur d'intégrité de la " +
                         "base de données.");
             }
-        }else{
+        } else {
             // Fichier non existant.
 
             // Exception attrapée, log de l'exception et lancement d'une
             // exception plus lisible pour l'utilisateur.
             LogManager.logs.log(Level.SEVERE, "Fichier table manquant");
             throw new SocieteDatabaseException("Fichier de sauvegarde " +
-                    "manquant pour les "+this.getTableName());
+                    "manquant pour les " + this.getTableName());
         }
 
     }
@@ -201,6 +200,7 @@ public class FilesystemTable {
 
     /**
      * Setter compteur d'incrémentation.
+     *
      * @param autoIncrement Nouvelle valeur compteur d'incrémentation.
      */
     public void setAutoIncrement(int autoIncrement) {
@@ -211,7 +211,7 @@ public class FilesystemTable {
      * Incrémente la valeur du compteur d'incrémentation de 1.
      */
     public void increaseAutoIncrement() {
-        this.setAutoIncrement(this.getAutoIncrement()+1);
+        this.setAutoIncrement(this.getAutoIncrement() + 1);
     }
 
     /**
@@ -247,18 +247,18 @@ public class FilesystemTable {
      * @param id Identifiant de l'enregistrement à retrouver.
      * @return Enregistrement recherché.
      * @throws SocieteDatabaseException Aucun enregistrement trouvé avec
-     * l'identifiant donné.
+     *                                  l'identifiant donné.
      */
     public String[] get(int id) throws SocieteDatabaseException {
         // Création d'un optional d'enregistrement à partir de l'identifiant.
         Optional<String[]> option = this.getRecords().stream().filter(r -> Integer.parseInt(r[0])
                 == id).findFirst();
 
-        if(option.isPresent()){
+        if (option.isPresent()) {
             // Si l'enregistrement existe dans l'optional, il est récupéré et
             // retourné.
             return option.get();
-        }else{
+        } else {
             // L'enregistrement n'existe pas dans l'optional, lancement d'une
             // exception pour notifier l'utilisateur.
             throw new SocieteDatabaseException("Aucun enregistrement avec cet" +
@@ -272,18 +272,18 @@ public class FilesystemTable {
      * @param nom Nom de l'enregistrement à retrouver.
      * @return Enregistrement recherché.
      * @throws SocieteDatabaseException Aucun enregistrement trouvé avec le
-     * nom donné.
+     *                                  nom donné.
      */
     public String[] find(String nom) throws SocieteDatabaseException {
         // Création d'un optional d'enregistrement à partir du nom.
         Optional<String[]> option =
                 this.getRecords().stream().filter(r -> nom.equalsIgnoreCase(r[1])).findFirst();
 
-        if(option.isPresent()){
+        if (option.isPresent()) {
             // Si l'enregistrement existe dans l'optional, il est récupéré et
             // retourné.
             return option.get();
-        }else{
+        } else {
             // L'enregistrement n'existe pas dans l'optional, lancement d'une
             // exception pour notifier l'utilisateur.
             throw new SocieteDatabaseException("Aucun enregistrement avec ce" +
@@ -330,12 +330,10 @@ public class FilesystemTable {
     public boolean update(String[] record) {
         boolean selected = false;
 
-        for(String[] r : this.getRecords()) {
-            if(Objects.equals(r[0], record[0])){
+        for (String[] r : this.getRecords()) {
+            if (Objects.equals(r[0], record[0])) {
                 selected = true;
-                for(int i = 0; i < r.length; i++){
-                    r[i] = record[i];
-                }
+                System.arraycopy(record, 0, r, 0, r.length);
             }
         }
         return selected;

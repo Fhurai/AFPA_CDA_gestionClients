@@ -113,7 +113,7 @@ public class ProspectFilesystemDAO extends SocieteFilesystemDAO<Prospect> {
     @Override
     public boolean delete(@NotNull Prospect obj) throws SocieteDatabaseException {
         // Initialisation de la variable.
-        boolean ret = false;
+        boolean ret;
 
         // Initialisation base de données.
         FilesystemDatabase db = ConnexionFilesystem.getInstance();
@@ -143,7 +143,7 @@ public class ProspectFilesystemDAO extends SocieteFilesystemDAO<Prospect> {
     @Override
     public boolean save(@NotNull Prospect obj) throws SocieteDatabaseException {
         // Initialisation des variables.
-        boolean ret = false;
+        boolean ret;
         String[] record;
 
         // Initialisation base de données.

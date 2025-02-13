@@ -3,10 +3,6 @@ package DAO.filesystem;
 import DAO.SocieteDatabaseException;
 import logs.LogManager;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.logging.Level;
 
 /**
@@ -45,7 +41,7 @@ public class ConnexionFilesystem {
      *
      * @return ArrayList<File> Liste des fichiers table.
      * @throws SocieteDatabaseException Exception lors de la création des
-     * fichiers table.
+     *                                  fichiers table.
      */
     public static FilesystemDatabase getInstance() throws SocieteDatabaseException {
 

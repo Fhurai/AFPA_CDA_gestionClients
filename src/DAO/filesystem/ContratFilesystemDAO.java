@@ -2,7 +2,6 @@ package DAO.filesystem;
 
 import DAO.DAO;
 import DAO.SocieteDatabaseException;
-import entities.Client;
 import entities.Contrat;
 import entities.SocieteEntityException;
 import logs.LogManager;
@@ -10,10 +9,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.logging.Level;
-import java.util.stream.Collectors;
 
+/**
+ * Classe DAO Filesystem pour les contrats.
+ */
 public class ContratFilesystemDAO extends DAO<Contrat> {
 
     /**

@@ -34,7 +34,7 @@ public class ProspectMySqlDAO extends SocieteMySqlDAO<Prospect> {
         // Initialisation variables.
         ArrayList<Prospect> prospects = new ArrayList<>();
         Connection con = ConnexionMySql.getInstance();
-        PreparedStatement stmt = null;
+        PreparedStatement stmt;
         String query = "SELECT * FROM prospects";
 
         try {
@@ -80,7 +80,7 @@ public class ProspectMySqlDAO extends SocieteMySqlDAO<Prospect> {
         // Initialisation des variables.
         Prospect prospect = null;
         Connection con = ConnexionMySql.getInstance();
-        PreparedStatement stmt = null;
+        PreparedStatement stmt;
 
         // Récupération de la requête de lecture à partir du tableau de
         // conditions de sélection.
@@ -133,7 +133,7 @@ public class ProspectMySqlDAO extends SocieteMySqlDAO<Prospect> {
         // Initialisation des variables.
         Prospect prospect = null;
         Connection con = ConnexionMySql.getInstance();
-        PreparedStatement stmt = null;
+        PreparedStatement stmt;
 
         // Récupération de la requête de lecture à partir du tableau de
         // conditions de sélection.

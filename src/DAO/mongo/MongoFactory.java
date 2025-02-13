@@ -11,6 +11,9 @@ import java.util.logging.Level;
 
 import static DAO.mongo.ConnexionMongo.getInstance;
 
+/**
+ * Classe factory pour les objets DAO MongoDB.
+ */
 public class MongoFactory implements DAOFactory {
 
     /**

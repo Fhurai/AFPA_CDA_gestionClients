@@ -70,7 +70,7 @@ public class ConnexionMongo {
             // configuration.
             final Properties dataProperties = new Properties();
             File fichier = new File("database.mongo.properties");
-            FileInputStream input = null;
+            FileInputStream input;
 
             try {
                 // Chargement de la configuration.

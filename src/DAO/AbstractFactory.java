@@ -36,7 +36,7 @@ public class AbstractFactory {
      * @return La factory.
      */
     public DAOFactory getFactory() throws SocieteDatabaseException {
-        DAOFactory daoFactory = null;
+        DAOFactory daoFactory;
         if (typeDatabase == null) {
             throw new SocieteDatabaseException("Aucun type de base de données" +
                     " n'a été définie");
@@ -44,7 +44,7 @@ public class AbstractFactory {
             daoFactory = new MySqlFactory();
         } else if (typeDatabase == TypeDatabase.MONGODB) {
             daoFactory = new MongoFactory();
-        }else if(typeDatabase == TypeDatabase.FILESYSTEM){
+        } else if (typeDatabase == TypeDatabase.FILESYSTEM) {
             daoFactory = new FilesystemFactory();
         } else {
             throw new SocieteDatabaseException("Erreur inconnue");

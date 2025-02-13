@@ -23,7 +23,7 @@ public class FilesystemDatabase {
      * Constructor.
      *
      * @throws SocieteDatabaseException Exception à la création des fichiers
-     * table.
+     *                                  table.
      */
     public FilesystemDatabase() throws SocieteDatabaseException {
         // Liste des fichiers table initialisés.
@@ -55,7 +55,7 @@ public class FilesystemDatabase {
      * @param tableName Nom de la table recherchée.
      * @return La table recherchée.
      * @throws SocieteDatabaseException Exception si aucune table correspond
-     * au nom donné.
+     *                                  au nom donné.
      */
     public FilesystemTable getFilesystemTable(String tableName) throws SocieteDatabaseException {
         Optional<FilesystemTable> fst =
