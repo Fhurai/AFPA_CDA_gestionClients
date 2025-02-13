@@ -1,6 +1,9 @@
 package view;
 
 import DAO.AbstractFactory;
+import builders.AdresseBuilder;
+import builders.ClientBuilder;
+import builders.ProspectBuilder;
 import entities.*;
 import logs.LogManager;
 import org.jetbrains.annotations.NotNull;
@@ -12,8 +15,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.time.DateTimeException;
-import java.time.LocalDate;
-import java.util.Objects;
 import java.util.logging.Level;
 
 import static utilities.ViewsUtilities.quitApplication;
@@ -276,81 +277,50 @@ public class Form extends JFrame {
 
                         // Création du client et ajout de celui-ci à la liste des
                         // clients en mémoire.
-                        client = new Client(this.raisonTextfield.getText(),
-                                new Adresse(0,
-                                        this.numRueTextfield.getText(),
-                                        this.nomRueTextfield.getText(),
-                                        this.codePostalTextfield.getText(),
-                                        this.villeTextfield.getText()
-                                ),
-                                this.telephoneTextfield.getText(),
-                                this.mailTextfield.getText(),
-                                this.commentairesTextArea.getText(),
-                                Long.parseLong(this.chiffreAffaireTextfield.getText()),
-                                Integer.parseInt(this.nbEmployesTextfield.getText()));
+                        this.setClientFromFields();
+
+                        // Sauvegarde du client dans la base de données.
                         new AbstractFactory().getFactory().getClientDAO().save(client);
 
+
+                        // Avertissement de l'utilisateur.
                         JOptionPane.showMessageDialog(this, "Client ajouté avec succès !");
                     } else if (this.typeSociete == TypeSociete.PROSPECT) {
                         // Si le formulaire est pour un client.
 
                         // Création du prospect et ajout de celui-ci à la liste des
                         // prospects en mémoire.
-                        prospect = new Prospect(
-                                this.raisonTextfield.getText(),
-                                new Adresse(0,
-                                        this.numRueTextfield.getText(),
-                                        this.nomRueTextfield.getText(),
-                                        this.codePostalTextfield.getText(),
-                                        this.villeTextfield.getText()
-                                ),
-                                this.telephoneTextfield.getText(),
-                                this.mailTextfield.getText(),
-                                this.commentairesTextArea.getText(),
-                                LocalDate.parse(this.dateProspectionTextfield.getText(), Formatters.FORMAT_DDMMYYYY),
-                                (String) this.prospectInteresseComboBox.getSelectedItem());
+                        this.setProspectFromFields();
+
+                        // Sauvegarde du prospect dans la base de données.
                         new AbstractFactory().getFactory().getProspectDAO().save(prospect);
 
+                        // Avertissement de l'utilisateur.
                         JOptionPane.showMessageDialog(this, "Prospect ajouté avec succès !");
                     }
+
                     break;
                 case MODIFICATION:
                     // Cas de la modification.
 
                     if (this.typeSociete == TypeSociete.CLIENT) {
                         // Remplissage du client avec les données du formulaire
-                        client.setRaisonSociale(this.raisonTextfield.getText());
-                        client.getAdresse().setNumeroRue(this.numRueTextfield.getText());
-                        client.getAdresse().setNomRue(this.nomRueTextfield.getText());
-                        client.getAdresse().setCodePostal(this.codePostalTextfield.getText());
-                        client.getAdresse().setVille(this.villeTextfield.getText());
-                        client.setTelephone(this.telephoneTextfield.getText());
-                        client.setMail(this.mailTextfield.getText());
-                        client.setCommentaires(this.commentairesTextArea.getText());
-                        client.setChiffreAffaires(Long.parseLong(this.chiffreAffaireTextfield.getText()));
-                        client.setNbEmployes(Integer.parseInt(this.nbEmployesTextfield.getText()));
+                        this.setClientFromFields();
 
-                        // Recherche du client modifié parmi la liste des clients
-                        // et modification de celui-c.
+                        // Sauvegarde du client dans la base de données.
                         new AbstractFactory().getFactory().getClientDAO().save(client);
+
+                        // Avertissement de l'utilisateur.
                         JOptionPane.showMessageDialog(this, "Client modifié " +
                                 "avec succès !");
                     } else if (this.typeSociete == TypeSociete.PROSPECT) {
                         // Remplissage du prospect avec les données du formulaire
-                        prospect.setRaisonSociale(this.raisonTextfield.getText());
-                        prospect.getAdresse().setNumeroRue(this.numRueTextfield.getText());
-                        prospect.getAdresse().setNomRue(this.nomRueTextfield.getText());
-                        prospect.getAdresse().setCodePostal(this.codePostalTextfield.getText());
-                        prospect.getAdresse().setVille(this.villeTextfield.getText());
-                        prospect.setTelephone(this.telephoneTextfield.getText());
-                        prospect.setMail(this.mailTextfield.getText());
-                        prospect.setCommentaires(this.commentairesTextArea.getText());
-                        prospect.setDateProspection(LocalDate.parse(this.dateProspectionTextfield.getText(), Formatters.FORMAT_DDMMYYYY));
-                        prospect.setProspectInteresse(Objects.requireNonNull(this.prospectInteresseComboBox.getSelectedItem()).toString());
+                        this.setProspectFromFields();
 
-                        // Recherche du prospect modifié parmi la liste des
-                        // prospects et modification de celui-c.
+                        // Sauvegarde du prospect dans la base de données.
                         new AbstractFactory().getFactory().getProspectDAO().save(prospect);
+
+                        // Avertissement de l'utilisateur.
                         JOptionPane.showMessageDialog(this, "Prospect modifié " +
                                 "avec succès !");
                     }
@@ -370,7 +340,11 @@ public class Form extends JFrame {
                                 " vous supprimer " + client.getRaisonSociale() + " ?");
 
                         if (reponse == JOptionPane.OK_OPTION) {
+                            // Suppression du client apres confirmation
+                            // utilisateur.
                             new AbstractFactory().getFactory().getClientDAO().delete(client);
+
+                            // Avertissement de l'utilisateur.
                             JOptionPane.showMessageDialog(this, "Client supprimé " +
                                     "avec succès !");
                         }
@@ -383,7 +357,11 @@ public class Form extends JFrame {
                                 "vous supprimer " + prospect.getRaisonSociale() + " ?");
 
                         if (reponse == JOptionPane.OK_OPTION) {
+                            // Suppression du prospect apres confirmation
+                            // utilisateur.
                             new AbstractFactory().getFactory().getProspectDAO().delete(prospect);
+
+                            // Avertissement de l'utilisateur.
                             JOptionPane.showMessageDialog(this, "Prospect " +
                                     "supprimé avec succès !");
                         }
@@ -391,6 +369,7 @@ public class Form extends JFrame {
                     break;
             }
 
+            // Retour sur la vue d'index de l'application.
             returnIndex(this);
         } catch (NumberFormatException nfe) {
             LogManager.logs.log(Level.SEVERE, nfe.getMessage(), nfe);
@@ -407,5 +386,68 @@ public class Form extends JFrame {
             JOptionPane.showMessageDialog(null, "Erreur inconnue.");
             System.exit(1);
         }
+    }
+
+    /**
+     * Methode qui transpose les données du formulaire dans l'objet Client de
+     * la vue.
+     *
+     * @throws SocieteEntityException Exception de l'identifiant ou de la
+     * raison sociale.
+     */
+    private void setClientFromFields() throws SocieteEntityException {
+        int id = client != null ? client.getIdentifiant() : 0;
+        int idAdresse = client != null ?
+                client.getAdresse().getIdentifiant() : 0;
+        client = ClientBuilder.getNewClientBuilder()
+                .deRaisonSociale(this.raisonTextfield.getText())
+                .dAdresse(AdresseBuilder.getNewAdresseBuilder()
+                        .dIdentifiant(0)
+                        .deNumeroRue(this.numRueTextfield.getText())
+                        .deNomRue(this.nomRueTextfield.getText())
+                        .deCodePostal(this.codePostalTextfield.getText())
+                        .deVille(this.villeTextfield.getText())
+                        .build())
+                .deTelephone(this.telephoneTextfield.getText())
+                .deMail(this.mailTextfield.getText())
+                .deCommentaires(this.commentairesTextArea.getText())
+                .deChiffreAffaires(this.chiffreAffaireTextfield.getText())
+                .deNombreEmployes(this.nbEmployesTextfield.getText())
+                .build();
+
+        if(id > 0) client.setIdentifiant(id);
+        if(idAdresse > 0) client.getAdresse().setIdentifiant(idAdresse);
+    }
+
+    /**
+     * Méthode qui transpose les données du formulaire dans l'objet Prospect
+     * de la vue.
+     *
+     * @throws SocieteEntityException Exception de l'identifiant ou de la
+     * raison sociale.
+     */
+    private void setProspectFromFields() throws SocieteEntityException {
+
+        int id =  prospect != null ? prospect.getIdentifiant() : 0;
+        int idAdresse =  prospect != null ? prospect.getAdresse().getIdentifiant() : 0;
+
+        prospect = ProspectBuilder.getNewProspectBuilder()
+                .deRaisonSociale(this.raisonTextfield.getText())
+                .dAdresse(AdresseBuilder.getNewAdresseBuilder()
+                        .deNumeroRue(this.numRueTextfield.getText())
+                        .deNomRue(this.nomRueTextfield.getText())
+                        .deCodePostal(this.codePostalTextfield.getText())
+                        .deVille(this.villeTextfield.getText())
+                        .build())
+                .deTelephone(this.telephoneTextfield.getText())
+                .deMail(this.mailTextfield.getText())
+                .deCommentaires(this.commentairesTextArea.getText())
+                .deDateProspection(this.dateProspectionTextfield.getText())
+                .dInteresse((String) this.prospectInteresseComboBox.getSelectedItem())
+                .build();
+
+
+        if(id > 0) prospect.setIdentifiant(id);
+        if(idAdresse > 0) prospect.getAdresse().setIdentifiant(idAdresse);
     }
 }

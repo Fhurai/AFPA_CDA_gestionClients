@@ -1,6 +1,8 @@
 package DAO.mongo;
 
 import DAO.SocieteDatabaseException;
+import builders.AdresseBuilder;
+import builders.ProspectBuilder;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
@@ -247,28 +249,25 @@ public class ProspectMongoDAO extends SocieteMongoDAO<Prospect> {
      * @throws SocieteDatabaseException Exception lors de la récupération.
      */
     private @NotNull Prospect parse(@NotNull Document document) throws SocieteDatabaseException {
-        // Initialisation Prospect.
-        Prospect prospect = new Prospect();
-
         try {
-            // Valorisation propriétés primitives.
-            prospect.setIdentifiant(document.getInteger("identifiant"));
-            prospect.setRaisonSociale(document.getString("raisonSociale"));
-            prospect.setTelephone(document.getString("telephone"));
-            prospect.setMail(document.getString("mail"));
-            prospect.setCommentaires(document.getString("commentaires"));
-
-            Date dt = document.getDate("dateProspection");
-            LocalDate ldt = LocalDate.ofInstant(dt.toInstant(), ZoneId.systemDefault());
-
-            prospect.setDateProspection(ldt);
-
-            prospect.setProspectInteresse(document.getBoolean(
-                    "prospectInteresse") ? "oui" : "non");
-
-            // Valorisation propriétés objets.
             Document adresse = document.get("adresse", Document.class);
-            prospect.setAdresse(new Adresse(adresse.getInteger("identifiant"), adresse.getString("numRue"), adresse.getString("nomRue"), adresse.getString("codePostal"), adresse.getString("ville")));
+
+            return ProspectBuilder.getNewProspectBuilder()
+                    .dIdentifiant(document.getInteger("identifiant"))
+                    .deRaisonSociale(document.getString("raisonSociale"))
+                    .deTelephone(document.getString("telephone"))
+                    .deMail(document.getString("mail"))
+                    .deCommentaires(document.getString("commentaires"))
+                    .deDateProspection(document.getDate("dateProspection"))
+                    .dInteresse(document.getBoolean("prospectInteresse") ? "oui" : "non")
+                    .dAdresse(AdresseBuilder.getNewAdresseBuilder()
+                            .dIdentifiant(adresse.getInteger("identifiant"))
+                            .deNumeroRue(adresse.getString("numRue"))
+                            .deNomRue(adresse.getString("nomRue"))
+                            .deCodePostal(adresse.getString("codePostal"))
+                            .deVille(adresse.getString("ville"))
+                            .build())
+                    .build();
         } catch (SocieteEntityException e) {
             // Log exception.
             LogManager.logs.log(Level.SEVERE, e.getMessage());
@@ -277,8 +276,5 @@ public class ProspectMongoDAO extends SocieteMongoDAO<Prospect> {
             throw new SocieteDatabaseException("Erreur de la récupération du " +
                     "prospect depuis la base de données.");
         }
-
-        // Retourne le Prospect valorisé.
-        return prospect;
     }
 }

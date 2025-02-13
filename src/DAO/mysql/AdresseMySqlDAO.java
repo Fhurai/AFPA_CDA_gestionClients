@@ -2,6 +2,7 @@ package DAO.mysql;
 
 import DAO.DAO;
 import DAO.SocieteDatabaseException;
+import builders.AdresseBuilder;
 import entities.Adresse;
 import entities.SocieteEntityException;
 import logs.LogManager;
@@ -257,7 +258,8 @@ public class AdresseMySqlDAO extends DAO<Adresse> {
             } else {
                 // Initialisation variables CREATE
                 ResultSet rs;
-                query = "INSERT INTO adresses VALUES (?, ?, ?, ?)";
+                query = "INSERT INTO adresses (`numRue`,`nomRue`," +
+                        "`codePostal`,`ville`) VALUES (?, ?, ?, ?)";
 
                 // Préparation requête à exécuter.
                 stmt = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
@@ -275,7 +277,7 @@ public class AdresseMySqlDAO extends DAO<Adresse> {
                 rs = stmt.getGeneratedKeys();
                 if (rs.next()) {
                     ret = true;
-                    obj.setIdentifiant(rs.getInt("identifiant"));
+                    obj.setIdentifiant(rs.getInt(1));
                 }
             }
         } catch (SQLException | SocieteEntityException e) {
@@ -307,16 +309,16 @@ public class AdresseMySqlDAO extends DAO<Adresse> {
      * @throws SocieteDatabaseException Exception lors de la récupération.
      */
     private @NotNull Adresse parse(@NotNull ResultSet rs) throws SocieteDatabaseException {
-        // Initialisation adresse.
-        Adresse adresse = new Adresse();
-
         try {
-            // Valorisation propriétés primitives.
-            adresse.setIdentifiant(rs.getInt("identifiant"));
-            adresse.setNumeroRue(rs.getString("numRue"));
-            adresse.setNomRue(rs.getString("nomRue"));
-            adresse.setCodePostal(rs.getString("codePostal"));
-            adresse.setVille(rs.getString("ville"));
+            // Valorisation propriétés primitives et construction de l'objet
+            // à retourner.
+            return AdresseBuilder.getNewAdresseBuilder()
+                    .dIdentifiant(rs.getInt("identifiant"))
+                    .deNumeroRue(rs.getString("numRue"))
+                    .deNomRue(rs.getString("nomRue"))
+                    .deCodePostal(rs.getString("codePostal"))
+                    .deVille(rs.getString("ville"))
+                    .build();
         } catch (SocieteEntityException | SQLException e) {
             // Log exception.
             LogManager.logs.log(Level.SEVERE, e.getMessage());
@@ -324,8 +326,5 @@ public class AdresseMySqlDAO extends DAO<Adresse> {
             // Lancement d'une exception lisible par l'utilisateur.
             throw new SocieteDatabaseException("Erreur de la récupération du " + "client depuis la base de données.");
         }
-
-        // Retourne l'adresse valorisée.
-        return adresse;
     }
 }

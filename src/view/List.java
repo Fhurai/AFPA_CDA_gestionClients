@@ -198,7 +198,8 @@ public class List extends JFrame {
                 // Récupération du prospect
                 Prospect prospect = null;
                 try {
-                    prospect = new AbstractFactory().getFactory().getProspectDAO().findById(x);
+                    prospect =
+                            new AbstractFactory().getFactory().getProspectDAO().findById(identifiant);
 
                     if (prospect != null) {
                         // Le prospect existe, le formulaire est à ouvrir avec l'action

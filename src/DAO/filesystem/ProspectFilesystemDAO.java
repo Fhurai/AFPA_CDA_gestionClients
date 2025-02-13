@@ -1,6 +1,8 @@
 package DAO.filesystem;
 
 import DAO.SocieteDatabaseException;
+import builders.AdresseBuilder;
+import builders.ProspectBuilder;
 import entities.Adresse;
 import entities.Prospect;
 import entities.SocieteEntityException;
@@ -183,28 +185,23 @@ public class ProspectFilesystemDAO extends SocieteFilesystemDAO<Prospect> {
      * @throws SocieteDatabaseException Exception lors de la récupération.
      */
     private Prospect parse(String[] record) throws SocieteDatabaseException {
-        // Initialisation prospect.
-        Prospect p = new Prospect();
-
-        // Valorisation propriétés primitives.
         try {
-            p.setIdentifiant(Integer.parseInt(record[0]));
-            p.setRaisonSociale(record[1]);
-            p.setTelephone(record[6]);
-            p.setMail(record[7]);
-            p.setCommentaires(record[8]);
-            p.setDateProspection(LocalDate.parse(record[9],
-                    Formatters.FORMAT_DDMMYYYY));
-            p.setProspectInteresse(record[10]);
-
-            // Valorisation propriétés objets.
-            Adresse adresse = new Adresse(
-                    Integer.parseInt(record[0]),
-                    record[2],
-                    record[3],
-                    record[4],
-                    record[5]);
-            p.setAdresse(adresse);
+            return ProspectBuilder.getNewProspectBuilder()
+                    .dIdentifiant(record[0])
+                    .deRaisonSociale(record[1])
+                    .dAdresse(AdresseBuilder.getNewAdresseBuilder()
+                            .dIdentifiant(record[0])
+                            .deNumeroRue(record[2])
+                            .deNomRue(record[3])
+                            .deCodePostal(record[4])
+                            .deVille(record[5])
+                            .build())
+                    .deTelephone(record[6])
+                    .deMail(record[7])
+                    .deCommentaires(record[8])
+                    .deDateProspection(record[9])
+                    .dInteresse(record[10])
+                            .build();
         } catch (SocieteEntityException e) {
             // Log exception.
             LogManager.logs.log(Level.SEVERE, e.getMessage());
@@ -212,8 +209,5 @@ public class ProspectFilesystemDAO extends SocieteFilesystemDAO<Prospect> {
             // Lancement d'une exception lisible par l'utilisateur.
             throw new SocieteDatabaseException("Erreur de la récupération du prospect depuis la base de données.");
         }
-
-        // Retourne le prospect valorisé.
-        return p;
     }
 }

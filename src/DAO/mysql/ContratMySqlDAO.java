@@ -2,6 +2,7 @@ package DAO.mysql;
 
 import DAO.DAO;
 import DAO.SocieteDatabaseException;
+import builders.ContratBuilder;
 import entities.Contrat;
 import entities.SocieteEntityException;
 import logs.LogManager;
@@ -319,15 +320,15 @@ public class ContratMySqlDAO extends DAO<Contrat> {
      * @throws SocieteDatabaseException Exception lors de la récupération.
      */
     private @NotNull Contrat parse(@NotNull ResultSet rs) throws SocieteDatabaseException {
-        // Initialisation Contrat.
-        Contrat contrat = new Contrat();
-
         try {
-            // Valorisation propriétés primitives.
-            contrat.setIdentifiant(rs.getInt("idContrat"));
-            contrat.setIdClient(rs.getInt("idClient"));
-            contrat.setLibelle(rs.getString("libelleContrat"));
-            contrat.setMontant(rs.getDouble("montant"));
+            // Valorisation propriétés primitives et retourne le contrat
+            // construit.
+            return ContratBuilder.getNewContratBuilder()
+                    .dIdentifiant(rs.getInt("idContrat"))
+                    .deLibelle(rs.getString("libelleContrat"))
+                    .deMontant(rs.getDouble("montant"))
+                    .dIdClient(rs.getInt("idClient"))
+                    .build();
         } catch (SocieteEntityException | SQLException e) {
             // Log exception.
             LogManager.logs.log(Level.SEVERE, e.getMessage());
@@ -335,8 +336,5 @@ public class ContratMySqlDAO extends DAO<Contrat> {
             // Lancement d'une exception lisible par l'utilisateur.
             throw new SocieteDatabaseException("Erreur de la récupération du Contrat depuis la base de données.");
         }
-
-        // Retourne le Contrat valorisé.
-        return contrat;
     }
 }

@@ -2,6 +2,7 @@ package DAO.filesystem;
 
 import DAO.DAO;
 import DAO.SocieteDatabaseException;
+import builders.ContratBuilder;
 import entities.Contrat;
 import entities.SocieteEntityException;
 import logs.LogManager;
@@ -145,15 +146,15 @@ public class ContratFilesystemDAO extends DAO<Contrat> {
      * @throws SocieteDatabaseException Exception lors de la récupération.
      */
     private Contrat parse(String[] record) throws SocieteDatabaseException {
-        // Initialisation contrat.
-        Contrat contrat = new Contrat();
-
         try {
-            // Valorisation propriétés primitives.
-            contrat.setIdentifiant(Integer.parseInt(record[0]));
-            contrat.setLibelle(record[1]);
-            contrat.setMontant(Float.parseFloat(record[2]));
-            contrat.setIdClient(Integer.parseInt(record[3]));
+            // Valorisation propriétés primitives et retourne le contrat
+            // construit.
+            return ContratBuilder.getNewContratBuilder()
+                    .dIdentifiant(record[0])
+                    .deLibelle(record[1])
+                    .deMontant(record[2])
+                    .dIdClient(record[3])
+                    .build();
         } catch (SocieteEntityException e) {
             // Log exception.
             LogManager.logs.log(Level.SEVERE, e.getMessage());
@@ -162,8 +163,5 @@ public class ContratFilesystemDAO extends DAO<Contrat> {
             throw new SocieteDatabaseException("Erreur de la récupération du " +
                     "contrat depuis la base de données.");
         }
-
-        // Retourne le contrat valorisé.
-        return contrat;
     }
 }

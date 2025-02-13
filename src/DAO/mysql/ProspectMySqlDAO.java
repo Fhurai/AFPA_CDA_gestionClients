@@ -1,6 +1,7 @@
 package DAO.mysql;
 
 import DAO.SocieteDatabaseException;
+import builders.ProspectBuilder;
 import entities.Prospect;
 import entities.SocieteEntityException;
 import logs.LogManager;
@@ -259,6 +260,10 @@ public class ProspectMySqlDAO extends SocieteMySqlDAO<Prospect> {
             conn.setAutoCommit(false);
 
             if (obj.getIdentifiant() > 0) {
+
+                // Update date.
+                MySqlFactory.getAdresseDAO().save(obj.getAdresse());
+
                 // Initialisation variables UPDATE
                 query = "UPDATE prospects SET `raisonSociale` = ?,`telephone` = ?,`mail` = ?, `commentaires` = ?,`dateProspection` = ?,`prospectInteresse` = ?,`idAdresse` = ?  WHERE `identifiant` = ?";
 
@@ -278,6 +283,9 @@ public class ProspectMySqlDAO extends SocieteMySqlDAO<Prospect> {
                 // Exécution de la requête.
                 ret = stmt.executeUpdate() == 1;
             } else {
+                // Création date.
+                MySqlFactory.getAdresseDAO().save(obj.getAdresse());
+
                 // Initialisation variables CREATE
                 ResultSet rs;
                 query = "INSERT INTO `prospects`(`raisonSociale`, `telephone`, `mail`, `commentaires`, `dateProspection`, `prospectInteresse`, `idAdresse`) " +
@@ -302,7 +310,7 @@ public class ProspectMySqlDAO extends SocieteMySqlDAO<Prospect> {
                 rs = stmt.getGeneratedKeys();
                 if (rs.next()) {
                     ret = true;
-                    obj.setIdentifiant(rs.getInt("identifiant"));
+                    obj.setIdentifiant(rs.getInt(1));
                 }
             }
             conn.commit();
@@ -346,28 +354,19 @@ public class ProspectMySqlDAO extends SocieteMySqlDAO<Prospect> {
      * @throws SocieteDatabaseException Exception lors de la récupération.
      */
     private @NotNull Prospect parse(@NotNull ResultSet rs) throws SocieteDatabaseException {
-        // Initialisation Prospect.
-        Prospect prospect = new Prospect();
-
         try {
-            // Valorisation propriétés primitives.
-            prospect.setIdentifiant(rs.getInt("identifiant"));
-            prospect.setRaisonSociale(rs.getString("raisonSociale"));
-            prospect.setTelephone(rs.getString("telephone"));
-            prospect.setMail(rs.getString("mail"));
-            prospect.setCommentaires(rs.getString("commentaires"));
-
-            // Valorisation propriété date.
-            String[] dt = rs.getString("dateProspection").split("-");
-            LocalDate ldt = LocalDate.parse(dt[2] + '/' + dt[1] + '/' + dt[0], Formatters.FORMAT_DDMMYYYY);
-            prospect.setDateProspection(ldt);
-
-            // Valorisation propriétés booléennes.
-            prospect.setProspectInteresse(rs.getInt("prospectInteresse") == 1 ? "oui" : "non");
-
-            // Valorisation propriétés objets.
-            prospect.setAdresse(MySqlFactory.getAdresseDAO().findById(rs.getInt(
-                    "idAdresse")));
+            return ProspectBuilder.getNewProspectBuilder()
+                    .dIdentifiant(rs.getInt("identifiant"))
+                    .deRaisonSociale(rs.getString("raisonSociale"))
+                    .deTelephone(rs.getString("telephone"))
+                    .deMail(rs.getString("mail"))
+                    .deCommentaires(rs.getString("commentaires"))
+                    .deDateProspection(rs.getString("dateProspection"))
+                    .dInteresse(rs.getBoolean("prospectInteresse") ? "oui" :
+                            "non")
+                    .dAdresse(MySqlFactory.getAdresseDAO().findById(rs.getInt(
+                            "idAdresse")))
+                    .build();
         } catch (SocieteEntityException | SQLException e) {
             // Log exception.
             LogManager.logs.log(Level.SEVERE, e.getMessage());
@@ -375,8 +374,5 @@ public class ProspectMySqlDAO extends SocieteMySqlDAO<Prospect> {
             // Lancement d'une exception lisible par l'utilisateur.
             throw new SocieteDatabaseException("Erreur de la récupération du Prospect depuis la base de données.");
         }
-
-        // Retourne le Prospect valorisé.
-        return prospect;
     }
 }
