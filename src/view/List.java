@@ -174,7 +174,8 @@ public class List extends JFrame {
 
                 // Récupération du client
                 try {
-                    Client client = new AbstractFactory().getFactory().getClientDAO().findById(x);
+                    Client client =
+                            new AbstractFactory().getFactory().getClientDAO().findById(identifiant);
 
                     if (client != null) {
                         // Le client existe, le formulaire est à ouvrir avec l'action
