@@ -1,6 +1,7 @@
 package view;
 
 import DAO.AbstractFactory;
+import builders.AdresseBuilder;
 import entities.*;
 import logs.LogManager;
 import org.jetbrains.annotations.NotNull;
@@ -277,12 +278,13 @@ public class Form extends JFrame {
                         // Création du client et ajout de celui-ci à la liste des
                         // clients en mémoire.
                         client = new Client(this.raisonTextfield.getText(),
-                                new Adresse(0,
-                                        this.numRueTextfield.getText(),
-                                        this.nomRueTextfield.getText(),
-                                        this.codePostalTextfield.getText(),
-                                        this.villeTextfield.getText()
-                                ),
+                                AdresseBuilder.getNewAdresseBuilder()
+                                        .dIdentifiant(0)
+                                        .deNumeroRue(this.numRueTextfield.getText())
+                                        .deNomRue(this.nomRueTextfield.getText())
+                                        .deCodePostal(this.codePostalTextfield.getText())
+                                        .deCodePostal(this.villeTextfield.getText())
+                                        .build(),
                                 this.telephoneTextfield.getText(),
                                 this.mailTextfield.getText(),
                                 this.commentairesTextArea.getText(),
@@ -298,12 +300,13 @@ public class Form extends JFrame {
                         // prospects en mémoire.
                         prospect = new Prospect(
                                 this.raisonTextfield.getText(),
-                                new Adresse(0,
-                                        this.numRueTextfield.getText(),
-                                        this.nomRueTextfield.getText(),
-                                        this.codePostalTextfield.getText(),
-                                        this.villeTextfield.getText()
-                                ),
+                                AdresseBuilder.getNewAdresseBuilder()
+                                        .dIdentifiant(0)
+                                        .deNumeroRue(this.numRueTextfield.getText())
+                                        .deNomRue(this.nomRueTextfield.getText())
+                                        .deCodePostal(this.codePostalTextfield.getText())
+                                        .deVille(this.villeTextfield.getText())
+                                        .build(),
                                 this.telephoneTextfield.getText(),
                                 this.mailTextfield.getText(),
                                 this.commentairesTextArea.getText(),

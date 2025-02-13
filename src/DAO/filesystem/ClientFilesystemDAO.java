@@ -1,7 +1,7 @@
 package DAO.filesystem;
 
 import DAO.SocieteDatabaseException;
-import entities.Adresse;
+import builders.AdresseBuilder;
 import entities.Client;
 import entities.SocieteEntityException;
 import logs.LogManager;
@@ -208,13 +208,13 @@ public class ClientFilesystemDAO extends SocieteFilesystemDAO<Client> {
             client.setNbEmployes(Integer.parseInt(record[10]));
 
             // Valorisation propriétés objets.
-            Adresse adresse = new Adresse(
-                    Integer.parseInt(record[0]),
-                    record[2],
-                    record[3],
-                    record[4],
-                    record[5]);
-            client.setAdresse(adresse);
+            client.setAdresse(AdresseBuilder.getNewAdresseBuilder()
+                    .dIdentifiant(record[0])
+                    .deNumeroRue(record[2])
+                    .deNomRue(record[3])
+                    .deCodePostal(record[4])
+                    .deVille(record[5])
+                    .build());
         } catch (SocieteEntityException e) {
             // Log exception.
             LogManager.logs.log(Level.SEVERE, e.getMessage());

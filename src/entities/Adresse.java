@@ -28,6 +28,7 @@ public class Adresse {
     public Adresse(int identifiant, String numeroRue, String nomRue,
                    String codePostal, String ville)
             throws SocieteEntityException {
+        setIdentifiant(identifiant);
         setNumeroRue(numeroRue);
         setNomRue(nomRue);
         setCodePostal(codePostal);

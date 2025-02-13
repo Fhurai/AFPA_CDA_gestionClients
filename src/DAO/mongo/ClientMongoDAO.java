@@ -1,6 +1,8 @@
 package DAO.mongo;
 
 import DAO.SocieteDatabaseException;
+import builders.AdresseBuilder;
+import builders.ContratBuilder;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
@@ -9,7 +11,6 @@ import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.InsertOneResult;
 import com.mongodb.client.result.UpdateResult;
-import entities.Adresse;
 import entities.Client;
 import entities.Contrat;
 import entities.SocieteEntityException;
@@ -271,20 +272,21 @@ public class ClientMongoDAO extends SocieteMongoDAO<Client> {
 
             // Valorisation propriétés objets.
             Document adresse = document.get("adresse", Document.class);
-            client.setAdresse(new Adresse(adresse.getInteger("identifiant"), adresse.getString("numRue"), adresse.getString("nomRue"), adresse.getString("codePostal"), adresse.getString("ville")));
+            client.setAdresse(AdresseBuilder.getNewAdresseBuilder()
+                    .dIdentifiant(adresse.getInteger("identifiant"))
+                    .deNumeroRue(adresse.getString("numRue"))
+                    .deNomRue(adresse.getString("nomRue"))
+                    .deCodePostal(adresse.getString("codePostal"))
+                    .deVille(adresse.getString("ville"))
+                    .build());
 
             ArrayList<Contrat> contrats = new ArrayList<>();
             for (Document contrat : document.getList("contrats", Document.class)) {
-                Contrat c = new Contrat();
-                c.setIdentifiant(Integer.parseInt(contrat.getString("identifiant")));
-                c.setIdClient(client.getIdentifiant());
-                c.setLibelle(contrat.getString("libelleContrat"));
-
-                String montantString = contrat.getString("montant");
-                double montant = Double.parseDouble(montantString);
-
-                c.setMontant(montant);
-                contrats.add(c);
+                contrats.add(ContratBuilder.getNewContratBuilder()
+                        .dIdentifiant(contrat.getString("identifiant"))
+                        .deLibelle(contrat.getString("libelleContrat"))
+                        .deMontant(contrat.getString("montant"))
+                        .build());
             }
             client.setContrats(contrats);
         } catch (SocieteEntityException | NumberFormatException e) {

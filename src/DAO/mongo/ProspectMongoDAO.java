@@ -1,6 +1,7 @@
 package DAO.mongo;
 
 import DAO.SocieteDatabaseException;
+import builders.AdresseBuilder;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
@@ -268,7 +269,12 @@ public class ProspectMongoDAO extends SocieteMongoDAO<Prospect> {
 
             // Valorisation propriétés objets.
             Document adresse = document.get("adresse", Document.class);
-            prospect.setAdresse(new Adresse(adresse.getInteger("identifiant"), adresse.getString("numRue"), adresse.getString("nomRue"), adresse.getString("codePostal"), adresse.getString("ville")));
+            prospect.setAdresse(AdresseBuilder.getNewAdresseBuilder()
+                    .dIdentifiant(adresse.getInteger("identifiant"))
+                    .deNumeroRue(adresse.getString("numRue"))
+                    .deCodePostal(adresse.getString("codePostal"))
+                    .deVille(adresse.getString("ville"))
+                    .build());
         } catch (SocieteEntityException e) {
             // Log exception.
             LogManager.logs.log(Level.SEVERE, e.getMessage());
