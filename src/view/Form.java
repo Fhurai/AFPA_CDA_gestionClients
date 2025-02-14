@@ -1,6 +1,7 @@
 package view;
 
 import DAO.AbstractFactory;
+import DAO.SocieteDatabaseException;
 import builders.AdresseBuilder;
 import builders.ClientBuilder;
 import builders.ProspectBuilder;
@@ -378,8 +379,8 @@ public class Form extends JFrame {
         } catch (DateTimeException dte) {
             LogManager.logs.log(Level.SEVERE, dte.getMessage(), dte);
             JOptionPane.showMessageDialog(null, "Erreur dans la date.");
-        } catch (SocieteEntityException see) {
-            LogManager.logs.log(Level.SEVERE, see.getMessage(), see);
+        } catch (SocieteEntityException | SocieteDatabaseException see) {
+            LogManager.logs.log(Level.INFO, see.getMessage(), see);
             JOptionPane.showMessageDialog(null, see.getMessage());
         } catch (Exception e) {
             LogManager.logs.log(Level.SEVERE, e.getMessage());

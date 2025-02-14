@@ -5,6 +5,7 @@ import builders.AdresseBuilder;
 import builders.ProspectBuilder;
 import entities.Adresse;
 import entities.Prospect;
+import entities.Societe;
 import entities.SocieteEntityException;
 import logs.LogManager;
 import org.jetbrains.annotations.NotNull;
@@ -12,6 +13,7 @@ import utilities.Formatters;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 
 /**
@@ -23,6 +25,16 @@ public class ProspectFilesystemDAO extends SocieteFilesystemDAO<Prospect> {
      * Constructor.
      */
     public ProspectFilesystemDAO() {
+    }
+
+    @Override
+    protected boolean checkOtherRaisonSociale(String raisonSociale) throws SocieteDatabaseException {
+        ClientFilesystemDAO clientFilesystemDAO = new ClientFilesystemDAO();
+        List<String> otherRaisonsSociales =
+                clientFilesystemDAO.findAll().stream()
+                        .map(Societe::getRaisonSociale)
+                        .toList();
+        return otherRaisonsSociales.contains(raisonSociale);
     }
 
     /**
@@ -147,6 +159,11 @@ public class ProspectFilesystemDAO extends SocieteFilesystemDAO<Prospect> {
         // Initialisation des variables.
         boolean ret;
         String[] record;
+
+        // Sécurité unicité
+        if(this.checkRaisonSociale(obj.getRaisonSociale())) {
+            throw new SocieteDatabaseException("La raison sociale existe déjà");
+        }
 
         // Initialisation base de données.
         FilesystemDatabase db = ConnexionFilesystem.getInstance();

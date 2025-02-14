@@ -129,7 +129,7 @@ abstract public class Societe {
         // Cas regex non matché
         if (!Patterns.PATTERN_TELEPHONE.matcher(telephone).matches()) {
             throw new SocieteEntityException("Le numéro de téléphone doit " +
-                    "comporter maximum quinze chiffres !");
+                    "correspondre à un numéro de téléphone FR !");
         }
 
         this.telephone = telephone;
@@ -178,26 +178,6 @@ abstract public class Societe {
             throw new SocieteEntityException("La raison sociale ne peut être" +
                     " vide !");
         }
-
-//        try {
-//            for(Client c : MySqlFactory.getClientsDAO().findAll()){
-//                if(raisonSociale.equals(c.getRaisonSociale()) && this.identifiant != c.getIdentifiant()){
-//                    throw new SocieteEntityException("La raison sociale donnée " +
-//                            "existe déjà en base de données.");
-//                }
-//            }
-//
-//            for(Prospect p : MySqlFactory.getProspectsDAO().findAll()){
-//                if(raisonSociale.equals(p.getRaisonSociale()) && this.identifiant != p.getIdentifiant()){
-//                    throw new SocieteEntityException("La raison sociale donnée " +
-//                            "existe déjà en base de données.");
-//                }
-//            }
-//        } catch (SocieteDatabaseException e) {
-//            LogManager.logs.log(Level.SEVERE, e.getMessage());
-//            throw new SocieteEntityException("La vérification de l'unicité de" +
-//                    " la raison sociale ne peut être faite !");
-//        }
         this.raisonSociale = raisonSociale;
     }
 

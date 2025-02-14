@@ -13,6 +13,7 @@ import com.mongodb.client.result.InsertOneResult;
 import com.mongodb.client.result.UpdateResult;
 import entities.Adresse;
 import entities.Prospect;
+import entities.Societe;
 import entities.SocieteEntityException;
 import logs.LogManager;
 import org.bson.Document;
@@ -24,6 +25,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
 
@@ -31,6 +33,16 @@ import java.util.logging.Level;
  * Classe DAO MongoDB pour les prospects.
  */
 public class ProspectMongoDAO extends SocieteMongoDAO<Prospect> {
+
+    @Override
+    protected boolean checkOtherRaisonSociale(String raisonSociale) throws SocieteDatabaseException {
+        ClientMongoDAO clientMongoDAO = new ClientMongoDAO();
+        List<String> otherRaisonsSociales =
+                clientMongoDAO.findAll().stream()
+                        .map(Societe::getRaisonSociale)
+                        .toList();
+        return otherRaisonsSociales.contains(raisonSociale);
+    }
 
     /**
      * Méthode pour rechercher un prospect.
@@ -170,6 +182,11 @@ public class ProspectMongoDAO extends SocieteMongoDAO<Prospect> {
         // Initialisation de la variable.
         MongoDatabase db = ConnexionMongo.getInstance();
         boolean ret;
+
+        // Sécurité unicité
+        if(this.checkRaisonSociale(obj.getRaisonSociale())) {
+            throw new SocieteDatabaseException("La raison sociale existe déjà");
+        }
 
         // Récupération de la collection des prospects.
         MongoCollection<Document> collection = db.getCollection("prospects");

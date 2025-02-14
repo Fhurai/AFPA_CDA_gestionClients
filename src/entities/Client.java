@@ -98,10 +98,10 @@ public final class Client extends Societe {
      * @param nbEmployes Nombre d'employés
      */
     public void setNbEmployes(int nbEmployes) throws SocieteEntityException {
-        // Cas nombre négatif
-        if (nbEmployes < 0) {
+        // Cas inférieur ou égal à 0.
+        if (nbEmployes <= 0) {
             throw new SocieteEntityException("Le nombre d'employés ne peut " +
-                    "être négatif");
+                    "être inférieur ou égal à 0.");
         }
 
         this.nbEmployes = nbEmployes;

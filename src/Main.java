@@ -34,13 +34,14 @@ public class Main {
             System.exit(1);
         } catch (Exception e) {
             LogManager.logs.log(Level.SEVERE, e.getMessage());
+            System.out.println(Arrays.toString(e.getStackTrace()));
             JOptionPane.showMessageDialog(null, "Erreur inconnue.");
             System.exit(1);
         }
 
-        // Initialisation de l'accès à la base de données.
-        AbstractFactory.setTypeDatabase(TypeDatabase.FILESYSTEM);
         try {
+            // Initialisation de l'accès à la base de données.
+            AbstractFactory.setTypeDatabase(TypeDatabase.FILESYSTEM);
             new AbstractFactory().getFactory().init();
         } catch (SocieteDatabaseException e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
