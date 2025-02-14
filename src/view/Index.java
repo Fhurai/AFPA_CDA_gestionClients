@@ -234,7 +234,13 @@ public class Index extends JFrame {
             // Valorisation de la valeur globale du choix de type de société.
             this.typeChoice = type;
         } catch (SocieteDatabaseException e) {
-            JOptionPane.showMessageDialog(null, e.getMessage());
+            if(e.getCause() != null && e.getCause() instanceof SocieteEntityException) {
+                JOptionPane.showMessageDialog(null, "Erreur d'intégrité dans " +
+                        "les données de la base de données !");
+                LogManager.logs.warning(e.getCause().getMessage());
+            }else{
+                JOptionPane.showMessageDialog(null, e.getMessage());
+            }
         }
     }
 
