@@ -12,7 +12,7 @@
     "nbEmployes": 80,
     "adresse": {
       "identifiant": 1,
-      "numRue": "2bis",
+      "numRue": "2 bis",
       "nomRue": "rue Ardant du Picq",
       "codePostal": "57004",
       "ville": "Metz"

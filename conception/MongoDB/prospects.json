@@ -35,7 +35,7 @@
     "prospectInteresse": false,
     "adresse": {
       "identifiant": 5,
-      "numRue": "80",
+      "numRue": "80 ter",
       "nomRue": "QUAI VOLTAIRE",
       "codePostal": "95870",
       "ville": "BEZONS"
@@ -56,7 +56,7 @@
     "prospectInteresse": true,
     "adresse": {
       "identifiant": 6,
-      "numRue": "276",
+      "numRue": "276b",
       "nomRue": "AVENUE DU PRESIDENT WILSON",
       "codePostal": "93210",
       "ville": "SAINT-DENIS"

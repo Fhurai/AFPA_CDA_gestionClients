@@ -47,12 +47,12 @@ CREATE TABLE IF NOT EXISTS `adresses`
 
 INSERT INTO `adresses` (`identifiant`, `numRue`, `nomRue`, `codePostal`,
                         `ville`)
-VALUES (1, '2bis', 'rue Ardant du Picq', '57004', 'Metz'),
+VALUES (1, '2 bis', 'rue Ardant du Picq', '57004', 'Metz'),
        (2, '25', 'rue de la Taye', '57130', 'Jussy'),
        (3, '3', 'rue des Michottes', '54000', 'Nancy'),
        (4, '28', 'Boulevard Albert 1er', '54000', 'NANCY'),
-       (5, '80', 'QUAI VOLTAIRE', '95870', 'BEZONS'),
-       (6, '276', 'AVENUE DU PRESIDENT WILSON', '93210', 'SAINT-DENIS'),
+       (5, '80 ter', 'QUAI VOLTAIRE', '95870', 'BEZONS'),
+       (6, '276b', 'AVENUE DU PRESIDENT WILSON', '93210', 'SAINT-DENIS'),
        (7, '25', 'rue Serpenoise', '57000', 'Metz');
 
 -- --------------------------------------------------------
