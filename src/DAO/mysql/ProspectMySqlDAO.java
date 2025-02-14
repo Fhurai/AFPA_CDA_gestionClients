@@ -3,6 +3,7 @@ package DAO.mysql;
 import DAO.SocieteDatabaseException;
 import builders.ProspectBuilder;
 import entities.Prospect;
+import entities.Societe;
 import entities.SocieteEntityException;
 import logs.LogManager;
 import org.jetbrains.annotations.NotNull;
@@ -11,6 +12,7 @@ import utilities.Formatters;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
 
@@ -120,6 +122,16 @@ public class ProspectMySqlDAO extends SocieteMySqlDAO<Prospect> {
         }
 
         return prospect;
+    }
+
+    @Override
+    protected boolean checkOtherRaisonSociale(String raisonSociale) throws SocieteDatabaseException {
+        ClientMySqlDAO  clientMySqlDAO = new ClientMySqlDAO();
+        List<String> otherRaisonsSociales =
+                clientMySqlDAO.findAll().stream()
+                        .map(Societe::getRaisonSociale)
+                        .toList();
+        return otherRaisonsSociales.contains(raisonSociale);
     }
 
     /**
@@ -255,6 +267,11 @@ public class ProspectMySqlDAO extends SocieteMySqlDAO<Prospect> {
         PreparedStatement stmt;
         String query;
         boolean ret = false;
+
+        // Sécurité unicité
+        if(this.checkRaisonSociale(obj.getRaisonSociale())) {
+            throw new SocieteDatabaseException("La raison sociale existe déjà");
+        }
 
         try {
             conn.setAutoCommit(false);

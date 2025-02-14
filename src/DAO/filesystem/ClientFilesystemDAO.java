@@ -4,11 +4,13 @@ import DAO.SocieteDatabaseException;
 import builders.AdresseBuilder;
 import builders.ClientBuilder;
 import entities.Client;
+import entities.Societe;
 import entities.SocieteEntityException;
 import logs.LogManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 
 /**
@@ -20,6 +22,17 @@ public class ClientFilesystemDAO extends SocieteFilesystemDAO<Client> {
      * Constructor
      */
     public ClientFilesystemDAO() {
+
+    }
+
+    @Override
+    protected boolean checkOtherRaisonSociale(String raisonSociale) throws SocieteDatabaseException {
+        ProspectFilesystemDAO prospectFilesystemDAO = new ProspectFilesystemDAO();
+        List<String> otherRaisonsSociales =
+                prospectFilesystemDAO.findAll().stream()
+                        .map(Societe::getRaisonSociale)
+                        .toList();
+        return otherRaisonsSociales.contains(raisonSociale);
     }
 
     /**
@@ -158,6 +171,11 @@ public class ClientFilesystemDAO extends SocieteFilesystemDAO<Client> {
         boolean ret;
         String[] record;
 
+        // Sécurité unicité
+        if (this.checkRaisonSociale(obj.getRaisonSociale())) {
+            throw new SocieteDatabaseException("La raison sociale existe déjà");
+        }
+
         // Initialisation base de données.
         FilesystemDatabase db = ConnexionFilesystem.getInstance();
 
@@ -219,7 +237,8 @@ public class ClientFilesystemDAO extends SocieteFilesystemDAO<Client> {
             LogManager.logs.log(Level.SEVERE, e.getMessage());
 
             // Lancement d'une exception lisible par l'utilisateur.
-            throw new SocieteDatabaseException("Erreur de la récupération du client depuis la base de données.");
+            throw new SocieteDatabaseException("Erreur de la récupération du " +
+                    "client depuis la base de données.", e);
         }
     }
 }

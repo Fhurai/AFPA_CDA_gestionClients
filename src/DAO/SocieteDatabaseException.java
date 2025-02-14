@@ -13,4 +13,14 @@ public final class SocieteDatabaseException extends Exception {
     public SocieteDatabaseException(String message) {
         super(message);
     }
+
+    /**
+     * Constructor.
+     *
+     * @param message Message d'erreur concernant la base de données.
+     * @param cause La cause de l'exception.
+     */
+    public SocieteDatabaseException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

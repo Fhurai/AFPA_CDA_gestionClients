@@ -13,7 +13,7 @@ import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.InsertOneResult;
 import com.mongodb.client.result.UpdateResult;
 import entities.Client;
-import entities.Contrat;
+import entities.Societe;
 import entities.SocieteEntityException;
 import logs.LogManager;
 import org.bson.Document;
@@ -22,6 +22,7 @@ import org.bson.types.ObjectId;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 
 /**
@@ -33,6 +34,16 @@ public class ClientMongoDAO extends SocieteMongoDAO<Client> {
      * Constructor
      */
     public ClientMongoDAO() {
+    }
+
+    @Override
+    protected boolean checkOtherRaisonSociale(String raisonSociale) throws SocieteDatabaseException {
+        ProspectMongoDAO prospectMongoDAO = new ProspectMongoDAO();
+        List<String> otherRaisonsSociales =
+                prospectMongoDAO.findAll().stream()
+                        .map(Societe::getRaisonSociale)
+                        .toList();
+        return otherRaisonsSociales.contains(raisonSociale);
     }
 
     /**
@@ -173,6 +184,11 @@ public class ClientMongoDAO extends SocieteMongoDAO<Client> {
         // Initialisation de la variable.
         MongoDatabase db = ConnexionMongo.getInstance();
         boolean ret;
+
+        // Sécurité unicité
+        if (this.checkRaisonSociale(obj.getRaisonSociale())) {
+            throw new SocieteDatabaseException("La raison sociale existe déjà");
+        }
 
         // Récupération de la collection des clients.
         MongoCollection<Document> collection = db.getCollection("clients");
