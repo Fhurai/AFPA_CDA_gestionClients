@@ -7,10 +7,8 @@ import entities.Societe;
 import entities.SocieteEntityException;
 import logs.LogManager;
 import org.jetbrains.annotations.NotNull;
-import utilities.Formatters;
 
 import java.sql.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -126,7 +124,7 @@ public class ProspectMySqlDAO extends SocieteMySqlDAO<Prospect> {
 
     @Override
     protected boolean checkOtherRaisonSociale(String raisonSociale) throws SocieteDatabaseException {
-        ClientMySqlDAO  clientMySqlDAO = new ClientMySqlDAO();
+        ClientMySqlDAO clientMySqlDAO = new ClientMySqlDAO();
         List<String> otherRaisonsSociales =
                 clientMySqlDAO.findAll().stream()
                         .map(Societe::getRaisonSociale)
@@ -269,7 +267,7 @@ public class ProspectMySqlDAO extends SocieteMySqlDAO<Prospect> {
         boolean ret = false;
 
         // Sécurité unicité
-        if(this.checkRaisonSociale(obj.getRaisonSociale())) {
+        if (this.checkRaisonSociale(obj.getRaisonSociale())) {
             throw new SocieteDatabaseException("La raison sociale existe déjà");
         }
 
@@ -389,7 +387,8 @@ public class ProspectMySqlDAO extends SocieteMySqlDAO<Prospect> {
             LogManager.logs.log(Level.SEVERE, e.getMessage());
 
             // Lancement d'une exception lisible par l'utilisateur.
-            throw new SocieteDatabaseException("Erreur de la récupération du Prospect depuis la base de données.");
+            throw new SocieteDatabaseException("Erreur de la récupération du " +
+                    "Prospect depuis la base de données.", e);
         }
     }
 }

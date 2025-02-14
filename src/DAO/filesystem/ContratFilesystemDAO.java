@@ -161,7 +161,7 @@ public class ContratFilesystemDAO extends DAO<Contrat> {
 
             // Lancement d'une exception lisible par l'utilisateur.
             throw new SocieteDatabaseException("Erreur de la récupération du " +
-                    "contrat depuis la base de données.");
+                    "contrat depuis la base de données.", e);
         }
     }
 }

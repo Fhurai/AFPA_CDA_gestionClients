@@ -18,8 +18,11 @@ public class ViewsUtilities {
      * Méthode pour quitter l'application
      */
     public static void quitApplication(@NotNull JFrame frame) {
-        LogManager.stop();
-        frame.dispose();
+        int confirm = JOptionPane.showConfirmDialog(null, "Vous allez quitter ?");
+        if(confirm == JOptionPane.YES_OPTION) {
+            LogManager.stop();
+            frame.dispose();
+        }
     }
 
     /**

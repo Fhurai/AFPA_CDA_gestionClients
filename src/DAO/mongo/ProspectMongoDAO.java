@@ -11,7 +11,6 @@ import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.InsertOneResult;
 import com.mongodb.client.result.UpdateResult;
-import entities.Adresse;
 import entities.Prospect;
 import entities.Societe;
 import entities.SocieteEntityException;
@@ -21,10 +20,7 @@ import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 import org.jetbrains.annotations.NotNull;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
@@ -291,7 +287,7 @@ public class ProspectMongoDAO extends SocieteMongoDAO<Prospect> {
 
             // Lancement d'une exception lisible par l'utilisateur.
             throw new SocieteDatabaseException("Erreur de la récupération du " +
-                    "prospect depuis la base de données.");
+                    "prospect depuis la base de données.", e);
         }
     }
 }

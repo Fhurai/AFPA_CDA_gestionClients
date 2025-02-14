@@ -3,7 +3,6 @@ package DAO.filesystem;
 import DAO.SocieteDatabaseException;
 import builders.AdresseBuilder;
 import builders.ProspectBuilder;
-import entities.Adresse;
 import entities.Prospect;
 import entities.Societe;
 import entities.SocieteEntityException;
@@ -11,7 +10,6 @@ import logs.LogManager;
 import org.jetbrains.annotations.NotNull;
 import utilities.Formatters;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -224,7 +222,8 @@ public class ProspectFilesystemDAO extends SocieteFilesystemDAO<Prospect> {
             LogManager.logs.log(Level.SEVERE, e.getMessage());
 
             // Lancement d'une exception lisible par l'utilisateur.
-            throw new SocieteDatabaseException("Erreur de la récupération du prospect depuis la base de données.");
+            throw new SocieteDatabaseException("Erreur de la récupération du " +
+                    "prospect depuis la base de données.", e);
         }
     }
 }

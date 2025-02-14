@@ -334,7 +334,8 @@ public class ContratMySqlDAO extends DAO<Contrat> {
             LogManager.logs.log(Level.SEVERE, e.getMessage());
 
             // Lancement d'une exception lisible par l'utilisateur.
-            throw new SocieteDatabaseException("Erreur de la récupération du Contrat depuis la base de données.");
+            throw new SocieteDatabaseException("Erreur de la récupération du " +
+                    "Contrat depuis la base de données.", e);
         }
     }
 }

@@ -145,6 +145,8 @@ public class Index extends JFrame {
                 factory.getFactory().close();
                 AbstractFactory.setTypeDatabase(TypeDatabase.findByString((String) dbComboBox.getSelectedItem()));
                 factory.getFactory().init();
+                JOptionPane.showMessageDialog(this, "Changement de base de " +
+                        "donnéees...");
             } catch (SocieteDatabaseException ex) {
                 LogManager.logs.log(Level.SEVERE, ex.getMessage());
                 JOptionPane.showMessageDialog(null, ex.getMessage(), "Erreur",
@@ -236,7 +238,8 @@ public class Index extends JFrame {
         } catch (SocieteDatabaseException e) {
             if(e.getCause() != null && e.getCause() instanceof SocieteEntityException) {
                 JOptionPane.showMessageDialog(null, "Erreur d'intégrité dans " +
-                        "les données de la base de données !");
+                        "les données de la base de données ! \nVeuillez " +
+                        "consulter le service informatique !");
                 LogManager.logs.warning(e.getCause().getMessage());
             }else{
                 JOptionPane.showMessageDialog(null, e.getMessage());
