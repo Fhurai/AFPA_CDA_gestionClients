@@ -1,5 +1,7 @@
-package entities;
+package tests.entities;
 
+import entities.Prospect;
+import entities.SocieteEntityException;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
