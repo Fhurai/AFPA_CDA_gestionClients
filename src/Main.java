@@ -41,7 +41,7 @@ public class Main {
 
         try {
             // Initialisation de l'accès à la base de données.
-            AbstractFactory.setTypeDatabase(TypeDatabase.FILESYSTEM);
+            AbstractFactory.setDefaultDatabase();
             new AbstractFactory().getFactory().init();
         } catch (SocieteDatabaseException e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
