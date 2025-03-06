@@ -142,7 +142,6 @@ public class Index extends JFrame {
         // Bouton sélection base de données.
         connecterButton.addActionListener(e -> {
             try {
-                factory.getFactory().close();
                 AbstractFactory.setTypeDatabase(TypeDatabase.findByString((String) dbComboBox.getSelectedItem()));
                 factory.getFactory().init();
                 JOptionPane.showMessageDialog(this, "Changement de base de " +
