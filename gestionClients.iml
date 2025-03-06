@@ -45,5 +45,7 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="mongodb.bson" level="application" />
+    <orderEntry type="library" name="mongodb.driver.sync" level="application" />
   </component>
 </module>
