@@ -1,5 +1,7 @@
-package entities;
+package tests.entities;
 
+import entities.Client;
+import entities.SocieteEntityException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -32,13 +34,13 @@ class ClientTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {-50})
+    @ValueSource(ints = {-50, 0})
     void setNbEmployesInvalid(int nbEmployes) {
         assertThrows(SocieteEntityException.class, () -> client.setNbEmployes(nbEmployes));
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {0, 2000})
+    @ValueSource(ints = {1, 2000})
     void setNbEmployesValid(int nbEmployes) {
         assertDoesNotThrow(() -> client.setNbEmployes(nbEmployes));
         assertEquals(nbEmployes, client.getNbEmployes());

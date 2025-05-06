@@ -4,8 +4,11 @@ out/
 !**/src/test/**/out/
 javadoc/
 !**/logs/
+/logs/
+/lib/
 .idea/
 !**/save
+/CDA_gestionClients.iml
 
 ### Eclipse ###
 .apt_generated

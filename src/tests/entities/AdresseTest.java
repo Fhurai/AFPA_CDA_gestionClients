@@ -1,5 +1,7 @@
-package entities;
+package tests.entities;
 
+import entities.Adresse;
+import entities.SocieteEntityException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
@@ -21,13 +23,13 @@ class AdresseTest {
 
     @ParameterizedTest
     @NullAndEmptySource
-    @ValueSource(strings = {"aled", "br45"})
+    @ValueSource(strings = {"aled", "br45", "2bis", ""})
     void setNumeroRueInvalid(String numeroRue) {
         assertThrows(SocieteEntityException.class, () -> adresse.setNumeroRue(numeroRue));
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"145", "67b", "2bis", "3"})
+    @ValueSource(strings = {"145", "67b", "2 bis", "3", "1 ter"})
     void setNumeroRueValid(String numeroRue) {
         assertDoesNotThrow(() -> adresse.setNumeroRue(numeroRue));
         assertEquals(numeroRue, adresse.getNumeroRue());

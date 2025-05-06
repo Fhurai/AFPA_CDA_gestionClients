@@ -11,7 +11,8 @@ import java.util.logging.LogRecord;
  */
 public class LogFormatter extends Formatter {
     /**
-     * Méthode de formattage de logs
+     * Méthode de formatage de logs
+     *
      * @param record the log record to be formatted.
      * @return La ligne de log.
      */
@@ -28,7 +29,7 @@ public class LogFormatter extends Formatter {
                 "\n";
     }
 
-    private String getFormattedDate(){
+    private String getFormattedDate() {
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return format.format(new Date());
     }

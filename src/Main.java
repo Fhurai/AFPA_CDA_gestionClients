@@ -1,6 +1,7 @@
+import DAO.AbstractFactory;
+import DAO.SocieteDatabaseException;
+import DAO.TypeDatabase;
 import logs.LogManager;
-import utilities.Files;
-import utilities.SocieteUtilitiesException;
 import view.Index;
 
 import javax.swing.*;
@@ -15,6 +16,7 @@ public class Main {
 
     /**
      * Méthode principale de lancement de l'application.
+     *
      * @param args Arguments de lancement.
      */
     public static void main(String[] args) {
@@ -32,24 +34,17 @@ public class Main {
             System.exit(1);
         } catch (Exception e) {
             LogManager.logs.log(Level.SEVERE, e.getMessage());
+            System.out.println(Arrays.toString(e.getStackTrace()));
             JOptionPane.showMessageDialog(null, "Erreur inconnue.");
             System.exit(1);
         }
 
         try {
-            // Création des fichiers de base de données si non existants.
-            Files.dbCreate();
-
-            // Chargement des fichiers de base de données.
-            Files.dbLoad();
-        } catch (SocieteUtilitiesException sue) {
-            LogManager.logs.log(Level.SEVERE, sue.getMessage());
-            JOptionPane.showMessageDialog(null, sue.getMessage());
-            System.out.println(sue.getMessage());
-        } catch (Exception e) {
-            LogManager.logs.log(Level.SEVERE, e.getMessage());
-            JOptionPane.showMessageDialog(null, "Erreur lors de la création " +
-                    "ou du chargement de la base de données.");
+            // Initialisation de l'accès à la base de données.
+            AbstractFactory.setDefaultDatabase();
+            new AbstractFactory().getFactory().init();
+        } catch (SocieteDatabaseException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
             System.exit(1);
         }
 

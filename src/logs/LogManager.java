@@ -16,7 +16,7 @@ public class LogManager {
     public static final Logger logs = Logger.getLogger(LogManager.class.getName());
 
     /**
-     * Initialisation du guestionnaire de logs
+     * Initialisation du gestionnaire de logs
      */
     public static void init() throws IOException {
         LocalDate date = LocalDate.now();
@@ -25,19 +25,20 @@ public class LogManager {
         logs.setUseParentHandlers(false);
         logs.addHandler(fh);
         fh.setFormatter(new LogFormatter());
+        logs.info(System.lineSeparator());
     }
 
     /**
      * Méthode de log du lancement de l'application.
      */
-    public static void run(){
+    public static void run() {
         logs.log(Level.INFO, "Software running...");
     }
 
     /**
      * Méthode de log de la fermeture de l'application.
      */
-    public static void stop(){
+    public static void stop() {
         logs.log(Level.INFO, "Software stopped !");
     }
 }
