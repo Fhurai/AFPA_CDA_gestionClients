@@ -2,8 +2,6 @@ package DAO;
 
 import entities.Societe;
 
-import java.util.List;
-
 /**
  * Classe DAO Société abstraite.
  */
