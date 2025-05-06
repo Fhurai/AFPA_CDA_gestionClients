@@ -180,7 +180,7 @@ public class ProspectMongoDAO extends SocieteMongoDAO<Prospect> {
         boolean ret;
 
         // Sécurité unicité
-        if(this.checkRaisonSociale(obj.getRaisonSociale())) {
+        if(this.checkRaisonSociale(obj.getRaisonSociale()) && obj.getIdentifiant() == 0) {
             throw new SocieteDatabaseException("La raison sociale existe déjà");
         }
 

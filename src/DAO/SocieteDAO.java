@@ -18,11 +18,7 @@ abstract public class SocieteDAO<T extends Societe> extends DAO<T> {
      *                                  sociales rencontre un problème.
      */
     protected boolean checkRaisonSociale(String raisonSociale) throws SocieteDatabaseException {
-        List<String> raisonsSociales = this.findAll().stream()
-                .map(Societe::getRaisonSociale)
-                .toList();
-
-        return raisonsSociales.contains(raisonSociale) || checkOtherRaisonSociale(raisonSociale);
+        return checkOtherRaisonSociale(raisonSociale);
     }
 
     /**

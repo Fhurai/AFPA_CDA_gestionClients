@@ -186,7 +186,7 @@ public class ClientMongoDAO extends SocieteMongoDAO<Client> {
         boolean ret;
 
         // Sécurité unicité
-        if (this.checkRaisonSociale(obj.getRaisonSociale())) {
+        if (this.checkRaisonSociale(obj.getRaisonSociale())  && obj.getIdentifiant() == 0) {
             throw new SocieteDatabaseException("La raison sociale existe déjà");
         }
 
